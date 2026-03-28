@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Admin Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Admin Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="admin-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="admin-recruiters.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Recruiters
+        </a>
+        <a href="admin-employees.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Employees
+        </a>
+        <a href="admin-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">A</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Admin Dashboard</h1>
+          <p class="page-subtitle">Platform control & monitoring</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Jobs</p>
+            <h2 id="totalJobs" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Pending Approvals</p>
+            <h2 id="pendingJobs" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Active Jobs</p>
+            <h2 id="activeJobs" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Applications</p>
+            <h2 id="totalApplications" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Interviews</p>
+            <h2 id="totalInterviews" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Hired</p>
+            <h2 id="totalHired" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <article class="card">
+        <h3 class="panel-title">Job Status Distribution</h3>
+        <div class="chart-wrap">
+          <canvas id="jobStatusChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Applications per Company</h3>
+        <div class="chart-wrap">
+          <canvas id="companyAppsChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Hiring Trend</h3>
+        <div class="chart-wrap">
+          <canvas id="hiringTrendChart"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Pending Job Approvals</h3>
+        <button id="refreshPendingBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div id="pendingJobsList" class="card-list">
+        <div class="loading-box"><span class="spinner"></span>Loading pending jobs...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">All Jobs Overview</h3>
+        <button id="refreshJobsBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="jobSearchInput" class="search" placeholder="Search jobs..." />
+        <select id="jobStatusFilter">
+          <option value="">All Statuses</option>
+          <option value="PENDING">Pending</option>
+          <option value="ACTIVE">Active</option>
+          <option value="PAUSED">Paused</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+        <select id="companyFilter">
+          <option value="">All Companies</option>
+        </select>
+      </div>
+      <div id="allJobsList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading jobs...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Company Performance</h3>
+      </div>
+      <div id="companyStats" class="company-stats-grid">
+        <div class="loading-box"><span class="spinner"></span>Loading company data...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Application Pipeline</h3>
+      </div>
+      <div id="pipelineStats" class="pipeline-grid">
+        <div class="loading-box"><span class="spinner"></span>Loading pipeline data...</div>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top: 24px;">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Approvals</h3>
+        </div>
+        <div id="recentApprovals" class="card-list">
+          <div class="empty-state">No recent approvals</div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Hires</h3>
+        </div>
+        <div id="recentHires" class="card-list">
+          <div class="empty-state">No recent hires</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <div id="rejectModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Reject Job</h3>
+        <button id="closeRejectModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="rejectModalContent">
+        <div class="field">
+          <label for="rejectReason">Reason for Rejection *</label>
+          <textarea id="rejectReason" placeholder="Please provide a reason for rejecting this job posting..." required style="min-height: 100px;"></textarea>
+        </div>
+        <div class="row" style="margin-top: 16px;">
+          <button id="confirmRejectBtn" class="btn danger">Confirm Rejection</button>
+          <button id="cancelRejectBtn" class="btn secondary">Cancel</button>
+        </div>
+        <div id="rejectError" class="error"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="applicantsModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 800px;">
+      <div class="section-head">
+        <h3 class="panel-title" id="applicantsModalTitle">Job Applicants</h3>
+        <button id="closeApplicantsModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="applicantsModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const admin = requireRole("ADMIN");
+    
+    let allJobs = [];
+    let allApplications = [];
+    let allCompanies = [];
+    let currentRejectJobId = null;
+    let jobStatusChart = null;
+    let companyAppsChart = null;
+    let hiringTrendChart = null;
+
+    if (admin) {
+      mountNotificationsBell();
+      
+      document.getElementById("refreshPendingBtn").addEventListener("click", loadPendingJobs);
+      document.getElementById("refreshJobsBtn").addEventListener("click", loadAllJobs);
+      document.getElementById("jobSearchInput").addEventListener("input", renderAllJobs);
+      document.getElementById("jobStatusFilter").addEventListener("change", renderAllJobs);
+      document.getElementById("companyFilter").addEventListener("change", renderAllJobs);
+      
+      document.getElementById("closeRejectModalBtn").addEventListener("click", closeRejectModal);
+      document.getElementById("cancelRejectBtn").addEventListener("click", closeRejectModal);
+      document.getElementById("confirmRejectBtn").addEventListener("click", confirmReject);
+      document.getElementById("rejectModal").addEventListener("click", (e) => {
+        if (e.target.id === "rejectModal") closeRejectModal();
+      });
+      
+      document.getElementById("closeApplicantsModalBtn").addEventListener("click", closeApplicantsModal);
+      document.getElementById("applicantsModal").addEventListener("click", (e) => {
+        if (e.target.id === "applicantsModal") closeApplicantsModal();
+      });
+
+      loadDashboard().catch((error) => {
+        console.error("Dashboard load error", error);
+        showToast(error.message || "Unable to load dashboard", "error");
+      });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "ACTIVE") return "status-active";
+      if (normalized === "PENDING") return "status-pending";
+      if (normalized === "PAUSED") return "status-pending";
+      if (normalized === "CLOSED" || normalized === "REJECTED") return "status-closed";
+      return "status-default";
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    async function loadDashboard() {
+      try {
+        const [jobsResponse, appsResponse] = await Promise.all([
+          apiFetch("/jobs?limit=500"),
+          apiFetch("/applications")
+        ]);
+
+        allJobs = jobsResponse?.data?.jobs || [];
+        allApplications = appsResponse?.data || [];
+        
+        const companies = {};
+        allJobs.forEach(job => {
+          if (job.company) {
+            companies[job.company.id] = job.company;
+          }
+        });
+        allCompanies = Object.values(companies);
+
+        updateStats();
+        populateCompanyFilter();
+        renderPendingJobs();
+        renderAllJobs();
+        renderCompanyStats();
+        renderPipelineStats();
+        renderRecentActivity();
+        renderCharts();
+
+      } catch (error) {
+        showToast(error.message || "Failed to load dashboard", "error");
+      }
+    }
+
+    async function loadPendingJobs() {
+      document.getElementById("pendingJobsList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      try {
+        const response = await apiFetch("/admin/jobs/pending");
+        const pendingJobs = response?.data || [];
+        allJobs = allJobs.map(j => {
+          const updated = pendingJobs.find(p => p.id === j.id);
+          return updated || j;
+        });
+        renderPendingJobs();
+      } catch (error) {
+        showToast(error.message || "Failed to load pending jobs", "error");
+      }
+    }
+
+    async function loadAllJobs() {
+      document.getElementById("allJobsList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      try {
+        const response = await apiFetch("/jobs?limit=500");
+        allJobs = response?.data?.jobs || [];
+        renderAllJobs();
+        updateStats();
+      } catch (error) {
+        showToast(error.message || "Failed to load jobs", "error");
+      }
+    }
+
+    function updateStats() {
+      const total = allJobs.length;
+      const pending = allJobs.filter(j => String(j.status).toUpperCase() === "PENDING").length;
+      const active = allJobs.filter(j => String(j.status).toUpperCase() === "ACTIVE").length;
+      const totalApps = allApplications.length;
+      const hired = allApplications.filter(a => String(a.status).toUpperCase() === "ACCEPTED").length;
+      const interviews = allApplications.filter(a => String(a.status).toUpperCase() === "INTERVIEW").length;
+
+      document.getElementById("totalJobs").textContent = String(total);
+      document.getElementById("pendingJobs").textContent = String(pending);
+      document.getElementById("activeJobs").textContent = String(active);
+      document.getElementById("totalApplications").textContent = String(totalApps);
+      document.getElementById("totalInterviews").textContent = String(interviews);
+      document.getElementById("totalHired").textContent = String(hired);
+    }
+
+    function populateCompanyFilter() {
+      const select = document.getElementById("companyFilter");
+      select.innerHTML = '<option value="">All Companies</option>' +
+        allCompanies.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+    }
+
+    function renderPendingJobs() {
+      const container = document.getElementById("pendingJobsList");
+      const pendingJobs = allJobs.filter(j => String(j.status).toUpperCase() === "PENDING");
+
+      if (!pendingJobs.length) {
+        container.innerHTML = '<div class="empty-state">No pending job approvals</div>';
+        return;
+      }
+
+      container.innerHTML = pendingJobs.map(job => `
+        <article class="admin-job-card pending">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${job.title || "Untitled Job"}</h3>
+              <p class="list-sub">${job.company?.name || "Unknown Company"}</p>
+            </div>
+            <span class="status-badge status-pending">PENDING</span>
+          </div>
+          <div class="meta">
+            <span>📍 ${job.location || "Not specified"}</span>
+            <span>₹ ${job.salaryRange || "Not specified"}</span>
+            <span>Posted Posted ${formatDate(job.createdAt)}</span>
+          </div>
+          ${job.skills?.length ? `
+            <div class="skill-tags" style="margin-top: 8px;">
+              ${job.skills.slice(0, 5).map(s => `<span class="skill-tag">${s}</span>`).join("")}
+            </div>
+          ` : ''}
+          <div class="row" style="margin-top: 14px;">
+            <button type="button" data-job-id="${job.id}" class="approve-btn">Approve</button>
+            <button type="button" data-job-id="${job.id}" class="btn danger reject-btn">Reject</button>
+          </div>
+        </article>
+      `).join("");
+
+      container.querySelectorAll(".approve-btn").forEach(btn => {
+        btn.addEventListener("click", () => approveJob(btn.dataset.jobId, btn));
+      });
+
+      container.querySelectorAll(".reject-btn").forEach(btn => {
+        btn.addEventListener("click", () => openRejectModal(btn.dataset.jobId));
+      });
+    }
+
+    function filteredJobs() {
+      const term = document.getElementById("jobSearchInput").value.trim().toLowerCase();
+      const status = document.getElementById("jobStatusFilter").value.toUpperCase();
+      const companyId = document.getElementById("companyFilter").value;
+
+      return allJobs.filter(job => {
+        const matchesStatus = !status || String(job.status).toUpperCase() === status;
+        const matchesCompany = !companyId || job.company?.id === companyId;
+        const hay = `${job.title || ""} ${job.company?.name || ""}`.toLowerCase();
+        const matchesTerm = !term || hay.includes(term);
+        return matchesStatus && matchesTerm && matchesCompany;
+      });
+    }
+
+    function renderAllJobs() {
+      const container = document.getElementById("allJobsList");
+      const jobs = filteredJobs();
+
+      if (!jobs.length) {
+        container.innerHTML = '<div class="empty-state">No jobs match your filters</div>';
+        return;
+      }
+
+      container.innerHTML = jobs.slice(0, 50).map(job => {
+        const appCount = allApplications.filter(a => a.jobId === job.id).length;
+        const status = String(job.status).toUpperCase();
+        const canClose = status !== "CLOSED";
+
+        return `
+          <article class="admin-job-card">
+            <div class="row" style="justify-content: space-between; align-items: flex-start;">
+              <div class="list-main">
+                <h3 class="list-title">${job.title || "Untitled Job"}</h3>
+                <p class="list-sub">${job.company?.name || "Unknown Company"}</p>
+              </div>
+              <span class="status-badge ${statusClass(job.status)}">${status}</span>
+            </div>
+            <div class="meta">
+              <span>📍 ${job.location || "Not specified"}</span>
+              <span>Applicants: ${appCount} applicants</span>
+              <span>Posted ${formatDate(job.createdAt)}</span>
+            </div>
+            <div class="row" style="margin-top: 12px;">
+              <button type="button" data-job-id="${job.id}" class="btn secondary view-applicants-btn">View Applicants</button>
+              ${canClose ? `<button type="button" data-job-id="${job.id}" class="btn danger close-job-btn">Force Close</button>` : ''}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      container.querySelectorAll(".view-applicants-btn").forEach(btn => {
+        btn.addEventListener("click", () => viewApplicants(btn.dataset.jobId));
+      });
+
+      container.querySelectorAll(".close-job-btn").forEach(btn => {
+        btn.addEventListener("click", () => forceCloseJob(btn.dataset.jobId, btn));
+      });
+    }
+
+    function renderCompanyStats() {
+      const container = document.getElementById("companyStats");
+      
+      if (!allCompanies.length) {
+        container.innerHTML = '<div class="empty-state">No company data available</div>';
+        return;
+      }
+
+      const stats = allCompanies.map(company => {
+        const companyJobs = allJobs.filter(j => j.company?.id === company.id);
+        const companyApps = allApplications.filter(a => companyJobs.some(j => j.id === a.jobId));
+        const approved = companyApps.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
+        const hired = companyApps.filter(a => String(a.status).toUpperCase() === "ACCEPTED").length;
+        
+        return {
+          company,
+          jobs: companyJobs.length,
+          applications: companyApps.length,
+          approved,
+          hired
+        };
+      }).sort((a, b) => b.applications - a.applications);
+
+      container.innerHTML = stats.slice(0, 8).map(s => `
+        <div class="company-stat-card">
+          <h4>${s.company.name}</h4>
+          <div class="company-stat-row">
+            <span class="company-stat-item">
+              <span class="company-stat-value">${s.jobs}</span>
+              <span class="company-stat-label">Jobs</span>
+            </span>
+            <span class="company-stat-item">
+              <span class="company-stat-value">${s.applications}</span>
+              <span class="company-stat-label">Applications</span>
+            </span>
+            <span class="company-stat-item">
+              <span class="company-stat-value">${s.approved}</span>
+              <span class="company-stat-label">Approved</span>
+            </span>
+            <span class="company-stat-item">
+              <span class="company-stat-value">${s.hired}</span>
+              <span class="company-stat-label">Hired</span>
+            </span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderPipelineStats() {
+      const container = document.getElementById("pipelineStats");
+      
+      const statusCounts = {
+        APPLIED: 0,
+        REVIEWED: 0,
+        APPROVED: 0,
+        INTERVIEW: 0,
+        ACCEPTED: 0,
+        REJECTED: 0
+      };
+
+      allApplications.forEach(app => {
+        const status = String(app.status || "APPLIED").toUpperCase();
+        if (statusCounts.hasOwnProperty(status)) {
+          statusCounts[status]++;
+        }
+      });
+
+      const total = allApplications.length || 1;
+
+      container.innerHTML = `
+        <div class="pipeline-bars">
+          ${Object.entries(statusCounts).map(([status, count]) => {
+            const pct = Math.round((count / total) * 100);
+            const colors = {
+              APPLIED: '#94a3b8',
+              REVIEWED: '#3b82f6',
+              APPROVED: '#10b981',
+              INTERVIEW: '#8b5cf6',
+              ACCEPTED: '#059669',
+              REJECTED: '#ef4444'
+            };
+            return `
+              <div class="pipeline-item">
+                <div class="pipeline-label">
+                  <span>${status}</span>
+                  <span>${count} (${pct}%)</span>
+                </div>
+                <div class="pipeline-bar">
+                  <div class="pipeline-fill" style="width: ${pct}%; background: ${colors[status]}"></div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderRecentActivity() {
+      const approvedJobs = allJobs
+        .filter(j => String(j.status).toUpperCase() === "ACTIVE")
+        .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+        .slice(0, 5);
+
+      const hiredApps = allApplications
+        .filter(a => String(a.status).toUpperCase() === "ACCEPTED")
+        .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+        .slice(0, 5);
+
+      const approvalsContainer = document.getElementById("recentApprovals");
+      const hiresContainer = document.getElementById("recentHires");
+
+      if (!approvedJobs.length) {
+        approvalsContainer.innerHTML = '<div class="empty-state">No recent approvals</div>';
+      } else {
+        approvalsContainer.innerHTML = approvedJobs.map(job => `
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">${job.title}</p>
+              <p class="list-sub">${job.company?.name || "Company"}</p>
+            </div>
+            <span class="status-badge status-active">ACTIVE</span>
+          </div>
+        `).join("");
+      }
+
+      if (!hiredApps.length) {
+        hiresContainer.innerHTML = '<div class="empty-state">No recent hires</div>';
+      } else {
+        hiresContainer.innerHTML = hiredApps.map(app => `
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">${app.applicant?.name || "Candidate"}</p>
+              <p class="list-sub">${app.job?.title || "Job"}</p>
+            </div>
+            <span class="status-badge status-active">HIRED</span>
+          </div>
+        `).join("");
+      }
+    }
+
+    function renderCharts() {
+      const jobStatusCounts = allJobs.reduce((acc, job) => {
+        const status = String(job.status || "UNKNOWN").toUpperCase();
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const companyAppCounts = allCompanies.map(c => ({
+        name: c.name?.length > 15 ? c.name.slice(0, 15) + "..." : c.name,
+        count: allApplications.filter(a => {
+          const job = allJobs.find(j => j.id === a.jobId);
+          return job?.company?.id === c.id;
+        }).length
+      })).filter(c => c.count > 0).sort((a, b) => b.count - a.count).slice(0, 6);
+
+      const hiringByMonth = allApplications
+        .filter(a => String(a.status).toUpperCase() === "ACCEPTED")
+        .reduce((acc, app) => {
+          const date = new Date(app.updatedAt || app.createdAt);
+          if (!isNaN(date.getTime())) {
+            const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+            acc[key] = (acc[key] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+      const sortedMonths = Object.keys(hiringByMonth).sort().slice(-6);
+
+      if (jobStatusChart) jobStatusChart.destroy();
+      if (companyAppsChart) companyAppsChart.destroy();
+      if (hiringTrendChart) hiringTrendChart.destroy();
+
+      const statusColors = {
+        PENDING: "#f59e0b",
+        ACTIVE: "#10b981",
+        PAUSED: "#6b7280",
+        CLOSED: "#ef4444",
+        REJECTED: "#dc2626"
+      };
+
+      jobStatusChart = new Chart(document.getElementById("jobStatusChart"), {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(jobStatusCounts),
+          datasets: [{
+            data: Object.values(jobStatusCounts),
+            backgroundColor: Object.keys(jobStatusCounts).map(s => statusColors[s] || "#6b7280"),
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: "bottom" } },
+        },
+      });
+
+      companyAppsChart = new Chart(document.getElementById("companyAppsChart"), {
+        type: "bar",
+        data: {
+          labels: companyAppCounts.map(c => c.name),
+          datasets: [{
+            label: "Applications",
+            data: companyAppCounts.map(c => c.count),
+            backgroundColor: "rgba(15, 107, 255, 0.7)",
+            borderRadius: 8,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+        },
+      });
+
+      hiringTrendChart = new Chart(document.getElementById("hiringTrendChart"), {
+        type: "line",
+        data: {
+          labels: sortedMonths.map(m => {
+            const [year, month] = m.split("-");
+            return new Date(year, month - 1).toLocaleDateString(undefined, { month: "short", year: "2-digit" });
+          }),
+          datasets: [{
+            label: "Hired",
+            data: sortedMonths.map(m => hiringByMonth[m] || 0),
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            fill: true,
+            tension: 0.4,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+        },
+      });
+    }
+
+    async function approveJob(jobId, triggerBtn) {
+      setButtonBusy(triggerBtn, true, "Approving...");
+      try {
+        await apiFetch(`/admin/jobs/${jobId}/approve`, { method: "PUT" });
+        showToast("Job approved successfully!", "success");
+        
+        const jobIndex = allJobs.findIndex(j => j.id === jobId);
+        if (jobIndex >= 0) {
+          allJobs[jobIndex].status = "ACTIVE";
+        }
+        
+        updateStats();
+        renderPendingJobs();
+        renderAllJobs();
+        renderRecentActivity();
+        renderCharts();
+      } catch (error) {
+        showToast(error.message || "Failed to approve job", "error");
+      } finally {
+        setButtonBusy(triggerBtn, false, "Approve");
+      }
+    }
+
+    function openRejectModal(jobId) {
+      currentRejectJobId = jobId;
+      document.getElementById("rejectReason").value = "";
+      document.getElementById("rejectError").textContent = "";
+      document.getElementById("rejectModal").classList.add("open");
+      document.getElementById("rejectModal").setAttribute("aria-hidden", "false");
+    }
+
+    function closeRejectModal() {
+      currentRejectJobId = null;
+      document.getElementById("rejectModal").classList.remove("open");
+      document.getElementById("rejectModal").setAttribute("aria-hidden", "true");
+    }
+
+    async function confirmReject() {
+      if (!currentRejectJobId) return;
+
+      const reason = document.getElementById("rejectReason").value.trim();
+      if (!reason) {
+        document.getElementById("rejectError").textContent = "Please provide a reason";
+        return;
+      }
+
+      const btn = document.getElementById("confirmRejectBtn");
+      setButtonBusy(btn, true, "Rejecting...");
+
+      try {
+        await apiFetch(`/admin/jobs/${currentRejectJobId}/reject`, {
+          method: "PUT",
+          body: JSON.stringify({ reason })
+        });
+        
+        showToast("Job rejected", "info");
+        
+        const jobIndex = allJobs.findIndex(j => j.id === currentRejectJobId);
+        if (jobIndex >= 0) {
+          allJobs[jobIndex].status = "REJECTED";
+        }
+        
+        closeRejectModal();
+        updateStats();
+        renderPendingJobs();
+        renderAllJobs();
+        renderCharts();
+      } catch (error) {
+        document.getElementById("rejectError").textContent = error.message || "Failed to reject job";
+        showToast(error.message || "Failed to reject job", "error");
+      } finally {
+        setButtonBusy(btn, false, "Confirm Rejection");
+      }
+    }
+
+    async function forceCloseJob(jobId, triggerBtn) {
+      if (!confirm("Are you sure you want to force close this job?")) return;
+      
+      setButtonBusy(triggerBtn, true, "Closing...");
+      try {
+        await apiFetch(`/jobs/${jobId}`, { method: "DELETE" });
+        showToast("Job closed successfully", "success");
+        
+        const jobIndex = allJobs.findIndex(j => j.id === jobId);
+        if (jobIndex >= 0) {
+          allJobs[jobIndex].status = "CLOSED";
+        }
+        
+        updateStats();
+        renderAllJobs();
+        renderCharts();
+      } catch (error) {
+        showToast(error.message || "Failed to close job", "error");
+      } finally {
+        setButtonBusy(triggerBtn, false, "Force Close");
+      }
+    }
+
+    async function viewApplicants(jobId) {
+      const job = allJobs.find(j => j.id === jobId);
+      document.getElementById("applicantsModalTitle").textContent = `Applicants for: ${job?.title || "Job"}`;
+      document.getElementById("applicantsModalContent").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      document.getElementById("applicantsModal").classList.add("open");
+      document.getElementById("applicantsModal").setAttribute("aria-hidden", "false");
+
+      try {
+        const response = await apiFetch(`/jobs/${jobId}/applicants`);
+        const applicants = response?.data || [];
+        
+        if (!applicants.length) {
+          document.getElementById("applicantsModalContent").innerHTML = '<div class="empty-state">No applicants for this job</div>';
+          return;
+        }
+
+        document.getElementById("applicantsModalContent").innerHTML = `
+          <div class="card-list">
+            ${applicants.map(app => `
+              <div class="list-row">
+                <div class="list-main">
+                  <p class="list-title">${app.applicant?.name || "Candidate"}</p>
+                  <p class="list-sub">${app.applicant?.email || ""} • Applied ${formatDate(app.createdAt)}</p>
+                </div>
+                <span class="status-badge ${statusClass(app.status)}">${String(app.status || "APPLIED").toUpperCase()}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      } catch (error) {
+        document.getElementById("applicantsModalContent").innerHTML = '<div class="empty-state">Failed to load applicants</div>';
+      }
+    }
+
+    function closeApplicantsModal() {
+      document.getElementById("applicantsModal").classList.remove("open");
+      document.getElementById("applicantsModal").setAttribute("aria-hidden", "true");
+    }
+  </script>
+
+  <!-- SmartHire AI Chatbot - Admin Assistant -->
+  <script src="chatbot/chatbotEngine.js"></script>
+  <script src="chatbot/adminKnowledge.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new SmartHireChatbot({
+        knowledgeBase: window.adminKnowledge || [],
+        title: 'Admin Assistant',
+        welcomeMessage: "Hello! 👋 I'm your Admin Assistant. Ask me about approvals, user management, or platform analytics.",
+        suggestions: ['Approve recruiter', 'Pending employees', 'Platform stats']
+      });
+    });
+  </script>
+</body>
+</html>

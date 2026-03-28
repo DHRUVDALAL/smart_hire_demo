@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Accountant Profile</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+      </div>
+      <div>
+        <div class="brand">Smart Hire</div>
+        <div class="user-meta">Accountant Portal</div>
+      </div>
+    </div>
+    <div class="topbar-nav">
+      <a href="accountant-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="accountant-profile.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </div>
+    <div class="topbar-user">
+      <div class="user-avatar user-name">$</div>
+      <a href="#" class="btn danger small logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-text">
+        <h1 class="page-title">Accountant Profile</h1>
+        <p class="page-subtitle">Your finance profile and expertise</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+    <aside class="profile-sidebar">
+      <div class="card">
+        <div class="profile-avatar-section">
+          <div class="profile-avatar-lg" id="profileAvatar">A</div>
+          <h3 id="profileDisplayName">Accountant</h3>
+          <p class="profile-role">Finance Department</p>
+        </div>
+        
+        <div class="profile-completion">
+          <h4>Profile Completion</h4>
+          <div class="completion-ring-wrap">
+            <svg class="completion-ring" viewBox="0 0 100 100">
+              <circle class="completion-bg" cx="50" cy="50" r="42"></circle>
+              <circle class="completion-fill" id="completionCircle" cx="50" cy="50" r="42" 
+                      stroke-dasharray="264" stroke-dashoffset="264"></circle>
+            </svg>
+            <span class="completion-pct" id="completionPct">0%</span>
+          </div>
+        </div>
+
+        <ul class="profile-checklist">
+          <li id="checkName"><span class="check-icon">○</span> Name added</li>
+          <li id="checkPhone"><span class="check-icon">○</span> Phone number</li>
+          <li id="checkAddress"><span class="check-icon">○</span> Address</li>
+          <li id="checkBio"><span class="check-icon">○</span> Bio written</li>
+          <li id="checkExperience"><span class="check-icon">○</span> Experience added</li>
+          <li id="checkSpecialization"><span class="check-icon">○</span> Specialization set</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <h3 class="panel-title">Finance Stats</h3>
+        <div class="stats-mini">
+          <div class="stat-mini-item">
+            <span class="stat-mini-value" id="statInvoices">0</span>
+            <span class="stat-mini-label">Invoices Processed</span>
+          </div>
+          <div class="stat-mini-item">
+            <span class="stat-mini-value" id="statPayments">0</span>
+            <span class="stat-mini-label">Payments Recorded</span>
+          </div>
+          <div class="stat-mini-item">
+            <span class="stat-mini-value" id="statCompanies">0</span>
+            <span class="stat-mini-label">Companies Managed</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="profile-main">
+      <div class="card">
+        <h3 class="panel-title">Personal Information</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" placeholder="Enter your full name" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" readonly class="readonly-field" />
+          </div>
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" placeholder="Enter phone number" />
+          </div>
+          <div class="field">
+            <label for="address">Address</label>
+            <input type="text" id="address" placeholder="Enter your address" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="bio">Bio</label>
+          <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <h3 class="panel-title">💼 Professional Information</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="role">Role</label>
+            <input type="text" id="role" value="Accountant" readonly class="readonly-field" />
+          </div>
+          <div class="field">
+            <label for="department">Department</label>
+            <input type="text" id="department" value="Finance" readonly class="readonly-field" />
+          </div>
+          <div class="field">
+            <label for="experience">Experience (years)</label>
+            <input type="number" id="experience" min="0" max="50" placeholder="Years of experience" />
+          </div>
+          <div class="field">
+            <label for="specialization">Specialization</label>
+            <select id="specialization">
+              <option value="">Select specialization</option>
+              <option value="Billing & Invoicing">Billing & Invoicing</option>
+              <option value="Financial Analysis">Financial Analysis</option>
+              <option value="Accounts Payable">Accounts Payable</option>
+              <option value="Accounts Receivable">Accounts Receivable</option>
+              <option value="Tax & Compliance">Tax & Compliance</option>
+              <option value="Payroll Management">Payroll Management</option>
+              <option value="General Accounting">General Accounting</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <h3 class="panel-title">🎓 Certifications & Skills</h3>
+        <div class="field">
+          <label>Certifications</label>
+          <div class="skills-input-wrap">
+            <input type="text" id="certInput" placeholder="e.g., CPA, CMA, ACCA" />
+            <button type="button" id="addCertBtn" class="btn small">Add</button>
+          </div>
+          <div id="certTags" class="skills-tags"></div>
+        </div>
+        <div class="field" style="margin-top: 16px;">
+          <label>Software Proficiency</label>
+          <div class="software-chips">
+            <label class="chip-checkbox">
+              <input type="checkbox" id="softQuickbooks" /> QuickBooks
+            </label>
+            <label class="chip-checkbox">
+              <input type="checkbox" id="softSAP" /> SAP
+            </label>
+            <label class="chip-checkbox">
+              <input type="checkbox" id="softExcel" /> Advanced Excel
+            </label>
+            <label class="chip-checkbox">
+              <input type="checkbox" id="softXero" /> Xero
+            </label>
+            <label class="chip-checkbox">
+              <input type="checkbox" id="softTally" /> Tally
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 20px; gap: 12px;">
+        <button id="saveBtn" class="btn">💾 Save Profile</button>
+        <button id="resetBtn" class="btn secondary">↩ Reset Changes</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  const accountant = requireRole("ACCOUNTANT");
+  
+  let originalData = {};
+  let certifications = [];
+
+  if (accountant) {
+    mountNotificationsBell();
+    
+    document.getElementById("saveBtn").addEventListener("click", saveProfile);
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
+    document.getElementById("addCertBtn").addEventListener("click", addCert);
+    document.getElementById("certInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addCert();
+      }
+    });
+
+    loadProfile();
+    loadFinanceStats();
+  }
+
+  async function loadProfile() {
+    try {
+      const response = await apiFetch("/profile");
+      const profile = response?.data || {};
+      
+      originalData = { ...profile };
+      
+      document.getElementById("name").value = profile.name || "";
+      document.getElementById("email").value = profile.email || "";
+      document.getElementById("phone").value = profile.phone || "";
+      document.getElementById("address").value = profile.address || "";
+      document.getElementById("bio").value = profile.bio || "";
+      document.getElementById("experience").value = profile.experience || "";
+      document.getElementById("specialization").value = profile.specialization || "";
+      
+      if (profile.certifications) {
+        certifications = typeof profile.certifications === "string" 
+          ? profile.certifications.split(",").map(s => s.trim()).filter(Boolean)
+          : (Array.isArray(profile.certifications) ? profile.certifications : []);
+      }
+      renderCerts();
+      
+      if (profile.software) {
+        const software = profile.software.split(",").map(s => s.trim().toLowerCase());
+        if (software.includes("quickbooks")) document.getElementById("softQuickbooks").checked = true;
+        if (software.includes("sap")) document.getElementById("softSAP").checked = true;
+        if (software.includes("excel") || software.includes("advanced excel")) document.getElementById("softExcel").checked = true;
+        if (software.includes("xero")) document.getElementById("softXero").checked = true;
+        if (software.includes("tally")) document.getElementById("softTally").checked = true;
+      }
+      
+      if (profile.name) {
+        document.getElementById("profileAvatar").textContent = profile.name.charAt(0).toUpperCase();
+        document.getElementById("profileDisplayName").textContent = profile.name;
+      }
+      
+      updateCompletion();
+      
+    } catch (error) {
+      showToast(error.message || "Failed to load profile", "error");
+    }
+  }
+
+  async function loadFinanceStats() {
+    try {
+      document.getElementById("statInvoices").textContent = "156";
+      document.getElementById("statPayments").textContent = "142";
+      document.getElementById("statCompanies").textContent = "28";
+    } catch (error) {
+      console.log("Stats load error", error);
+    }
+  }
+
+  function addCert() {
+    const input = document.getElementById("certInput");
+    const cert = input.value.trim();
+    
+    if (cert && !certifications.includes(cert)) {
+      certifications.push(cert);
+      renderCerts();
+      updateCompletion();
+    }
+    input.value = "";
+    input.focus();
+  }
+
+  function removeCert(index) {
+    certifications.splice(index, 1);
+    renderCerts();
+    updateCompletion();
+  }
+
+  function renderCerts() {
+    const container = document.getElementById("certTags");
+    if (!certifications.length) {
+      container.innerHTML = '<span class="no-skills">No certifications added</span>';
+      return;
+    }
+    
+    container.innerHTML = certifications.map((cert, idx) => `
+      <span class="skill-tag cert">
+        ${cert}
+        <button type="button" onclick="removeCert(${idx})" class="skill-remove">×</button>
+      </span>
+    `).join("");
+  }
+
+  function updateCompletion() {
+    const checks = {
+      checkName: !!document.getElementById("name").value.trim(),
+      checkPhone: !!document.getElementById("phone").value.trim(),
+      checkAddress: !!document.getElementById("address").value.trim(),
+      checkBio: !!document.getElementById("bio").value.trim(),
+      checkExperience: !!document.getElementById("experience").value,
+      checkSpecialization: !!document.getElementById("specialization").value
+    };
+
+    let completed = 0;
+    const total = Object.keys(checks).length;
+
+    for (const [id, done] of Object.entries(checks)) {
+      const el = document.getElementById(id);
+      const icon = el.querySelector(".check-icon");
+      if (done) {
+        el.classList.add("completed");
+        icon.textContent = "✓";
+        completed++;
+      } else {
+        el.classList.remove("completed");
+        icon.textContent = "○";
+      }
+    }
+
+    const pct = Math.round((completed / total) * 100);
+    document.getElementById("completionPct").textContent = pct + "%";
+
+    const circumference = 264;
+    const offset = circumference - (pct / 100 * circumference);
+    document.getElementById("completionCircle").style.strokeDashoffset = offset;
+  }
+
+  async function saveProfile() {
+    const btn = document.getElementById("saveBtn");
+    const name = document.getElementById("name").value.trim();
+    
+    if (!name) {
+      showToast("Name is required", "error");
+      return;
+    }
+    
+    setButtonBusy(btn, true, "Saving...");
+    
+    try {
+      const software = [];
+      if (document.getElementById("softQuickbooks").checked) software.push("QuickBooks");
+      if (document.getElementById("softSAP").checked) software.push("SAP");
+      if (document.getElementById("softExcel").checked) software.push("Advanced Excel");
+      if (document.getElementById("softXero").checked) software.push("Xero");
+      if (document.getElementById("softTally").checked) software.push("Tally");
+      
+      const payload = {
+        name,
+        phone: document.getElementById("phone").value.trim() || null,
+        address: document.getElementById("address").value.trim() || null,
+        bio: document.getElementById("bio").value.trim() || null,
+        experience: parseInt(document.getElementById("experience").value) || null,
+        specialization: document.getElementById("specialization").value || null,
+        certifications: certifications.join(", ") || null,
+        software: software.join(", ") || null
+      };
+      
+      await apiFetch("/profile", {
+        method: "PUT",
+        body: JSON.stringify(payload)
+      });
+      
+      originalData = { ...payload };
+      
+      document.getElementById("profileAvatar").textContent = name.charAt(0).toUpperCase();
+      document.getElementById("profileDisplayName").textContent = name;
+      
+      showToast("Profile saved successfully!", "success");
+      updateCompletion();
+      
+    } catch (error) {
+      showToast(error.message || "Failed to save profile", "error");
+    } finally {
+      setButtonBusy(btn, false, "💾 Save Profile");
+    }
+  }
+
+  function resetForm() {
+    document.getElementById("name").value = originalData.name || "";
+    document.getElementById("phone").value = originalData.phone || "";
+    document.getElementById("address").value = originalData.address || "";
+    document.getElementById("bio").value = originalData.bio || "";
+    document.getElementById("experience").value = originalData.experience || "";
+    document.getElementById("specialization").value = originalData.specialization || "";
+    
+    if (originalData.certifications) {
+      certifications = typeof originalData.certifications === "string"
+        ? originalData.certifications.split(",").map(s => s.trim()).filter(Boolean)
+        : (Array.isArray(originalData.certifications) ? originalData.certifications : []);
+    } else {
+      certifications = [];
+    }
+    
+    renderCerts();
+    updateCompletion();
+    showToast("Changes reset", "info");
+  }
+
+  document.querySelectorAll("#name, #phone, #address, #bio, #experience, #specialization").forEach(el => {
+    el.addEventListener("input", updateCompletion);
+    el.addEventListener("change", updateCompletion);
+  });
+</script>
+</body>
+</html>

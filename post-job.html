@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Post Job</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Recruiter Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="recruiter-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="post-job.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+          Post Job
+        </a>
+        <a href="recruiter-jobs.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Manage Jobs
+        </a>
+        <a href="recruiter-applications.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Applications
+        </a>
+        <a href="interview-schedule.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Interviews
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">R</div>
+        <a href="#" class="btn danger small logout-btn">Logout</a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Post New Job</h1>
+          <p class="page-subtitle">Create a new job listing for your company</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <section class="card">
+        <h3 class="panel-title">Job Details</h3>
+        <form id="jobForm" novalidate>
+          <div class="field">
+            <label for="title">Job Title</label>
+            <input id="title" required placeholder="Example: Senior Frontend Engineer" />
+          </div>
+
+          <div class="field">
+            <label for="description">Job Description</label>
+            <textarea id="description" required placeholder="Describe responsibilities, goals, and team context"></textarea>
+          </div>
+
+          <div class="grid-2" style="margin-top: 0;">
+            <div class="field">
+              <label for="location">City / Location</label>
+              <input id="location" placeholder="Example: Pune, Bengaluru, Mumbai" />
+            </div>
+            <div class="field">
+              <label for="locality">Locality (Sub-location)</label>
+              <input id="locality" placeholder="Example: Baner, Koramangala, Andheri West" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="salaryRange">Salary Range</label>
+            <input id="salaryRange" placeholder="Example: ₹3-6 LPA or ₹50,000-80,000/month" />
+          </div>
+
+          <div class="field">
+            <label for="skills">Key Skills (comma separated)</label>
+            <input id="skills" placeholder="React, TypeScript, API Design" />
+          </div>
+
+          <div class="row">
+            <button id="submitBtn" type="submit">Create Job</button>
+            <a class="btn secondary" href="jobs.html">Cancel</a>
+          </div>
+          <div id="formError" class="error"></div>
+        </form>
+      </section>
+
+      <aside class="card">
+        <h3 class="panel-title">Publishing Notes</h3>
+        <div class="card-list">
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">Approval Workflow</p>
+              <p class="list-sub">Recruiter jobs are submitted as pending and reviewed by admin.</p>
+            </div>
+          </div>
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">Candidate Quality</p>
+              <p class="list-sub">Clear role details improve conversion and application quality.</p>
+            </div>
+          </div>
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">Skill Keywords</p>
+              <p class="list-sub">Use accurate keywords to improve profile matching.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const recruiter = requireRole("RECRUITER");
+    const form = document.getElementById("jobForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const formError = document.getElementById("formError");
+
+    if (recruiter) {
+      mountNotificationsBell();
+      form.addEventListener("submit", onSubmit);
+    }
+
+    async function onSubmit(event) {
+      event.preventDefault();
+      formError.textContent = "";
+
+      const payload = {
+        title: document.getElementById("title").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        location: document.getElementById("location").value.trim() || null,
+        locality: document.getElementById("locality").value.trim() || null,
+        salaryRange: document.getElementById("salaryRange").value.trim() || null,
+        skills: document
+          .getElementById("skills")
+          .value
+          .split(",")
+          .map((value) => value.trim())
+          .filter(Boolean),
+      };
+
+      if (!payload.title || !payload.description) {
+        formError.textContent = "Title and description are required.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creating...";
+
+      try {
+        await apiFetch("/jobs", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        showToast("Job created and sent for approval", "success");
+        form.reset();
+        setTimeout(() => {
+          window.location.href = "jobs.html";
+        }, 1000);
+      } catch (error) {
+        formError.textContent = error.message || "Unable to create job.";
+        showToast(formError.textContent, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Create Job";
+      }
+    }
+  </script>
+</body>
+</html>

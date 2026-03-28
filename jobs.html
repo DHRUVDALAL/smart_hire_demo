@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Browse Jobs</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Applicant Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="applicant-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="jobs.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Browse Jobs
+        </a>
+        <a href="applications.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          My Applications
+        </a>
+        <a href="applicant-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">A</div>
+        <a href="#" class="btn danger small logout-btn">Logout</a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Browse Jobs</h1>
+          <p class="page-subtitle">Find opportunities that match your skills</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Available Positions</h3>
+        <button id="refreshBtn" class="btn secondary" type="button">Refresh</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" class="search" placeholder="Search jobs by title, description, or skills..." />
+        <select id="locationFilter">
+          <option value="">All Cities</option>
+        </select>
+        <select id="localityFilter">
+          <option value="">All Localities</option>
+        </select>
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option value="Full-time">Full-time</option>
+          <option value="Part-time">Part-time</option>
+          <option value="Contract">Contract</option>
+          <option value="Remote">Remote</option>
+        </select>
+        <select id="matchFilter">
+          <option value="">All Jobs</option>
+          <option value="recommended">Recommended (50%+ match)</option>
+        </select>
+      </div>
+
+      <div class="stats-bar" style="margin-top: 12px; display: flex; gap: 16px; font-size: 0.85rem; color: var(--muted);">
+        <span id="totalCount">0 jobs found</span>
+        <span id="recommendedCount">0 recommended</span>
+      </div>
+
+      <div id="jobsList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading available jobs...</div>
+      </div>
+    </section>
+  </div>
+
+  <div id="jobDetailModal" class="modal" aria-hidden="true">
+    <div class="modal-card job-detail-modal">
+      <button id="closeModalBtn" class="modal-close-btn" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="modalJobContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const applicant = requireRole("APPLICANT");
+    const jobsList = document.getElementById("jobsList");
+    const searchInput = document.getElementById("searchInput");
+    const locationFilter = document.getElementById("locationFilter");
+    const localityFilter = document.getElementById("localityFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const matchFilter = document.getElementById("matchFilter");
+    const jobDetailModal = document.getElementById("jobDetailModal");
+
+    let allJobs = [];
+    let userSkills = [];
+    let appliedJobIds = new Set();
+
+    if (applicant) {
+      mountNotificationsBell();
+      document.getElementById("refreshBtn").addEventListener("click", loadJobs);
+      searchInput.addEventListener("input", renderJobs);
+      locationFilter.addEventListener("change", () => {
+        populateLocalityFilter(allJobs);
+        renderJobs();
+      });
+      localityFilter.addEventListener("change", renderJobs);
+      typeFilter.addEventListener("change", renderJobs);
+      matchFilter.addEventListener("change", renderJobs);
+      document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+      jobDetailModal.addEventListener("click", (event) => {
+        if (event.target === jobDetailModal) closeModal();
+      });
+
+      loadJobs().catch((error) => {
+        console.error("Load jobs failed", error);
+        showToast(error.message || "Failed to load jobs", "error");
+      });
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function calculateSkillMatch(jobSkills, userSkillsList) {
+      if (!jobSkills?.length || !userSkillsList?.length) return 0;
+      const jobSet = new Set(jobSkills.map(s => s.toLowerCase().trim()));
+      const userSet = new Set(userSkillsList.map(s => s.toLowerCase().trim()));
+      let matches = 0;
+      jobSet.forEach(skill => {
+        if (userSet.has(skill)) matches++;
+      });
+      return jobSkills.length > 0 ? Math.round((matches / jobSkills.length) * 100) : 0;
+    }
+
+    function populateLocationFilter(jobs) {
+      const locations = [...new Set(jobs.map(j => j.location).filter(Boolean))].sort();
+      locationFilter.innerHTML = '<option value="">All Cities</option>' +
+        locations.map(loc => `<option value="${loc}">${loc}</option>`).join("");
+    }
+
+    function populateLocalityFilter(jobs) {
+      // Use locality field for sub-locations (Baner, Kothrud, etc.)
+      const localities = [...new Set(
+        jobs
+          .map(j => j.locality)
+          .filter(Boolean)
+          .map(loc => loc.trim())
+          .filter(loc => loc.length > 0)
+      )].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+      
+      localityFilter.innerHTML = '<option value="">All Localities</option>' +
+        localities.map(loc => `<option value="${loc}">${loc}</option>`).join("");
+    }
+
+    function filteredJobs() {
+      const term = searchInput.value.trim().toLowerCase();
+      const location = locationFilter.value;
+      const locality = localityFilter.value;
+      const type = typeFilter.value.toLowerCase();
+      const matchOnly = matchFilter.value === "recommended";
+
+      return allJobs
+        .map(job => ({
+          ...job,
+          matchScore: calculateSkillMatch(job.skills || [], userSkills),
+          hasApplied: appliedJobIds.has(job.id)
+        }))
+        .filter(job => {
+          const jobStatus = String(job.status || "").toUpperCase();
+          if (jobStatus !== "ACTIVE") return false;
+          
+          const hay = `${job.title || ""} ${job.description || ""} ${(job.skills || []).join(" ")}`.toLowerCase();
+          const matchesTerm = !term || hay.includes(term);
+          const matchesLocation = !location || job.location === location;
+          const matchesLocality = !locality || job.locality === locality;
+          const matchesType = !type || (job.jobType || "").toLowerCase().includes(type) || 
+                             (job.type || "").toLowerCase().includes(type);
+          const matchesRecommended = !matchOnly || job.matchScore >= 50;
+          
+          return matchesTerm && matchesLocation && matchesLocality && matchesType && matchesRecommended;
+        })
+        .sort((a, b) => b.matchScore - a.matchScore);
+    }
+
+    function renderJobs() {
+      const jobs = filteredJobs();
+      const recommendedJobs = jobs.filter(j => j.matchScore >= 50);
+
+      document.getElementById("totalCount").textContent = `${jobs.length} jobs found`;
+      document.getElementById("recommendedCount").textContent = `${recommendedJobs.length} recommended`;
+
+      if (!jobs.length) {
+        jobsList.innerHTML = '<div class="empty-state">No jobs match your search criteria. Try adjusting the filters.</div>';
+        return;
+      }
+
+      jobsList.innerHTML = jobs.map((job, index) => {
+        const isRecommended = job.matchScore >= 50;
+        const hasApplied = job.hasApplied;
+        const locationDisplay = job.locality ? `${job.location} • ${job.locality}` : (job.location || "Not specified");
+
+        return `
+        <article class="job-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <div class="row" style="gap: 8px; align-items: center; margin-bottom: 4px;">
+                <h3 class="list-title">${job.title || "Untitled Job"}</h3>
+                ${isRecommended ? '<span class="recommended-badge">Recommended</span>' : ''}
+                ${hasApplied ? '<span class="applied-badge">Applied</span>' : ''}
+              </div>
+              <p class="list-sub">${job.company?.name || "Company"}</p>
+            </div>
+            ${isRecommended ? `<span class="status-badge status-active">${job.matchScore}% Match</span>` : ''}
+          </div>
+
+          <p class="job-description">${(job.description || "No description provided.").substring(0, 150)}${(job.description || "").length > 150 ? "..." : ""}</p>
+
+          <div class="meta">
+            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${locationDisplay}</span>
+            <span>${job.salaryRange || "Competitive"}</span>
+            <span>Posted ${formatDate(job.createdAt)}</span>
+          </div>
+
+          <div class="skill-tags" style="margin-top: 10px;">
+            ${(job.skills || []).slice(0, 5).map(s => {
+              const isMatch = userSkills.map(us => us.toLowerCase()).includes(s.toLowerCase());
+              return `<span class="skill-tag ${isMatch ? 'skill-match' : ''}">${s}</span>`;
+            }).join("")}
+            ${(job.skills || []).length > 5 ? `<span class="skill-tag">+${job.skills.length - 5} more</span>` : ''}
+          </div>
+
+          <div class="row" style="margin-top: 14px;">
+            ${hasApplied 
+              ? '<button class="btn secondary" disabled>Already Applied</button>'
+              : `<button type="button" data-job-id="${job.id}" data-index="${index}" class="apply-btn">Apply Now</button>`
+            }
+            <button type="button" data-index="${index}" class="btn secondary view-btn">View Details</button>
+          </div>
+        </article>
+      `;
+      }).join("");
+
+      document.querySelectorAll(".apply-btn").forEach((btn) => {
+        btn.addEventListener("click", () => applyToJob(jobs[Number(btn.dataset.index)], btn));
+      });
+
+      document.querySelectorAll(".view-btn").forEach((btn) => {
+        btn.addEventListener("click", () => viewJobDetails(jobs[Number(btn.dataset.index)]));
+      });
+    }
+
+    async function loadJobs() {
+      jobsList.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading available jobs...</div>';
+
+      try {
+        const [jobsResponse, appsResponse, profileResponse] = await Promise.all([
+          apiFetch("/jobs?limit=100"),
+          apiFetch("/applications/my"),
+          apiFetch("/profile").catch(() => ({ data: {} }))
+        ]);
+
+        allJobs = jobsResponse?.data?.jobs || [];
+        const applications = appsResponse?.data || [];
+        const profile = profileResponse?.data || {};
+
+        userSkills = profile.skills || [];
+        appliedJobIds = new Set(applications.map(a => a.jobId));
+
+        populateLocationFilter(allJobs);
+        populateLocalityFilter(allJobs);
+        renderJobs();
+
+      } catch (error) {
+        jobsList.innerHTML = '<div class="empty-state">Failed to load jobs. Please try again.</div>';
+        showToast(error.message || "Failed to load jobs", "error");
+      }
+    }
+
+    function viewJobDetails(job) {
+      const locationDisplay = job.locality ? `${job.location} • ${job.locality}` : (job.location || "Not specified");
+      
+      document.getElementById("modalJobContent").innerHTML = `
+        <div class="job-modal-header">
+          <div class="job-modal-title-wrap">
+            <h2 class="job-modal-title">${job.title || "Untitled Job"}</h2>
+            <p class="job-modal-company">${job.company?.name || "Company"}</p>
+            <p class="job-modal-location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${locationDisplay}
+            </p>
+          </div>
+          ${job.matchScore >= 50 ? `<span class="job-modal-match">${job.matchScore}% Match</span>` : ''}
+        </div>
+
+        <div class="job-info-cards">
+          <div class="job-info-card">
+            <div class="job-info-icon salary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="job-info-content">
+              <span class="job-info-label">Salary</span>
+              <span class="job-info-value">${job.salaryRange || "Competitive"}</span>
+            </div>
+          </div>
+          <div class="job-info-card">
+            <div class="job-info-icon location">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="job-info-content">
+              <span class="job-info-label">Location</span>
+              <span class="job-info-value">${job.location || "Not specified"}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="job-modal-section">
+          <h4 class="job-modal-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Job Description
+          </h4>
+          <p class="job-modal-description">${job.description || "No description provided."}</p>
+        </div>
+
+        <div class="job-modal-section">
+          <h4 class="job-modal-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Required Skills
+          </h4>
+          <div class="job-modal-skills">
+            ${(job.skills || []).map(s => {
+              const isMatch = userSkills.map(us => us.toLowerCase()).includes(s.toLowerCase());
+              return `<span class="skill-tag ${isMatch ? 'skill-match' : ''}">${s}</span>`;
+            }).join("") || '<span class="text-muted">No skills specified</span>'}
+          </div>
+        </div>
+
+        <div class="job-modal-meta">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Posted ${formatDate(job.createdAt)}
+          </span>
+          ${job.jobType ? `<span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            ${job.jobType}
+          </span>` : ''}
+        </div>
+
+        <div class="job-modal-actions">
+          ${appliedJobIds.has(job.id)
+            ? '<button class="btn secondary" disabled>Already Applied</button>'
+            : `<button type="button" id="modalApplyBtn" class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                Apply Now
+              </button>`
+          }
+        </div>
+      `;
+
+      const applyBtn = document.getElementById("modalApplyBtn");
+      if (applyBtn) {
+        applyBtn.addEventListener("click", () => applyToJob(job, applyBtn));
+      }
+
+      jobDetailModal.classList.add("open");
+      jobDetailModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      jobDetailModal.classList.remove("open");
+      jobDetailModal.setAttribute("aria-hidden", "true");
+    }
+
+    async function applyToJob(job, triggerBtn) {
+      if (!job || appliedJobIds.has(job.id)) return;
+
+      setButtonBusy(triggerBtn, true, "Applying...");
+
+      try {
+        await apiFetch("/applications", {
+          method: "POST",
+          body: JSON.stringify({ jobId: job.id }),
+        });
+
+        appliedJobIds.add(job.id);
+        showToast("Applied successfully! Good luck with your application.", "success");
+        closeModal();
+        renderJobs();
+
+      } catch (error) {
+        showToast(error.message || "Failed to apply. Please try again.", "error");
+      } finally {
+        setButtonBusy(triggerBtn, false, "Apply Now");
+      }
+    }
+  </script>
+</body>
+</html>

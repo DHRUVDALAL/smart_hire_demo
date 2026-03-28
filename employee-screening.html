@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Candidate Screening</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Employee Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="employee-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="employee-screening.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Candidate Screening
+        </a>
+        <a href="employee-shortlist.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Shortlist Manager
+        </a>
+        <a href="employee-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">E</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Candidate Screening</h1>
+          <p class="page-subtitle">Review, approve, reject, or blacklist candidates</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Applications</p>
+            <h2 id="totalApplications" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Reviewed</p>
+            <h2 id="reviewedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Approved</p>
+            <h2 id="approvedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Rejected</p>
+            <h2 id="rejectedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">All Candidates</h3>
+        <button id="refreshBtn" class="btn secondary" type="button">Refresh</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" class="search" placeholder="Search by candidate name or job title..." />
+        <select id="statusFilter">
+          <option value="">All Statuses</option>
+          <option value="APPLIED">Applied (Pending)</option>
+          <option value="REVIEWED">Reviewed</option>
+          <option value="APPROVED">Approved</option>
+          <option value="HOLD">On Hold</option>
+          <option value="REJECTED">Rejected</option>
+          <option value="BLACKLISTED">Blacklisted</option>
+        </select>
+        <select id="companyFilter">
+          <option value="">All Companies</option>
+        </select>
+        <select id="jobFilter">
+          <option value="">All Jobs</option>
+        </select>
+      </div>
+
+      <div id="applicationsList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading applications...</div>
+      </div>
+    </section>
+
+    <section class="card" id="blacklistedSection" style="margin-top: 24px; display: none;">
+      <div class="section-head">
+        <h3 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg>
+          Blacklisted Candidates
+        </h3>
+        <button id="toggleBlacklistBtn" class="btn secondary" type="button">Show/Hide</button>
+      </div>
+      <div id="blacklistedList" class="card-list">
+        <div class="empty-state">No blacklisted candidates</div>
+      </div>
+    </section>
+  </div>
+
+  <div id="reviewModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 560px;">
+      <div class="section-head">
+        <h3 class="panel-title" style="display: flex; align-items: center; gap: 8px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Review Candidate
+        </h3>
+        <button id="closeReviewModalBtn" class="btn secondary" type="button">Close</button>
+      </div>
+      <div id="reviewModalContent">
+        <div class="candidate-info" id="candidateInfo" style="background: var(--bg-light); padding: 16px; border-radius: 8px; margin-bottom: 20px;"></div>
+        <form id="reviewForm" novalidate>
+          <div class="field">
+            <label for="reviewNotes" style="display: flex; align-items: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Candidate Evaluation Notes
+            </label>
+            <textarea id="reviewNotes" placeholder="Strong React experience.
+Portfolio looks good.
+Recommended for recruiter interview." style="min-height: 140px;"></textarea>
+          </div>
+          <div class="field">
+            <label for="profileFeedback" style="display: flex; align-items: center; gap: 6px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Profile Feedback
+            </label>
+            <textarea id="profileFeedback" placeholder="Summary of candidate's profile strengths and areas for improvement..." style="min-height: 100px;"></textarea>
+          </div>
+          <div class="row" style="margin-top: 20px; gap: 12px;">
+            <button type="submit" id="submitReviewBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2;margin-right:6px;"><polyline points="20 6 9 17 4 12"/></svg>
+              Submit Review
+            </button>
+            <button type="button" id="cancelReviewBtn" class="btn secondary">Cancel</button>
+          </div>
+          <div id="reviewError" class="error" style="margin-top: 12px;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="blacklistModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 420px;">
+      <div class="section-head">
+        <h3 class="panel-title">Blacklist Candidate</h3>
+        <button id="closeBlacklistModalBtn" class="btn secondary" type="button">Close</button>
+      </div>
+      <div id="blacklistModalContent">
+        <p style="margin-bottom: 16px; color: var(--muted);">Are you sure you want to blacklist this candidate?</p>
+        <p id="blacklistCandidateName" style="font-weight: 600; margin-bottom: 16px;"></p>
+        <p style="margin-bottom: 20px; font-size: 13px; color: var(--danger);">
+          Blacklisted candidates will be removed from the screening queue and won't appear in normal application lists.
+        </p>
+        <div class="field">
+          <label for="blacklistReason">Reason for Blacklisting (optional)</label>
+          <textarea id="blacklistReason" placeholder="Enter reason..." style="min-height: 80px;"></textarea>
+        </div>
+        <div class="row" style="margin-top: 16px;">
+          <button type="button" id="confirmBlacklistBtn" class="btn danger">Confirm Blacklist</button>
+          <button type="button" id="cancelBlacklistBtn" class="btn secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applicant Details Modal -->
+  <div id="applicantModal" class="modal" aria-hidden="true">
+    <div class="modal-card job-detail-modal" style="max-width: 700px;">
+      <button id="closeApplicantModal" type="button" class="modal-close-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="applicantModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading applicant details...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const employee = requireRole("EMPLOYEE");
+    const applicationsList = document.getElementById("applicationsList");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+    const companyFilter = document.getElementById("companyFilter");
+    const jobFilter = document.getElementById("jobFilter");
+    const reviewModal = document.getElementById("reviewModal");
+    const reviewForm = document.getElementById("reviewForm");
+    const reviewError = document.getElementById("reviewError");
+    const blacklistModal = document.getElementById("blacklistModal");
+    const blacklistedSection = document.getElementById("blacklistedSection");
+    const blacklistedList = document.getElementById("blacklistedList");
+    const applicantModal = document.getElementById("applicantModal");
+    const applicantModalContent = document.getElementById("applicantModalContent");
+
+    let allApplications = [];
+    let allJobs = [];
+    let blacklistedApps = [];
+    let currentReviewAppId = null;
+    let currentBlacklistAppId = null;
+
+    if (employee) {
+      mountNotificationsBell();
+      loadBlacklist();
+      
+      document.getElementById("refreshBtn").addEventListener("click", loadApplications);
+      searchInput.addEventListener("input", renderApplications);
+      statusFilter.addEventListener("change", renderApplications);
+      companyFilter.addEventListener("change", renderApplications);
+      jobFilter.addEventListener("change", renderApplications);
+      
+      document.getElementById("closeReviewModalBtn").addEventListener("click", closeReviewModal);
+      document.getElementById("cancelReviewBtn").addEventListener("click", closeReviewModal);
+      reviewModal.addEventListener("click", (e) => { if (e.target === reviewModal) closeReviewModal(); });
+      reviewForm.addEventListener("submit", submitReview);
+
+      document.getElementById("closeBlacklistModalBtn").addEventListener("click", closeBlacklistModal);
+      document.getElementById("cancelBlacklistBtn").addEventListener("click", closeBlacklistModal);
+      document.getElementById("confirmBlacklistBtn").addEventListener("click", confirmBlacklist);
+      blacklistModal.addEventListener("click", (e) => { if (e.target === blacklistModal) closeBlacklistModal(); });
+      document.getElementById("toggleBlacklistBtn").addEventListener("click", toggleBlacklistedSection);
+
+      document.getElementById("closeApplicantModal").addEventListener("click", closeApplicantModal);
+      applicantModal.addEventListener("click", (e) => { if (e.target === applicantModal) closeApplicantModal(); });
+
+      loadApplications().catch((error) => {
+        console.error("Load error", error);
+        showToast(error.message || "Unable to load applications", "error");
+      });
+    }
+
+    function loadBlacklist() {
+      try {
+        blacklistedApps = JSON.parse(localStorage.getItem("blacklistedApps") || "[]");
+      } catch {
+        blacklistedApps = [];
+      }
+    }
+
+    function saveBlacklist() {
+      localStorage.setItem("blacklistedApps", JSON.stringify(blacklistedApps));
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "BLACKLISTED") return "status-blacklisted";
+      if (normalized === "APPLIED") return "status-applied";
+      if (normalized === "REVIEWED") return "status-reviewed";
+      if (normalized === "APPROVED") return "status-approved";
+      if (normalized === "HOLD") return "status-hold";
+      if (normalized === "REJECTED") return "status-rejected";
+      return "status-default";
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function populateJobFilters(jobs) {
+      const jobFilterHtml = '<option value="">All Jobs</option>' + 
+        jobs.map(j => `<option value="${j.id}">${j.title}</option>`).join("");
+      jobFilter.innerHTML = jobFilterHtml;
+    }
+
+    function populateCompanyFilter(applications) {
+      // Get unique companies from applications
+      const companies = [...new Set(
+        applications
+          .map(app => app.job?.company?.name)
+          .filter(Boolean)
+      )].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+
+      companyFilter.innerHTML = '<option value="">All Companies</option>' +
+        companies.map(c => `<option value="${c}">${c}</option>`).join("");
+    }
+
+    function filteredApplications() {
+      const term = searchInput.value.trim().toLowerCase();
+      const status = statusFilter.value.toUpperCase();
+      const company = companyFilter.value;
+      const jobId = jobFilter.value;
+
+      return allApplications.filter(app => {
+        const isBlacklisted = blacklistedApps.includes(app.id);
+        if (isBlacklisted && status !== "BLACKLISTED") return false;
+        if (status === "BLACKLISTED" && !isBlacklisted) return false;
+        
+        const matchesStatus = !status || status === "BLACKLISTED" || String(app.status || "").toUpperCase() === status;
+        const matchesCompany = !company || app.job?.company?.name === company;
+        const matchesJob = !jobId || app.jobId === jobId;
+        const hay = `${app.applicant?.name || ""} ${app.job?.title || ""}`.toLowerCase();
+        const matchesTerm = !term || hay.includes(term);
+        return matchesStatus && matchesTerm && matchesJob && matchesCompany;
+      });
+    }
+
+    function renderApplications() {
+      const applications = filteredApplications();
+      renderBlacklistedList();
+
+      if (!applications.length) {
+        applicationsList.innerHTML = '<div class="empty-state">No applications match your criteria.</div>';
+        return;
+      }
+
+      applicationsList.innerHTML = applications.map((app) => {
+        const isBlacklisted = blacklistedApps.includes(app.id);
+        const status = isBlacklisted ? "BLACKLISTED" : String(app.status || "APPLIED").toUpperCase();
+        const canApprove = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
+        const canReject = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
+        const canHold = !isBlacklisted && !["APPROVED", "REJECTED", "HOLD"].includes(status);
+        const canReview = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
+        const canBlacklist = !isBlacklisted && !["APPROVED"].includes(status);
+
+        return `
+          <article class="screening-card ${isBlacklisted ? 'blacklisted' : ''}">
+            <div class="row" style="justify-content: space-between; align-items: flex-start;">
+              <div class="list-main">
+                <h3 class="list-title">${app.applicant?.name || "Unknown Candidate"}</h3>
+                <p class="list-sub">${app.job?.title || "Job"} • ${app.job?.company?.name || "Company"}</p>
+              </div>
+              <span class="status-badge ${statusClass(status)}">${status}</span>
+            </div>
+
+            <div class="meta">
+              <span>Applied ${formatDate(app.createdAt)}</span>
+              <span>${app.applicant?.email || "No email"}</span>
+              ${app.applicant?.phone ? `<span>${app.applicant.phone}</span>` : ''}
+            </div>
+
+            ${app.applicant?.skills?.length ? `
+              <div class="skill-tags" style="margin-top: 8px;">
+                ${app.applicant.skills.slice(0, 5).map(s => `<span class="skill-tag">${s}</span>`).join("")}
+                ${app.applicant.skills.length > 5 ? `<span class="skill-tag">+${app.applicant.skills.length - 5}</span>` : ''}
+              </div>
+            ` : ''}
+
+            <div class="row" style="margin-top: 14px;">
+              ${canReview ? `<button type="button" data-app-id="${app.id}" class="btn review-btn">Review</button>` : ''}
+              ${canApprove ? `<button type="button" data-app-id="${app.id}" class="approve-btn">Approve</button>` : ''}
+              ${canHold ? `<button type="button" data-app-id="${app.id}" class="btn secondary hold-btn">Hold</button>` : ''}
+              ${canReject ? `<button type="button" data-app-id="${app.id}" class="btn danger reject-btn">Reject</button>` : ''}
+              ${canBlacklist ? `<button type="button" data-app-id="${app.id}" class="btn blacklist-btn" style="background: #7f1d1d; color: white;">Blacklist</button>` : ''}
+              ${isBlacklisted ? `<button type="button" data-app-id="${app.id}" class="btn secondary unblacklist-btn">Remove from Blacklist</button>` : ''}
+              <button type="button" data-app-id="${app.id}" class="btn secondary details-btn">Applicant Details</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".review-btn").forEach(btn => {
+        btn.addEventListener("click", () => openReviewModal(btn.dataset.appId));
+      });
+
+      document.querySelectorAll(".approve-btn").forEach(btn => {
+        btn.addEventListener("click", () => updateStatus(btn.dataset.appId, "APPROVED", btn));
+      });
+
+      document.querySelectorAll(".hold-btn").forEach(btn => {
+        btn.addEventListener("click", () => updateStatus(btn.dataset.appId, "HOLD", btn));
+      });
+
+      document.querySelectorAll(".reject-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (confirm("Are you sure you want to reject this candidate?")) {
+            updateStatus(btn.dataset.appId, "REJECTED", btn);
+          }
+        });
+      });
+
+      document.querySelectorAll(".blacklist-btn").forEach(btn => {
+        btn.addEventListener("click", () => openBlacklistModal(btn.dataset.appId));
+      });
+
+      document.querySelectorAll(".unblacklist-btn").forEach(btn => {
+        btn.addEventListener("click", () => removeFromBlacklist(btn.dataset.appId));
+      });
+
+      document.querySelectorAll(".details-btn").forEach(btn => {
+        btn.addEventListener("click", () => openApplicantModal(btn.dataset.appId));
+      });
+    }
+
+    function renderBlacklistedList() {
+      const blacklistedCandidates = allApplications.filter(app => blacklistedApps.includes(app.id));
+      
+      if (blacklistedCandidates.length > 0) {
+        blacklistedSection.style.display = "block";
+        blacklistedList.innerHTML = blacklistedCandidates.map(app => `
+          <div class="list-row" style="background: rgba(127, 29, 29, 0.05); border-left: 3px solid #7f1d1d;">
+            <div class="list-main">
+              <p class="list-title">${app.applicant?.name || "Candidate"}</p>
+              <p class="list-sub">${app.job?.title || "Job"}</p>
+            </div>
+            <span class="status-badge status-blacklisted">BLACKLISTED</span>
+            <button type="button" data-app-id="${app.id}" class="btn secondary unblacklist-small-btn" style="margin-left: 8px; padding: 4px 8px; font-size: 12px;">Remove</button>
+          </div>
+        `).join("");
+        
+        document.querySelectorAll(".unblacklist-small-btn").forEach(btn => {
+          btn.addEventListener("click", () => removeFromBlacklist(btn.dataset.appId));
+        });
+      } else {
+        blacklistedSection.style.display = "none";
+      }
+    }
+
+    function toggleBlacklistedSection() {
+      const content = blacklistedList;
+      if (content.style.display === "none") {
+        content.style.display = "block";
+      } else {
+        content.style.display = "none";
+      }
+    }
+
+    function openBlacklistModal(appId) {
+      currentBlacklistAppId = appId;
+      const app = allApplications.find(a => a.id === appId);
+      
+      if (!app) {
+        showToast("Application not found", "error");
+        return;
+      }
+      
+      document.getElementById("blacklistCandidateName").textContent = 
+        `${app.applicant?.name || "Candidate"} - ${app.job?.title || "Job"}`;
+      document.getElementById("blacklistReason").value = "";
+      
+      blacklistModal.classList.add("open");
+      blacklistModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeBlacklistModal() {
+      currentBlacklistAppId = null;
+      blacklistModal.classList.remove("open");
+      blacklistModal.setAttribute("aria-hidden", "true");
+    }
+
+    function confirmBlacklist() {
+      if (!currentBlacklistAppId) return;
+      
+      if (!blacklistedApps.includes(currentBlacklistAppId)) {
+        blacklistedApps.push(currentBlacklistAppId);
+        saveBlacklist();
+      }
+      
+      showToast("Candidate has been blacklisted", "info");
+      closeBlacklistModal();
+      renderApplications();
+    }
+
+    function removeFromBlacklist(appId) {
+      const index = blacklistedApps.indexOf(appId);
+      if (index > -1) {
+        blacklistedApps.splice(index, 1);
+        saveBlacklist();
+        showToast("Candidate removed from blacklist", "success");
+        renderApplications();
+      }
+    }
+
+    async function loadApplications() {
+      applicationsList.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading applications...</div>';
+
+      try {
+        const [appsResponse, jobsResponse] = await Promise.all([
+          apiFetch("/applications"),
+          apiFetch("/jobs?limit=100")
+        ]);
+
+        allApplications = appsResponse?.data || [];
+        allJobs = jobsResponse?.data?.jobs || [];
+
+        allApplications.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+        const total = allApplications.length;
+        const reviewed = allApplications.filter(a => String(a.status).toUpperCase() === "REVIEWED").length;
+        const approved = allApplications.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
+        const rejected = allApplications.filter(a => String(a.status).toUpperCase() === "REJECTED").length;
+
+        document.getElementById("totalApplications").textContent = String(total);
+        document.getElementById("reviewedCount").textContent = String(reviewed);
+        document.getElementById("approvedCount").textContent = String(approved);
+        document.getElementById("rejectedCount").textContent = String(rejected);
+
+        populateJobFilters(allJobs);
+        populateCompanyFilter(allApplications);
+        renderApplications();
+
+      } catch (error) {
+        applicationsList.innerHTML = '<div class="empty-state">Failed to load applications. Please try again.</div>';
+        showToast(error.message || "Failed to load applications", "error");
+      }
+    }
+
+    function openReviewModal(appId) {
+      currentReviewAppId = appId;
+      const app = allApplications.find(a => a.id === appId);
+      
+      if (!app) {
+        showToast("Application not found", "error");
+        return;
+      }
+
+      document.getElementById("candidateInfo").innerHTML = `
+        <div class="candidate-header" style="display: flex; align-items: center; gap: 12px;">
+          <div class="candidate-avatar" style="width: 48px; height: 48px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.2rem;">
+            ${(app.applicant?.name || "C").charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h4 style="margin: 0 0 4px; font-size: 1.1rem;">${app.applicant?.name || "Candidate"}</h4>
+            <p class="muted" style="margin: 0; font-size: 0.9rem;">${app.job?.title || "Job"} at ${app.job?.company?.name || "Company"}</p>
+          </div>
+        </div>
+        ${app.applicant?.email ? `
+          <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--muted);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            ${app.applicant.email}
+          </div>
+        ` : ''}
+        ${app.applicant?.bio ? `<p style="margin-top: 10px; color: var(--muted); font-size: 0.88rem; line-height: 1.5;">${app.applicant.bio}</p>` : ''}
+        ${app.applicant?.skills?.length ? `
+          <div class="skill-tags" style="margin-top: 12px;">
+            ${app.applicant.skills.slice(0, 8).map(s => `<span class="skill-tag">${s}</span>`).join("")}
+            ${app.applicant.skills.length > 8 ? `<span class="skill-tag">+${app.applicant.skills.length - 8}</span>` : ''}
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById("reviewNotes").value = "";
+      document.getElementById("profileFeedback").value = "";
+      reviewError.textContent = "";
+
+      reviewModal.classList.add("open");
+      reviewModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeReviewModal() {
+      currentReviewAppId = null;
+      reviewModal.classList.remove("open");
+      reviewModal.setAttribute("aria-hidden", "true");
+    }
+
+    async function submitReview(e) {
+      e.preventDefault();
+      if (!currentReviewAppId) return;
+
+      const notes = document.getElementById("reviewNotes").value.trim();
+      const profileFeedback = document.getElementById("profileFeedback").value.trim();
+
+      if (!notes) {
+        reviewError.textContent = "Please provide evaluation notes";
+        return;
+      }
+
+      const submitBtn = document.getElementById("submitReviewBtn");
+      setButtonBusy(submitBtn, true, "Submitting...");
+
+      try {
+        await apiFetch("/reviews", {
+          method: "POST",
+          body: JSON.stringify({
+            applicationId: currentReviewAppId,
+            notes: notes,
+            comments: profileFeedback || null,
+            stage: "Employee Screening"
+          })
+        });
+
+        // Update the application status to REVIEWED
+        await apiFetch(`/applications/${currentReviewAppId}/status`, {
+          method: "PUT",
+          body: JSON.stringify({ status: "REVIEWED" })
+        });
+
+        showToast("Review submitted successfully!", "success");
+        closeReviewModal();
+        await loadApplications();
+
+      } catch (error) {
+        reviewError.textContent = error.message || "Failed to submit review";
+        showToast(error.message || "Failed to submit review", "error");
+      } finally {
+        setButtonBusy(submitBtn, false, "Submit Review");
+      }
+    }
+
+    async function updateStatus(appId, newStatus, triggerBtn) {
+      setButtonBusy(triggerBtn, true, "Updating...");
+
+      try {
+        await apiFetch(`/applications/${appId}/status`, {
+          method: "PUT",
+          body: JSON.stringify({ status: newStatus })
+        });
+
+        const statusMessages = {
+          APPROVED: "Candidate approved and sent to recruiter!",
+          HOLD: "Candidate placed on hold",
+          REJECTED: "Candidate rejected"
+        };
+
+        showToast(statusMessages[newStatus] || "Status updated", newStatus === "APPROVED" ? "success" : "info");
+        await loadApplications();
+
+      } catch (error) {
+        showToast(error.message || "Failed to update status", "error");
+      } finally {
+        setButtonBusy(triggerBtn, false);
+      }
+    }
+
+    function openApplicantModal(appId) {
+      const app = allApplications.find(a => a.id === appId);
+      
+      if (!app) {
+        showToast("Application not found", "error");
+        return;
+      }
+
+      const applicantData = app.applicant || {};
+      const applicantProfile = applicantData.applicant || {};
+      const jobData = app.job || {};
+      const companyName = jobData.company?.name || "Company";
+      
+      const candidateName = applicantData.name || "Unknown";
+      const candidateEmail = applicantData.email || "N/A";
+      const candidatePhone = applicantData.phone || "N/A";
+      const candidateAddress = applicantData.address || "N/A";
+      const candidateBio = applicantData.bio || "";
+      const skills = applicantProfile.skills || applicantData.skills || [];
+      const experienceYears = applicantProfile.experienceYears || 0;
+      const education = applicantProfile.education || "N/A";
+      const resumeUrl = applicantProfile.resumeUrl || app.resumeUrl || "";
+      const appliedDate = formatDate(app.createdAt);
+      const applicationStatus = app.status || "APPLIED";
+
+      const skillsHtml = skills.length > 0 
+        ? skills.map(skill => `<span class="skill-tag">${skill}</span>`).join("") 
+        : '<span class="muted">No skills listed</span>';
+
+      const resumeHtml = resumeUrl 
+        ? `<a href="${API_BASE.replace('/api', '')}${resumeUrl}" target="_blank" class="btn secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 13px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            View Resume
+          </a>
+          <a href="${API_BASE.replace('/api', '')}${resumeUrl}" download class="btn secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 13px; margin-left: 8px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download
+          </a>` 
+        : '<span class="muted">No resume uploaded</span>';
+
+      applicantModalContent.innerHTML = `
+        <div class="candidate-review-modal">
+          <!-- Header Section -->
+          <div class="candidate-header">
+            <div class="candidate-avatar">
+              <span>${candidateName.charAt(0).toUpperCase()}</span>
+            </div>
+            <div class="candidate-title">
+              <h3>${candidateName}</h3>
+              <p class="job-applied">${jobData.title || "Job"} at ${companyName}</p>
+            </div>
+            <span class="status-badge ${statusClass(applicationStatus)}">${applicationStatus.replace(/_/g, ' ')}</span>
+          </div>
+
+          <!-- Candidate Info Section -->
+          <div class="review-section-card">
+            <h4 class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Contact Information
+            </h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">${candidateEmail}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Phone</span>
+                <span class="info-value">${candidatePhone}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Address</span>
+                <span class="info-value">${candidateAddress}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Summary Section -->
+          <div class="review-section-card">
+            <h4 class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Profile Summary
+            </h4>
+            ${candidateBio ? `<p class="bio-text">${candidateBio}</p>` : ''}
+            <div class="profile-details">
+              <div class="profile-detail-item">
+                <span class="detail-label">Experience</span>
+                <span class="detail-value">${experienceYears} ${experienceYears === 1 ? 'year' : 'years'}</span>
+              </div>
+              <div class="profile-detail-item">
+                <span class="detail-label">Education</span>
+                <span class="detail-value">${education}</span>
+              </div>
+            </div>
+            <div class="skills-section">
+              <span class="detail-label">Skills</span>
+              <div class="skills-tags">${skillsHtml}</div>
+            </div>
+          </div>
+
+          <!-- Application Details Section -->
+          <div class="review-section-card">
+            <h4 class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Application Details
+            </h4>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Applied Date</span>
+                <span class="info-value">${appliedDate}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Position</span>
+                <span class="info-value">${jobData.title || "N/A"}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Company</span>
+                <span class="info-value">${companyName}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status</span>
+                <span class="info-value">${applicationStatus.replace(/_/g, ' ')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resume Section -->
+          <div class="review-section-card">
+            <h4 class="section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Resume
+            </h4>
+            <div style="margin-top: 8px;">
+              ${resumeHtml}
+            </div>
+          </div>
+        </div>
+      `;
+
+      applicantModal.classList.add("open");
+      applicantModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeApplicantModal() {
+      applicantModal.classList.remove("open");
+      applicantModal.setAttribute("aria-hidden", "true");
+    }
+  </script>
+</body>
+</html>

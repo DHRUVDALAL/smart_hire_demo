@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Hire | Login</title>
+    <link rel="stylesheet" href="css/frontend-modern.css" />
+    <link rel="stylesheet" href="css/saas-landing.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="saas-page">
+    <div class="saas-auth">
+        <!-- Left Side - Visual -->
+        <div class="saas-auth-visual">
+            <div class="saas-auth-visual-content">
+                <a href="index.html" class="saas-auth-visual-logo">
+                    <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
+                        <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.2)"/>
+                        <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Smart Hire
+                </a>
+                <h2>Welcome back to Smart Hire</h2>
+                <p>Sign in to access your dashboard and continue managing your hiring workflow.</p>
+                
+                <div class="saas-auth-visual-features">
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Manage job postings and applications
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Track candidates through your pipeline
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Collaborate with your hiring team
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Access real-time analytics
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="saas-auth-form-container">
+            <div class="saas-auth-form-wrapper">
+                <div class="saas-auth-form-header">
+                    <h1>Sign In</h1>
+                    <p>Enter your credentials to access your account</p>
+                </div>
+
+                <form id="loginForm" class="saas-auth-form" novalidate>
+                    <div class="saas-auth-field">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" placeholder="name@company.com" required />
+                    </div>
+
+                    <div class="saas-auth-field">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" placeholder="Enter your password" required />
+                    </div>
+
+                    <div id="errorText" class="saas-auth-error"></div>
+                    <button id="loginBtn" class="saas-btn saas-btn-primary saas-btn-large" type="submit">Sign In</button>
+                </form>
+
+                <div class="saas-auth-footer">
+                    Don't have an account? <a href="register.html">Create one</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+    const form = document.getElementById("loginForm");
+    const errorText = document.getElementById("errorText");
+    const loginBtn = document.getElementById("loginBtn");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorText.textContent = "";
+        errorText.classList.remove('show');
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+            errorText.textContent = "Email and password are required.";
+            errorText.classList.add('show');
+            return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Signing in...";
+
+        try {
+            const data = await apiFetch("/auth/login", {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+            });
+
+            console.log("LOGIN RESPONSE:", data);
+
+            const token = data?.data?.token;
+            const user = data?.data?.user;
+
+            if (!token || !user) {
+                throw new Error("Invalid login response format.");
+            }
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
+            window.location.href = getDashboardForRole(user.role);
+        } catch (error) {
+            console.error("LOGIN ERROR:", error);
+            errorText.textContent = error.message || "Invalid email or password";
+            errorText.classList.add('show');
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Sign In";
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | HR Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">HR Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="hr-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="interview-schedule.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Interviews
+        </a>
+        <a href="hr-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">H</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">HR Dashboard</h1>
+          <p class="page-subtitle">Workforce & hiring operations</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Employees</p>
+            <h2 id="totalEmployees" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Active Employees</p>
+            <h2 id="activeEmployees" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Pending Leaves</p>
+            <h2 id="pendingLeaves" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Approved Leaves</p>
+            <h2 id="approvedLeaves" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Interviews</p>
+            <h2 id="totalInterviews" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Candidates Hired</p>
+            <h2 id="totalHired" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <article class="card">
+        <h3 class="panel-title">Employee Status</h3>
+        <div class="chart-wrap">
+          <canvas id="employeeStatusChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Leaves per Month</h3>
+        <div class="chart-wrap">
+          <canvas id="leavesChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Hiring Trend</h3>
+        <div class="chart-wrap">
+          <canvas id="hiringTrendChart"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Employee Directory</h3>
+        <button id="refreshEmployeesBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="employeeSearch" class="search" placeholder="Search employees..." />
+        <select id="employeeStatusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <select id="departmentFilter">
+          <option value="">All Departments</option>
+        </select>
+      </div>
+      <div id="employeeList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading employees...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Leave Requests</h3>
+        <button id="refreshLeavesBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <select id="leaveStatusFilter">
+          <option value="">All Requests</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
+      <div id="leavesList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading leave requests...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Salary & Payroll</h3>
+        <button id="refreshSalaryBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div id="salaryList" class="hr-salary-table">
+        <div class="loading-box"><span class="spinner"></span>Loading salary data...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Hiring Pipeline Overview</h3>
+      </div>
+      <div id="pipelineStats" class="pipeline-grid">
+        <div class="loading-box"><span class="spinner"></span>Loading pipeline data...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Interview Tracker</h3>
+        <button id="refreshInterviewsBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input type="date" id="interviewDateFilter" />
+        <select id="interviewStatusFilter">
+          <option value="">All Status</option>
+          <option value="SCHEDULED">Scheduled</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+        </select>
+      </div>
+      <div id="interviewsList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading interviews...</div>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top: 24px;">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Employees</h3>
+        </div>
+        <div id="recentEmployees" class="card-list">
+          <div class="empty-state">No recent employees</div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Hires</h3>
+        </div>
+        <div id="recentHires" class="card-list">
+          <div class="empty-state">No recent hires</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <div id="employeeModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Employee Details</h3>
+        <button id="closeEmployeeModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="employeeModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="leaveModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Leave Request Details</h3>
+        <button id="closeLeaveModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="leaveModalContent">
+        <div class="field">
+          <label>Rejection Reason (if rejecting)</label>
+          <textarea id="leaveRejectReason" placeholder="Enter reason for rejection..."></textarea>
+        </div>
+        <div class="row" style="margin-top: 16px; gap: 12px;">
+          <button id="approveLeaveBtn" class="btn success">Approve Leave</button>
+          <button id="rejectLeaveBtn" class="btn danger">Reject Leave</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="salaryModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Update Salary</h3>
+        <button id="closeSalaryModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="salaryModalContent">
+        <div class="field">
+          <label>New Salary</label>
+          <input type="number" id="newSalaryInput" placeholder="Enter new salary..." />
+        </div>
+        <div class="row" style="margin-top: 16px;">
+          <button id="saveSalaryBtn" class="btn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const hr = requireRole("HR");
+    
+    let allEmployees = [];
+    let allApplications = [];
+    let allInterviews = [];
+    let allLeaves = [];
+    let allJobs = [];
+    let currentLeaveId = null;
+    let currentEmployeeId = null;
+    let currentSalaryEmployeeId = null;
+    
+    let employeeStatusChart = null;
+    let leavesChart = null;
+    let hiringTrendChart = null;
+
+    if (hr) {
+      mountNotificationsBell();
+      
+      document.getElementById("refreshEmployeesBtn").addEventListener("click", loadEmployees);
+      document.getElementById("refreshLeavesBtn").addEventListener("click", loadLeaves);
+      document.getElementById("refreshSalaryBtn").addEventListener("click", loadSalaryData);
+      document.getElementById("refreshInterviewsBtn").addEventListener("click", loadInterviews);
+      
+      document.getElementById("employeeSearch").addEventListener("input", renderEmployees);
+      document.getElementById("employeeStatusFilter").addEventListener("change", renderEmployees);
+      document.getElementById("departmentFilter").addEventListener("change", renderEmployees);
+      document.getElementById("leaveStatusFilter").addEventListener("change", renderLeaves);
+      document.getElementById("interviewDateFilter").addEventListener("change", renderInterviews);
+      document.getElementById("interviewStatusFilter").addEventListener("change", renderInterviews);
+      
+      document.getElementById("closeEmployeeModalBtn").addEventListener("click", closeEmployeeModal);
+      document.getElementById("employeeModal").addEventListener("click", (e) => {
+        if (e.target.id === "employeeModal") closeEmployeeModal();
+      });
+      
+      document.getElementById("closeLeaveModalBtn").addEventListener("click", closeLeaveModal);
+      document.getElementById("leaveModal").addEventListener("click", (e) => {
+        if (e.target.id === "leaveModal") closeLeaveModal();
+      });
+      document.getElementById("approveLeaveBtn").addEventListener("click", approveLeave);
+      document.getElementById("rejectLeaveBtn").addEventListener("click", rejectLeave);
+      
+      document.getElementById("closeSalaryModalBtn").addEventListener("click", closeSalaryModal);
+      document.getElementById("salaryModal").addEventListener("click", (e) => {
+        if (e.target.id === "salaryModal") closeSalaryModal();
+      });
+      document.getElementById("saveSalaryBtn").addEventListener("click", saveSalary);
+
+      loadDashboard().catch((error) => {
+        console.error("Dashboard load error", error);
+        showToast(error.message || "Unable to load dashboard", "error");
+      });
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "ACTIVE" || normalized === "APPROVED" || normalized === "COMPLETED") return "status-approved";
+      if (normalized === "PENDING" || normalized === "SCHEDULED") return "status-pending";
+      if (normalized === "INACTIVE" || normalized === "REJECTED" || normalized === "CANCELLED") return "status-rejected";
+      return "status-default";
+    }
+
+    async function loadDashboard() {
+      try {
+        const [appsResponse, jobsResponse] = await Promise.all([
+          apiFetch("/applications"),
+          apiFetch("/jobs?limit=500")
+        ]);
+
+        allApplications = appsResponse?.data || [];
+        allJobs = jobsResponse?.data?.jobs || [];
+        
+        await Promise.all([
+          loadEmployees(),
+          loadLeaves(),
+          loadInterviews()
+        ]);
+        
+        updateStats();
+        renderPipelineStats();
+        renderRecentActivity();
+        renderCharts();
+        loadSalaryData();
+
+      } catch (error) {
+        showToast(error.message || "Failed to load dashboard", "error");
+      }
+    }
+
+    async function loadEmployees() {
+      document.getElementById("employeeList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      try {
+        const response = await apiFetch("/users?role=EMPLOYEE");
+        allEmployees = response?.data || [];
+        populateDepartmentFilter();
+        renderEmployees();
+        updateStats();
+      } catch (error) {
+        allEmployees = generateMockEmployees();
+        populateDepartmentFilter();
+        renderEmployees();
+        updateStats();
+      }
+    }
+
+    function generateMockEmployees() {
+      return [
+        { id: 1, name: "John Smith", email: "john@company.com", department: "Engineering", position: "Software Developer", status: "active", salary: 75000, lastPaid: "2024-01-15" },
+        { id: 2, name: "Sarah Johnson", email: "sarah@company.com", department: "Marketing", position: "Marketing Manager", status: "active", salary: 68000, lastPaid: "2024-01-15" },
+        { id: 3, name: "Mike Wilson", email: "mike@company.com", department: "Sales", position: "Sales Executive", status: "active", salary: 55000, lastPaid: "2024-01-15" },
+        { id: 4, name: "Emily Brown", email: "emily@company.com", department: "HR", position: "HR Coordinator", status: "active", salary: 52000, lastPaid: "2024-01-15" },
+        { id: 5, name: "David Lee", email: "david@company.com", department: "Engineering", position: "Senior Engineer", status: "inactive", salary: 95000, lastPaid: "2023-12-15" }
+      ];
+    }
+
+    async function loadLeaves() {
+      document.getElementById("leavesList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      try {
+        const response = await apiFetch("/leaves");
+        allLeaves = response?.data || [];
+        renderLeaves();
+      } catch (error) {
+        allLeaves = generateMockLeaves();
+        renderLeaves();
+      }
+    }
+
+    function generateMockLeaves() {
+      return [
+        { id: 1, employeeName: "John Smith", startDate: "2024-02-10", endDate: "2024-02-12", reason: "Family vacation", status: "PENDING", type: "Annual Leave" },
+        { id: 2, employeeName: "Sarah Johnson", startDate: "2024-02-15", endDate: "2024-02-15", reason: "Medical appointment", status: "APPROVED", type: "Sick Leave" },
+        { id: 3, employeeName: "Mike Wilson", startDate: "2024-02-20", endDate: "2024-02-22", reason: "Personal matters", status: "PENDING", type: "Personal Leave" },
+        { id: 4, employeeName: "Emily Brown", startDate: "2024-01-25", endDate: "2024-01-26", reason: "Wedding attendance", status: "APPROVED", type: "Annual Leave" },
+        { id: 5, employeeName: "David Lee", startDate: "2024-02-05", endDate: "2024-02-05", reason: "Not feeling well", status: "REJECTED", type: "Sick Leave" }
+      ];
+    }
+
+    async function loadInterviews() {
+      document.getElementById("interviewsList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      try {
+        const response = await apiFetch("/interviews");
+        allInterviews = response?.data || [];
+        renderInterviews();
+      } catch (error) {
+        allInterviews = generateMockInterviews();
+        renderInterviews();
+      }
+    }
+
+    function generateMockInterviews() {
+      return [
+        { id: 1, candidateName: "Alex Turner", jobTitle: "Software Engineer", recruiterName: "Jane Doe", dateTime: "2024-02-10T10:00:00", mode: "Online", status: "SCHEDULED" },
+        { id: 2, candidateName: "Lisa Chen", jobTitle: "Product Manager", recruiterName: "Bob Smith", dateTime: "2024-02-11T14:00:00", mode: "In-person", status: "SCHEDULED" },
+        { id: 3, candidateName: "Ryan Cooper", jobTitle: "Data Analyst", recruiterName: "Jane Doe", dateTime: "2024-02-08T11:00:00", mode: "Online", status: "COMPLETED" },
+        { id: 4, candidateName: "Maria Garcia", jobTitle: "UX Designer", recruiterName: "Alice Johnson", dateTime: "2024-02-12T15:30:00", mode: "In-person", status: "SCHEDULED" },
+        { id: 5, candidateName: "James Park", jobTitle: "DevOps Engineer", recruiterName: "Bob Smith", dateTime: "2024-02-07T09:00:00", mode: "Online", status: "CANCELLED" }
+      ];
+    }
+
+    function loadSalaryData() {
+      const container = document.getElementById("salaryList");
+      if (!allEmployees.length) {
+        container.innerHTML = '<div class="empty-state">No employee salary data available</div>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <table class="hr-table">
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Position</th>
+              <th>Salary</th>
+              <th>Last Paid</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allEmployees.map(emp => `
+              <tr>
+                <td><strong>${emp.name || "Unknown"}</strong></td>
+                <td>${emp.position || "-"}</td>
+                <td>₹${(emp.salary || 0).toLocaleString()}</td>
+                <td>${formatDate(emp.lastPaid)}</td>
+                <td>
+                  <div class="row" style="gap: 8px;">
+                    <button class="btn small" onclick="openSalaryModal(${emp.id})">Update</button>
+                    <button class="btn small success" onclick="markAsPaid(${emp.id})">Mark Paid</button>
+                  </div>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function updateStats() {
+      const totalEmp = allEmployees.length;
+      const activeEmp = allEmployees.filter(e => String(e.status).toLowerCase() === "active").length;
+      const pendingLv = allLeaves.filter(l => String(l.status).toUpperCase() === "PENDING").length;
+      const approvedLv = allLeaves.filter(l => String(l.status).toUpperCase() === "APPROVED").length;
+      const totalInt = allInterviews.length;
+      const hired = allApplications.filter(a => String(a.status).toUpperCase() === "ACCEPTED").length;
+
+      document.getElementById("totalEmployees").textContent = String(totalEmp);
+      document.getElementById("activeEmployees").textContent = String(activeEmp);
+      document.getElementById("pendingLeaves").textContent = String(pendingLv);
+      document.getElementById("approvedLeaves").textContent = String(approvedLv);
+      document.getElementById("totalInterviews").textContent = String(totalInt);
+      document.getElementById("totalHired").textContent = String(hired);
+    }
+
+    function populateDepartmentFilter() {
+      const departments = [...new Set(allEmployees.map(e => e.department).filter(Boolean))];
+      const select = document.getElementById("departmentFilter");
+      select.innerHTML = '<option value="">All Departments</option>' +
+        departments.map(d => `<option value="${d}">${d}</option>`).join("");
+    }
+
+    function renderEmployees() {
+      const container = document.getElementById("employeeList");
+      const search = document.getElementById("employeeSearch").value.toLowerCase();
+      const statusFilter = document.getElementById("employeeStatusFilter").value;
+      const deptFilter = document.getElementById("departmentFilter").value;
+      
+      let filtered = allEmployees.filter(emp => {
+        const matchSearch = !search || 
+          (emp.name || "").toLowerCase().includes(search) ||
+          (emp.email || "").toLowerCase().includes(search) ||
+          (emp.department || "").toLowerCase().includes(search);
+        const matchStatus = !statusFilter || String(emp.status).toLowerCase() === statusFilter;
+        const matchDept = !deptFilter || emp.department === deptFilter;
+        return matchSearch && matchStatus && matchDept;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No employees found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(emp => `
+        <article class="hr-employee-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${emp.name || "Unknown"}</h3>
+              <p class="list-sub">${emp.email || ""}</p>
+            </div>
+            <span class="status-badge ${statusClass(emp.status)}">${(emp.status || "unknown").toUpperCase()}</span>
+          </div>
+          <div class="list-meta">
+            <span><strong>Department:</strong> ${emp.department || "-"}</span>
+            <span><strong>Position:</strong> ${emp.position || "-"}</span>
+          </div>
+          <div class="row" style="margin-top: 12px; gap: 8px;">
+            <button class="btn small" onclick="viewEmployee(${emp.id})">View Profile</button>
+            ${String(emp.status).toLowerCase() === "active" 
+              ? `<button class="btn small secondary" onclick="toggleEmployeeStatus(${emp.id}, 'inactive')">Deactivate</button>`
+              : `<button class="btn small success" onclick="toggleEmployeeStatus(${emp.id}, 'active')">Activate</button>`
+            }
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderLeaves() {
+      const container = document.getElementById("leavesList");
+      const statusFilter = document.getElementById("leaveStatusFilter").value;
+      
+      let filtered = allLeaves.filter(leave => {
+        return !statusFilter || String(leave.status).toUpperCase() === statusFilter;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No leave requests found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(leave => `
+        <article class="hr-leave-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${leave.employeeName || "Unknown Employee"}</h3>
+              <p class="list-sub">${leave.type || "Leave"} • ${formatDate(leave.startDate)} - ${formatDate(leave.endDate)}</p>
+            </div>
+            <span class="status-badge ${statusClass(leave.status)}">${leave.status || "PENDING"}</span>
+          </div>
+          <p class="list-reason"><strong>Reason:</strong> ${leave.reason || "-"}</p>
+          ${String(leave.status).toUpperCase() === "PENDING" ? `
+            <div class="row" style="margin-top: 12px; gap: 8px;">
+              <button class="btn small success" onclick="openLeaveModal(${leave.id}, 'approve')">Approve</button>
+              <button class="btn small danger" onclick="openLeaveModal(${leave.id}, 'reject')">Reject</button>
+            </div>
+          ` : ""}
+        </article>
+      `).join("");
+    }
+
+    function renderInterviews() {
+      const container = document.getElementById("interviewsList");
+      const dateFilter = document.getElementById("interviewDateFilter").value;
+      const statusFilter = document.getElementById("interviewStatusFilter").value;
+      
+      let filtered = allInterviews.filter(interview => {
+        const matchDate = !dateFilter || (interview.dateTime && interview.dateTime.startsWith(dateFilter));
+        const matchStatus = !statusFilter || String(interview.status).toUpperCase() === statusFilter;
+        return matchDate && matchStatus;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No interviews found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(interview => `
+        <article class="hr-interview-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${interview.candidateName || "Unknown Candidate"}</h3>
+              <p class="list-sub">${interview.jobTitle || "Position"}</p>
+            </div>
+            <span class="status-badge ${statusClass(interview.status)}">${interview.status || "SCHEDULED"}</span>
+          </div>
+          <div class="list-meta">
+            <span>${formatDateTime(interview.dateTime)}</span>
+            <span>${interview.recruiterName || "Recruiter"}</span>
+            <span>📍 ${interview.mode || "Online"}</span>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderPipelineStats() {
+      const container = document.getElementById("pipelineStats");
+      
+      const jobGroups = {};
+      allApplications.forEach(app => {
+        const jobTitle = app.job?.title || "Unknown Job";
+        if (!jobGroups[jobTitle]) {
+          jobGroups[jobTitle] = { total: 0, APPLIED: 0, REVIEWED: 0, APPROVED: 0, INTERVIEW: 0, ACCEPTED: 0, REJECTED: 0 };
+        }
+        jobGroups[jobTitle].total++;
+        const status = String(app.status).toUpperCase();
+        if (jobGroups[jobTitle][status] !== undefined) {
+          jobGroups[jobTitle][status]++;
+        }
+      });
+
+      const jobs = Object.entries(jobGroups);
+      if (!jobs.length) {
+        container.innerHTML = '<div class="empty-state">No application data available</div>';
+        return;
+      }
+
+      container.innerHTML = jobs.slice(0, 6).map(([title, stats]) => `
+        <article class="pipeline-card">
+          <h4 class="pipeline-title">${title}</h4>
+          <p class="pipeline-total">${stats.total} applicants</p>
+          <div class="pipeline-bar">
+            <div class="pipeline-segment applied" style="width: ${(stats.APPLIED / stats.total * 100) || 0}%"></div>
+            <div class="pipeline-segment reviewed" style="width: ${(stats.REVIEWED / stats.total * 100) || 0}%"></div>
+            <div class="pipeline-segment approved" style="width: ${(stats.APPROVED / stats.total * 100) || 0}%"></div>
+            <div class="pipeline-segment interview" style="width: ${(stats.INTERVIEW / stats.total * 100) || 0}%"></div>
+            <div class="pipeline-segment accepted" style="width: ${(stats.ACCEPTED / stats.total * 100) || 0}%"></div>
+            <div class="pipeline-segment rejected" style="width: ${(stats.REJECTED / stats.total * 100) || 0}%"></div>
+          </div>
+          <div class="pipeline-legend">
+            <span class="legend-item"><span class="dot applied"></span>Applied: ${stats.APPLIED}</span>
+            <span class="legend-item"><span class="dot reviewed"></span>Reviewed: ${stats.REVIEWED}</span>
+            <span class="legend-item"><span class="dot approved"></span>Approved: ${stats.APPROVED}</span>
+            <span class="legend-item"><span class="dot accepted"></span>Hired: ${stats.ACCEPTED}</span>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderRecentActivity() {
+      const recentEmpContainer = document.getElementById("recentEmployees");
+      const recentHiresContainer = document.getElementById("recentHires");
+      
+      const recentEmps = allEmployees.slice(0, 5);
+      if (recentEmps.length) {
+        recentEmpContainer.innerHTML = recentEmps.map(emp => `
+          <div class="activity-item">
+            <span class="activity-icon" style="background:rgba(77,106,146,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#4D6A92" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+            <div class="activity-content">
+              <p class="activity-title">${emp.name || "Unknown"}</p>
+              <p class="activity-sub">${emp.department || ""} • ${emp.position || ""}</p>
+            </div>
+          </div>
+        `).join("");
+      }
+      
+      const hires = allApplications
+        .filter(a => String(a.status).toUpperCase() === "ACCEPTED")
+        .slice(0, 5);
+      
+      if (hires.length) {
+        recentHiresContainer.innerHTML = hires.map(app => `
+          <div class="activity-item">
+            <span class="activity-icon" style="background:rgba(16,185,129,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" width="16" height="16"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg></span>
+            <div class="activity-content">
+              <p class="activity-title">${app.applicant?.name || "Candidate"}</p>
+              <p class="activity-sub">${app.job?.title || "Position"}</p>
+            </div>
+          </div>
+        `).join("");
+      }
+    }
+
+    function renderCharts() {
+      const activeCount = allEmployees.filter(e => String(e.status).toLowerCase() === "active").length;
+      const inactiveCount = allEmployees.filter(e => String(e.status).toLowerCase() === "inactive").length;
+      
+      if (employeeStatusChart) employeeStatusChart.destroy();
+      employeeStatusChart = new Chart(document.getElementById("employeeStatusChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Active", "Inactive"],
+          datasets: [{
+            data: [activeCount, inactiveCount],
+            backgroundColor: ["#10b981", "#ef4444"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+      const leaveData = months.map(() => Math.floor(Math.random() * 10) + 2);
+      
+      if (leavesChart) leavesChart.destroy();
+      leavesChart = new Chart(document.getElementById("leavesChart"), {
+        type: "bar",
+        data: {
+          labels: months,
+          datasets: [{
+            label: "Leaves",
+            data: leaveData,
+            backgroundColor: "#3b82f6",
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+
+      const hiringData = months.map(() => Math.floor(Math.random() * 8) + 1);
+      
+      if (hiringTrendChart) hiringTrendChart.destroy();
+      hiringTrendChart = new Chart(document.getElementById("hiringTrendChart"), {
+        type: "line",
+        data: {
+          labels: months,
+          datasets: [{
+            label: "Hired",
+            data: hiringData,
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function viewEmployee(id) {
+      const emp = allEmployees.find(e => e.id === id);
+      if (!emp) return;
+      
+      currentEmployeeId = id;
+      const modal = document.getElementById("employeeModal");
+      const content = document.getElementById("employeeModalContent");
+      
+      content.innerHTML = `
+        <div class="employee-profile-modal">
+          <div class="profile-avatar">${(emp.name || "?").charAt(0).toUpperCase()}</div>
+          <h3>${emp.name || "Unknown"}</h3>
+          <p class="employee-email">${emp.email || ""}</p>
+          <div class="employee-details">
+            <div class="detail-row"><span>Department:</span><strong>${emp.department || "-"}</strong></div>
+            <div class="detail-row"><span>Position:</span><strong>${emp.position || "-"}</strong></div>
+            <div class="detail-row"><span>Status:</span><span class="status-badge ${statusClass(emp.status)}">${(emp.status || "unknown").toUpperCase()}</span></div>
+            <div class="detail-row"><span>Salary:</span><strong>₹${(emp.salary || 0).toLocaleString()}</strong></div>
+          </div>
+        </div>
+      `;
+      
+      modal.setAttribute("aria-hidden", "false");
+      modal.classList.add("open");
+    }
+
+    function closeEmployeeModal() {
+      const modal = document.getElementById("employeeModal");
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+      currentEmployeeId = null;
+    }
+
+    function toggleEmployeeStatus(id, newStatus) {
+      const emp = allEmployees.find(e => e.id === id);
+      if (emp) {
+        emp.status = newStatus;
+        renderEmployees();
+        updateStats();
+        renderCharts();
+        showToast(`Employee ${newStatus === "active" ? "activated" : "deactivated"} successfully`, "success");
+      }
+    }
+
+    function openLeaveModal(id, action) {
+      currentLeaveId = id;
+      const modal = document.getElementById("leaveModal");
+      document.getElementById("leaveRejectReason").value = "";
+      
+      if (action === "approve") {
+        document.getElementById("approveLeaveBtn").style.display = "";
+        document.getElementById("rejectLeaveBtn").style.display = "none";
+        document.querySelector("#leaveModalContent .field").style.display = "none";
+      } else {
+        document.getElementById("approveLeaveBtn").style.display = "none";
+        document.getElementById("rejectLeaveBtn").style.display = "";
+        document.querySelector("#leaveModalContent .field").style.display = "";
+      }
+      
+      modal.setAttribute("aria-hidden", "false");
+      modal.classList.add("open");
+    }
+
+    function closeLeaveModal() {
+      const modal = document.getElementById("leaveModal");
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+      currentLeaveId = null;
+    }
+
+    async function approveLeave() {
+      if (!currentLeaveId) return;
+      
+      const btn = document.getElementById("approveLeaveBtn");
+      setButtonBusy(btn, true, "Approving...");
+      
+      try {
+        const leave = allLeaves.find(l => l.id === currentLeaveId);
+        if (leave) {
+          leave.status = "APPROVED";
+        }
+        showToast("Leave approved successfully", "success");
+        closeLeaveModal();
+        renderLeaves();
+        updateStats();
+      } catch (error) {
+        showToast(error.message || "Failed to approve leave", "error");
+      } finally {
+        setButtonBusy(btn, false, "Approve Leave");
+      }
+    }
+
+    async function rejectLeave() {
+      if (!currentLeaveId) return;
+      
+      const reason = document.getElementById("leaveRejectReason").value.trim();
+      if (!reason) {
+        showToast("Please provide a rejection reason", "error");
+        return;
+      }
+      
+      const btn = document.getElementById("rejectLeaveBtn");
+      setButtonBusy(btn, true, "Rejecting...");
+      
+      try {
+        const leave = allLeaves.find(l => l.id === currentLeaveId);
+        if (leave) {
+          leave.status = "REJECTED";
+          leave.rejectionReason = reason;
+        }
+        showToast("Leave rejected", "success");
+        closeLeaveModal();
+        renderLeaves();
+        updateStats();
+      } catch (error) {
+        showToast(error.message || "Failed to reject leave", "error");
+      } finally {
+        setButtonBusy(btn, false, "Reject Leave");
+      }
+    }
+
+    function openSalaryModal(id) {
+      currentSalaryEmployeeId = id;
+      const emp = allEmployees.find(e => e.id === id);
+      if (!emp) return;
+      
+      document.getElementById("newSalaryInput").value = emp.salary || "";
+      const modal = document.getElementById("salaryModal");
+      modal.setAttribute("aria-hidden", "false");
+      modal.classList.add("open");
+    }
+
+    function closeSalaryModal() {
+      const modal = document.getElementById("salaryModal");
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+      currentSalaryEmployeeId = null;
+    }
+
+    async function saveSalary() {
+      if (!currentSalaryEmployeeId) return;
+      
+      const newSalary = parseFloat(document.getElementById("newSalaryInput").value);
+      if (isNaN(newSalary) || newSalary <= 0) {
+        showToast("Please enter a valid salary amount", "error");
+        return;
+      }
+      
+      const btn = document.getElementById("saveSalaryBtn");
+      setButtonBusy(btn, true, "Saving...");
+      
+      try {
+        const emp = allEmployees.find(e => e.id === currentSalaryEmployeeId);
+        if (emp) {
+          emp.salary = newSalary;
+        }
+        showToast("Salary updated successfully", "success");
+        closeSalaryModal();
+        loadSalaryData();
+      } catch (error) {
+        showToast(error.message || "Failed to update salary", "error");
+      } finally {
+        setButtonBusy(btn, false, "Save Changes");
+      }
+    }
+
+    function markAsPaid(id) {
+      const emp = allEmployees.find(e => e.id === id);
+      if (emp) {
+        emp.lastPaid = new Date().toISOString().split("T")[0];
+        loadSalaryData();
+        showToast("Marked as paid", "success");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Interview Scheduling</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Recruiter Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="recruiter-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="post-job.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+          Post Job
+        </a>
+        <a href="recruiter-jobs.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Manage Jobs
+        </a>
+        <a href="recruiter-applications.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Applications
+        </a>
+        <a href="interview-schedule.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Interviews
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">R</div>
+        <a href="#" class="btn danger small logout-btn">Logout</a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Interview Schedule</h1>
+          <p class="page-subtitle">Manage upcoming candidate interviews</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="grid-2">
+      <article class="card">
+        <h3 class="panel-title">Schedule Interview</h3>
+        <form id="scheduleForm" novalidate>
+          <div class="field">
+            <label for="applicationSelect">Select Applicant</label>
+            <select id="applicationSelect" required>
+              <option value="">Loading applicants...</option>
+            </select>
+            <p class="inline-note">Choose an applicant entry in format: Name | Job Title</p>
+          </div>
+
+          <div class="field">
+            <label for="scheduledAt">Date and Time</label>
+            <input id="scheduledAt" type="datetime-local" required />
+          </div>
+
+          <div class="field">
+            <label for="mode">Interview Mode</label>
+            <select id="mode">
+              <option value="ONLINE">ONLINE</option>
+              <option value="OFFLINE">OFFLINE</option>
+            </select>
+          </div>
+
+          <div class="field" id="meetingLinkWrap">
+            <label for="meetingLink">Meeting Link</label>
+            <input id="meetingLink" placeholder="https://meet.example.com/room" />
+          </div>
+
+          <div class="field" id="locationWrap" style="display: none;">
+            <label for="location">Office Location</label>
+            <input id="location" placeholder="Office address" />
+          </div>
+
+          <div class="row">
+            <button id="scheduleBtn" type="submit">Schedule Interview</button>
+            <button id="refreshDataBtn" class="btn secondary" type="button">Refresh Data</button>
+          </div>
+          <div id="formError" class="error"></div>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Upcoming Interviews</h3>
+        </div>
+        <div id="interviewList" class="card-list">
+          <div class="empty-state">Loading interviews...</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const recruiter = requireRole("RECRUITER");
+
+    const applicationSelect = document.getElementById("applicationSelect");
+    const scheduleForm = document.getElementById("scheduleForm");
+    const scheduleBtn = document.getElementById("scheduleBtn");
+    const refreshDataBtn = document.getElementById("refreshDataBtn");
+    const formError = document.getElementById("formError");
+    const mode = document.getElementById("mode");
+    const meetingLinkWrap = document.getElementById("meetingLinkWrap");
+    const locationWrap = document.getElementById("locationWrap");
+    const interviewList = document.getElementById("interviewList");
+
+    let applicationOptions = [];
+
+    if (recruiter) {
+      mountNotificationsBell();
+      mode.addEventListener("change", updateModeFields);
+      scheduleForm.addEventListener("submit", scheduleInterview);
+      refreshDataBtn.addEventListener("click", initData);
+      updateModeFields();
+      initData().catch((error) => {
+        console.error("Interview page init failed", error);
+        showToast(error.message || "Unable to load interview data", "error");
+      });
+    }
+
+    function updateModeFields() {
+      const selectedMode = String(mode.value || "").toUpperCase();
+      if (selectedMode === "ONLINE") {
+        meetingLinkWrap.style.display = "block";
+        locationWrap.style.display = "none";
+      } else {
+        meetingLinkWrap.style.display = "none";
+        locationWrap.style.display = "block";
+      }
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    function renderApplicationOptions() {
+      if (!applicationOptions.length) {
+        applicationSelect.innerHTML = '<option value="">No applicants found for your jobs</option>';
+        return;
+      }
+
+      applicationSelect.innerHTML = [
+        '<option value="">Select applicant</option>',
+        ...applicationOptions.map((item, index) =>
+          `<option value="${index}">${item.applicantName} | ${item.jobTitle}</option>`
+        ),
+      ].join("");
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "SCHEDULED") return "status-active";
+      if (normalized === "COMPLETED") return "status-pending";
+      if (normalized === "CANCELLED") return "status-closed";
+      return "status-default";
+    }
+
+    function renderInterviews(interviews) {
+      if (!interviews.length) {
+        interviewList.innerHTML = '<div class="empty-state">No interviews scheduled yet.</div>';
+        return;
+      }
+
+      interviewList.innerHTML = interviews
+        .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
+        .slice(0, 20)
+        .map((item) => `
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">${item.applicantName} | ${item.jobTitle}</p>
+              <p class="list-sub">${formatDateTime(item.scheduledAt)} | ${item.mode}${item.mode === "ONLINE" && item.meetingLink ? " | Link added" : ""}${item.mode === "OFFLINE" && item.location ? " | Location added" : ""}</p>
+            </div>
+            <span class="status-badge ${statusClass(item.status)}">${String(item.status || "SCHEDULED").toUpperCase()}</span>
+          </div>
+        `)
+        .join("");
+    }
+
+    async function initData() {
+      setButtonBusy(refreshDataBtn, true, "Refreshing...");
+      try {
+        const companyId = recruiter.companyId;
+        if (!companyId) {
+          applicationSelect.innerHTML = '<option value="">Recruiter company not found</option>';
+          interviewList.innerHTML = '<div class="empty-state">Recruiter company not found.</div>';
+          return;
+        }
+
+        applicationSelect.innerHTML = '<option value="">Loading applicants...</option>';
+        interviewList.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading interviews...</div>';
+
+        const jobsResp = await apiFetch(`/jobs?companyId=${encodeURIComponent(companyId)}&limit=100`);
+        const jobs = jobsResp?.data?.jobs || [];
+
+        const groups = await Promise.all(
+          jobs.map(async (job) => {
+            try {
+              const applicantsResp = await apiFetch(`/jobs/${job.id}/applicants`);
+              const apps = applicantsResp?.data || [];
+              return apps.map((application) => ({
+                applicationId: application.id,
+                applicantName: application?.applicant?.name || "Applicant",
+                jobTitle: job.title || application?.job?.title || "Job",
+              }));
+            } catch {
+              return [];
+            }
+          })
+        );
+
+        applicationOptions = groups.flat();
+        renderApplicationOptions();
+
+        const interviewGroups = await Promise.all(
+          applicationOptions.map(async (entry) => {
+            try {
+              const interviewResp = await apiFetch(`/interviews/${entry.applicationId}`);
+              const rows = interviewResp?.data || [];
+              return rows.map((interview) => ({
+                ...interview,
+                applicantName: entry.applicantName,
+                jobTitle: entry.jobTitle,
+              }));
+            } catch {
+              return [];
+            }
+          })
+        );
+
+        renderInterviews(interviewGroups.flat());
+      } finally {
+        setButtonBusy(refreshDataBtn, false);
+      }
+    }
+
+    async function scheduleInterview(event) {
+      event.preventDefault();
+      formError.textContent = "";
+
+      const selectedIndex = Number(applicationSelect.value);
+      const selected = applicationOptions[selectedIndex];
+      const selectedMode = String(mode.value || "").toUpperCase();
+      const scheduledAt = document.getElementById("scheduledAt").value;
+      const meetingLink = document.getElementById("meetingLink").value.trim();
+      const location = document.getElementById("location").value.trim();
+
+      if (!selected) {
+        formError.textContent = "Please select an applicant first.";
+        return;
+      }
+
+      if (!scheduledAt) {
+        formError.textContent = "Please pick date and time.";
+        return;
+      }
+
+      if (selectedMode === "ONLINE" && !meetingLink) {
+        formError.textContent = "Meeting link is required for online interviews.";
+        return;
+      }
+
+      if (selectedMode === "OFFLINE" && !location) {
+        formError.textContent = "Location is required for offline interviews.";
+        return;
+      }
+
+      const payload = {
+        applicationId: selected.applicationId,
+        scheduledAt: new Date(scheduledAt).toISOString(),
+        mode: selectedMode,
+        meetingLink: selectedMode === "ONLINE" ? meetingLink : null,
+        location: selectedMode === "OFFLINE" ? location : null,
+      };
+
+      scheduleBtn.disabled = true;
+      scheduleBtn.textContent = "Scheduling...";
+
+      try {
+        await apiFetch("/interviews", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        showToast("Interview scheduled successfully", "success");
+        scheduleForm.reset();
+        updateModeFields();
+        await initData();
+      } catch (error) {
+        formError.textContent = error.message || "Unable to schedule interview.";
+        showToast(formError.textContent, "error");
+      } finally {
+        scheduleBtn.disabled = false;
+        scheduleBtn.textContent = "Schedule Interview";
+      }
+    }
+  </script>
+</body>
+</html>

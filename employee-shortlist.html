@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Shortlist Manager</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Employee Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="employee-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="employee-screening.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Candidate Screening
+        </a>
+        <a href="employee-shortlist.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Shortlist Manager
+        </a>
+        <a href="employee-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">E</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Shortlist Manager</h1>
+          <p class="page-subtitle">Set and manage shortlist limits per job role</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2;color:var(--primary)">
+            <path d="M3 3h18v18H3z"/>
+            <path d="M9 14l2 2 4-4"/>
+          </svg>
+          Set Shortlist Limit
+        </h3>
+      </div>
+      
+      <div class="shortlist-filters">
+        <div class="filter-group">
+          <label for="companyFilter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+              <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01"/>
+            </svg>
+            Company
+          </label>
+          <select id="companyFilter">
+            <option value="">All Companies</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="jobRoleFilter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            Job Role
+          </label>
+          <select id="jobRoleFilter">
+            <option value="">Select Job Role...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="shortlist-config">
+        <div class="config-input-group">
+          <label for="limitInput">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Max Candidates
+          </label>
+          <input id="limitInput" type="number" min="1" max="100" placeholder="Enter maximum candidates..." />
+        </div>
+        <button id="applyLimitBtn" class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Apply Limit
+        </button>
+      </div>
+      
+      <div id="limitStatus" class="limit-status-message"></div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2;color:var(--primary)">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Active Limits
+        </h3>
+        <button id="clearAllLimitsBtn" class="btn secondary">Clear All</button>
+      </div>
+      <div id="limitsDisplay" class="limits-grid">
+        <div class="empty-state">No shortlist limits set yet.</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2;color:var(--primary)">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          Approved Candidates by Job
+        </h3>
+      </div>
+      <div id="approvedSummary" class="approved-summary">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const employee = requireRole("EMPLOYEE");
+    
+    let allApplications = [];
+    let allJobs = [];
+    let allCompanies = [];
+    let shortlistLimits = {};
+
+    if (employee) {
+      mountNotificationsBell();
+      loadShortlistLimits();
+      
+      document.getElementById("applyLimitBtn").addEventListener("click", applyShortlistLimit);
+      document.getElementById("clearAllLimitsBtn").addEventListener("click", clearAllLimits);
+      document.getElementById("companyFilter").addEventListener("change", filterJobsByCompany);
+
+      loadData().catch((error) => {
+        console.error("Load error", error);
+        showToast(error.message || "Unable to load data", "error");
+      });
+    }
+
+    function loadShortlistLimits() {
+      try {
+        shortlistLimits = JSON.parse(localStorage.getItem("shortlistLimits") || "{}");
+      } catch {
+        shortlistLimits = {};
+      }
+    }
+
+    function saveShortlistLimits() {
+      localStorage.setItem("shortlistLimits", JSON.stringify(shortlistLimits));
+    }
+
+    function getApprovedCountForJob(jobId) {
+      return allApplications.filter(app => 
+        app.jobId === jobId && String(app.status).toUpperCase() === "APPROVED"
+      ).length;
+    }
+
+    function filterJobsByCompany() {
+      const companyId = document.getElementById("companyFilter").value;
+      const jobRoleFilter = document.getElementById("jobRoleFilter");
+      
+      let filteredJobs = allJobs;
+      if (companyId) {
+        filteredJobs = allJobs.filter(job => job.companyId === companyId || job.company?.id === companyId);
+      }
+      
+      jobRoleFilter.innerHTML = '<option value="">Select Job Role...</option>' + 
+        filteredJobs.map(j => `<option value="${j.id}">${j.title}</option>`).join("");
+    }
+
+    function applyShortlistLimit() {
+      const jobSelect = document.getElementById("jobRoleFilter");
+      const limitInput = document.getElementById("limitInput");
+      const limitStatus = document.getElementById("limitStatus");
+      
+      const jobId = jobSelect.value;
+      const limit = parseInt(limitInput.value, 10);
+      
+      if (!jobId) {
+        limitStatus.innerHTML = '<span class="status-error">Please select a job role</span>';
+        showToast("Please select a job role", "error");
+        return;
+      }
+      
+      if (!limit || limit < 1) {
+        limitStatus.innerHTML = '<span class="status-error">Please enter a valid limit (minimum 1)</span>';
+        showToast("Please enter a valid limit (minimum 1)", "error");
+        return;
+      }
+      
+      shortlistLimits[jobId] = limit;
+      saveShortlistLimits();
+      
+      const job = allJobs.find(j => j.id === jobId);
+      limitStatus.innerHTML = `<span class="status-success">Limit set: ${limit} candidates for "${job?.title || 'Job'}"</span>`;
+      showToast(`Limit set: ${limit} candidates for "${job?.title || 'Job'}"`, "success");
+      
+      limitInput.value = "";
+      jobSelect.value = "";
+      
+      renderLimitsDisplay();
+      renderApprovedSummary();
+    }
+
+    function clearAllLimits() {
+      if (!confirm("Are you sure you want to clear all shortlist limits?")) return;
+      
+      shortlistLimits = {};
+      saveShortlistLimits();
+      showToast("All limits cleared", "info");
+      renderLimitsDisplay();
+      renderApprovedSummary();
+    }
+
+    function renderLimitsDisplay() {
+      const container = document.getElementById("limitsDisplay");
+      const jobsWithLimits = Object.entries(shortlistLimits).filter(([jobId]) => 
+        allJobs.some(j => j.id === jobId)
+      );
+      
+      if (!jobsWithLimits.length) {
+        container.innerHTML = '<div class="empty-state">No shortlist limits set yet. Select a job role above to set a limit.</div>';
+        return;
+      }
+      
+      container.innerHTML = jobsWithLimits.map(([jobId, limit]) => {
+        const job = allJobs.find(j => j.id === jobId);
+        const approved = getApprovedCountForJob(jobId);
+        const isReached = approved >= limit;
+        const percentage = Math.min(100, Math.round((approved / limit) * 100));
+        
+        return `
+          <div class="limit-card ${isReached ? 'limit-reached' : ''}">
+            <div class="limit-card-header">
+              <div class="limit-job-info">
+                <h4 class="limit-job-title">${job?.title || 'Unknown Job'}</h4>
+                <p class="limit-company">${job?.company?.name || 'Company'}</p>
+              </div>
+              <button type="button" class="limit-remove-btn" data-job-id="${jobId}" aria-label="Remove limit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div class="limit-progress">
+              <div class="limit-progress-bar" style="width: ${percentage}%"></div>
+            </div>
+            <div class="limit-stats">
+              <span class="limit-count">${approved} / ${limit} candidates</span>
+              <span class="limit-status ${isReached ? 'reached' : 'available'}">${isReached ? 'Limit Reached' : 'Available'}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+      
+      container.querySelectorAll(".limit-remove-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          delete shortlistLimits[btn.dataset.jobId];
+          saveShortlistLimits();
+          renderLimitsDisplay();
+          renderApprovedSummary();
+          showToast("Limit removed", "info");
+        });
+      });
+    }
+
+    function renderApprovedSummary() {
+      const container = document.getElementById("approvedSummary");
+      
+      const jobsWithApproved = allJobs.map(job => {
+        const approved = getApprovedCountForJob(job.id);
+        const limit = shortlistLimits[job.id];
+        return { job, approved, limit };
+      }).filter(item => item.approved > 0);
+      
+      if (!jobsWithApproved.length) {
+        container.innerHTML = '<div class="empty-state">No approved candidates yet.</div>';
+        return;
+      }
+      
+      container.innerHTML = `
+        <div class="summary-table">
+          <div class="summary-header">
+            <span>Job Role</span>
+            <span>Company</span>
+            <span>Approved</span>
+            <span>Limit</span>
+            <span>Status</span>
+          </div>
+          ${jobsWithApproved.map(({ job, approved, limit }) => {
+            const hasLimit = limit !== undefined;
+            const isReached = hasLimit && approved >= limit;
+            return `
+              <div class="summary-row ${isReached ? 'row-warning' : ''}">
+                <span class="summary-job">${job.title || 'Job'}</span>
+                <span class="summary-company">${job.company?.name || 'Company'}</span>
+                <span class="summary-approved">${approved}</span>
+                <span class="summary-limit">${hasLimit ? limit : '-'}</span>
+                <span class="summary-status">
+                  ${isReached ? '<span class="badge-warning">Limit Reached</span>' : hasLimit ? '<span class="badge-success">Within Limit</span>' : '<span class="badge-neutral">No Limit</span>'}
+                </span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    async function loadData() {
+      try {
+        const [appsResponse, jobsResponse] = await Promise.all([
+          apiFetch("/applications"),
+          apiFetch("/jobs?limit=100")
+        ]);
+
+        allApplications = appsResponse?.data || [];
+        allJobs = jobsResponse?.data?.jobs || [];
+        
+        // Extract unique companies
+        const companyMap = new Map();
+        allJobs.forEach(job => {
+          if (job.company?.id) {
+            companyMap.set(job.company.id, job.company);
+          }
+        });
+        allCompanies = Array.from(companyMap.values());
+        
+        // Populate company filter
+        document.getElementById("companyFilter").innerHTML = 
+          '<option value="">All Companies</option>' + 
+          allCompanies.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+        
+        // Populate job role filter
+        document.getElementById("jobRoleFilter").innerHTML = 
+          '<option value="">Select Job Role...</option>' + 
+          allJobs.map(j => `<option value="${j.id}">${j.title}</option>`).join("");
+
+        renderLimitsDisplay();
+        renderApprovedSummary();
+
+      } catch (error) {
+        showToast(error.message || "Failed to load data", "error");
+      }
+    }
+  </script>
+</body>
+</html>

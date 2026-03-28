@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Recruiter Profile</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+      </div>
+      <div>
+        <div class="brand">Smart Hire</div>
+        <div class="user-meta">Recruiter Portal</div>
+      </div>
+    </div>
+    <div class="topbar-nav">
+      <a href="recruiter-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="recruiter-profile.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+        Company Profile
+      </a>
+    </div>
+    <div class="topbar-user">
+      <div class="notif-wrap" id="notificationBell"></div>
+      <div class="user-avatar user-name">R</div>
+      <a href="#" class="btn danger small logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-text">
+        <h1 class="page-title">Company Profile</h1>
+        <p class="page-subtitle">Manage your company information for candidates</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Company Information</h3>
+      </div>
+      
+      <form id="profileForm" novalidate>
+        <div class="field">
+          <label for="companyName">Company Name *</label>
+          <input id="companyName" type="text" required placeholder="Enter company name" />
+        </div>
+        
+        <div class="field">
+          <label for="companyPhone">Company Phone</label>
+          <input id="companyPhone" type="tel" placeholder="e.g., +1 (555) 123-4567" />
+        </div>
+        
+        <div class="field">
+          <label for="companyAddress">Company Address</label>
+          <input id="companyAddress" type="text" placeholder="Full office address" />
+        </div>
+        
+        <div class="field">
+          <label for="companyDescription">Company Description</label>
+          <textarea id="companyDescription" placeholder="Tell candidates about your company, culture, and what makes you a great place to work..." style="min-height: 120px;"></textarea>
+        </div>
+        
+        <div class="row" style="margin-top: 16px;">
+          <button id="saveBtn" type="submit">Save Changes</button>
+          <button id="resetBtn" type="button" class="btn secondary">Reset Changes</button>
+        </div>
+        
+        <div id="formError" class="error"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Profile Tips</h3>
+      </div>
+      
+      <div class="card" style="background: var(--surface-2);">
+        <h4 style="margin: 0 0 12px; display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Company Profile Tips
+        </h4>
+        <ul class="tips-list">
+          <li>Add a company description to attract better candidates</li>
+          <li>Provide correct company contact information</li>
+          <li>Complete your company profile to improve trust</li>
+          <li>Keep your company details up to date</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px; background: var(--surface-2);">
+        <h4 style="margin: 0 0 8px; display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Benefits
+        </h4>
+        <ul class="tips-list">
+          <li>Complete profiles get more applicant views</li>
+          <li>Candidates trust companies with detailed profiles</li>
+          <li>Job postings appear more professional</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+<script src="js/main.js"></script>
+<script>
+const recruiter = requireRole("RECRUITER");
+const profileForm = document.getElementById("profileForm");
+const saveBtn = document.getElementById("saveBtn");
+const resetBtn = document.getElementById("resetBtn");
+const formError = document.getElementById("formError");
+
+let originalData = {};
+
+if (recruiter) {
+  mountNotificationsBell();
+  loadProfile();
+  
+  profileForm.addEventListener("submit", saveProfile);
+  resetBtn.addEventListener("click", resetForm);
+}
+
+async function loadProfile() {
+  try {
+    const response = await apiFetch("/profile");
+    const profile = response?.data || {};
+    
+    document.getElementById("companyName").value = profile.name || "";
+    document.getElementById("companyPhone").value = profile.phone || "";
+    document.getElementById("companyAddress").value = profile.address || "";
+    document.getElementById("companyDescription").value = profile.bio || "";
+    
+    originalData = { ...profile };
+    
+  } catch (error) {
+    showToast(error.message || "Failed to load profile", "error");
+  }
+}
+
+async function saveProfile(e) {
+  e.preventDefault();
+  formError.textContent = "";
+  
+  const name = document.getElementById("companyName").value.trim();
+  if (!name) {
+    formError.textContent = "Company name is required";
+    return;
+  }
+  
+  const payload = {
+    name,
+    phone: document.getElementById("companyPhone").value.trim() || null,
+    address: document.getElementById("companyAddress").value.trim() || null,
+    bio: document.getElementById("companyDescription").value.trim() || null
+  };
+  
+  setButtonBusy(saveBtn, true, "Saving...");
+  
+  try {
+    await apiFetch("/profile", {
+      method: "PUT",
+      body: JSON.stringify(payload)
+    });
+    
+    originalData = { ...payload };
+    showToast("Company profile saved successfully!", "success");
+    
+  } catch (error) {
+    formError.textContent = error.message || "Failed to save profile";
+    showToast(error.message || "Failed to save profile", "error");
+  } finally {
+    setButtonBusy(saveBtn, false, "Save Changes");
+  }
+}
+
+function resetForm() {
+  document.getElementById("companyName").value = originalData.name || "";
+  document.getElementById("companyPhone").value = originalData.phone || "";
+  document.getElementById("companyAddress").value = originalData.address || "";
+  document.getElementById("companyDescription").value = originalData.bio || "";
+  formError.textContent = "";
+}
+</script>
+</body>
+</html>

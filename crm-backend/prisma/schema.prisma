@@ -1,0 +1,348 @@
+// Prisma Schema — Smart Hire Recruitment CRM
+// ============================================================
+// Models: User, Company, Recruiter, Applicant, Employee,
+//         Job, Application, InterviewFeedback,
+//         Notification, ActivityLog, Billing
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ======================== ENUMS ========================
+
+enum Role {
+  ADMIN
+  RECRUITER
+  APPLICANT
+  HR
+  EMPLOYEE
+  ACCOUNTANT
+}
+
+enum JobStatus {
+  DRAFT
+  PENDING
+  PENDING_APPROVAL
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWED
+  APPROVED
+  HOLD
+  ACCEPTED
+  REJECTED_FINAL
+  UNDER_REVIEW
+  SHORTLISTED
+  INTERVIEW
+  OFFERED
+  HIRED
+  REJECTED
+  WITHDRAWN
+}
+
+enum BillingStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum InterviewMode {
+  ONLINE
+  OFFLINE
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+// ======================== MODELS ========================
+
+/// Core user model — all roles share this table.
+/// Role-specific data lives in related models (Recruiter, Applicant, Employee).
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  password       String
+  role           Role     @default(APPLICANT)
+  name           String
+  phone          String?
+  profilePicture String?
+  avatar         String?
+  bio            String?
+  address        String?
+  department     String?
+  experienceYears Int?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // — Relationships —
+  company           Company?            @relation(fields: [companyId], references: [id])
+  companyId         String?
+
+  recruiter         Recruiter?          // 1:1 if user is a recruiter
+  applicant         Applicant?          // 1:1 if user is an applicant
+  employee          Employee?           // 1:1 if user is an internal employee
+  applications      Application[]       // Applicant's job applications
+  interviewFeedback InterviewFeedback[] // Feedback given by this user (reviewer)
+  interviewsCreated Interview[]         // Interviews created by recruiter
+  activityLogs      ActivityLog[]       // Actions performed by this user
+  notifications     Notification[]      // User notifications
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+/// Company that recruiters belong to and that posts jobs.
+model Company {
+  id          String   @id @default(uuid())
+  name        String
+  website     String?
+  industry    String?
+  logo        String?
+  description String?
+  location    String?
+  size        String?  // e.g. "50-100", "500+"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // — Relationships —
+  users      User[]       // Users belonging to this company
+  jobs       Job[]        // Jobs posted by this company
+  recruiters Recruiter[]  // Recruiter profiles
+  billings   Billing[]    // Billing records
+
+  @@map("companies")
+}
+
+/// Recruiter profile — linked to a user with RECRUITER role.
+model Recruiter {
+  id          String   @id @default(uuid())
+  designation String?
+  verified    Boolean  @default(false)
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // — Relationships —
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+
+  @@index([companyId])
+  @@map("recruiters")
+}
+
+/// Applicant profile — extended profile for job seekers.
+model Applicant {
+  id              String   @id @default(uuid())
+  education       String?
+  experienceYears Int?
+  skills          String[]
+  resumeUrl       String?
+  portfolio       String?
+  address         String?
+  profilePhoto    String?
+  alternatePhone  String?
+  designation     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // — Relationships —
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  @@map("applicants")
+}
+
+/// Internal employee of the middle company (screening team, HR, etc).
+model Employee {
+  id             String   @id @default(uuid())
+  department     String?
+  position       String?
+  experience     Int?
+  specialization String?
+  skills         String[]
+  isActive       Boolean  @default(true)
+  isApproved     Boolean  @default(false)
+  joinedAt       DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // — Relationships —
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  @@map("employees")
+}
+
+/// Job listing posted by a company.
+model Job {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  location    String?
+  locality    String?
+  type        JobType   @default(FULL_TIME)
+  salaryRange String?
+  salaryMin   Int?
+  salaryMax   Int?
+  skills      String[]
+  status      JobStatus @default(PENDING)
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // — Relationships —
+  company      Company       @relation(fields: [companyId], references: [id])
+  companyId    String
+  applications Application[]
+
+  @@index([status])
+  @@index([companyId])
+  @@map("jobs")
+}
+
+/// An applicant's application to a specific job.
+model Application {
+  id          String            @id @default(uuid())
+  status      ApplicationStatus @default(APPLIED)
+  coverLetter String?
+  resumeUrl   String?
+  notes       String?
+  appliedAt   DateTime          @default(now())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // — Relationships —
+  applicant         User                @relation(fields: [applicantId], references: [id])
+  applicantId       String
+  job               Job                 @relation(fields: [jobId], references: [id])
+  jobId             String
+  interviewFeedback InterviewFeedback[]
+  interviews        Interview[]
+
+  @@unique([applicantId, jobId])
+  @@index([status])
+  @@map("applications")
+}
+
+/// Interview schedule attached to an application.
+model Interview {
+  id            String          @id @default(uuid())
+  scheduledAt   DateTime
+  mode          InterviewMode
+  meetingLink   String?
+  location      String?
+  status        InterviewStatus @default(SCHEDULED)
+  createdAt     DateTime        @default(now())
+
+  // — Relationships —
+  application   Application @relation(fields: [applicationId], references: [id])
+  applicationId String
+  createdByUser User        @relation(fields: [createdBy], references: [id])
+  createdBy     String
+
+  @@index([applicationId])
+  @@index([createdBy])
+  @@index([status])
+  @@map("interviews")
+}
+
+/// Feedback given by a reviewer (employee/recruiter) on a specific application.
+model InterviewFeedback {
+  id                  String   @id @default(uuid())
+  rating              Int?
+  technicalRating     Int?
+  communicationRating Int?
+  comments            String?
+  notes               String?
+  decision            String?  // e.g. "APPROVE", "REJECT", "HOLD"
+  stage               String?  // e.g. "Phone Screen", "Technical", "Final"
+  createdAt           DateTime @default(now())
+
+  // — Relationships —
+  application   Application @relation(fields: [applicationId], references: [id])
+  applicationId String
+  reviewer      User        @relation(fields: [reviewerId], references: [id])
+  reviewerId    String
+
+  @@map("interview_feedback")
+}
+
+/// Notifications for users (application updates, interview schedules, etc).
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // — Relationships —
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+/// Audit log for tracking user actions across the platform.
+model ActivityLog {
+  id        String   @id @default(uuid())
+  action    String
+  entity    String?
+  entityId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  // — Relationships —
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@index([userId])
+  @@index([action])
+  @@map("activity_logs")
+}
+
+/// Billing records for companies.
+model Billing {
+  id         String        @id @default(uuid())
+  plan       String
+  amount     Float
+  status     BillingStatus @default(PENDING)
+  invoiceUrl String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // — Relationships —
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+
+  @@index([companyId])
+  @@index([status])
+  @@map("billings")
+}

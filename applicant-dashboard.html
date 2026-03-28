@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Applicant Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Applicant Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="applicant-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="jobs.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Browse Jobs
+        </a>
+        <a href="applications.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          My Applications
+        </a>
+        <a href="applicant-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">A</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Welcome back!</h1>
+          <p class="page-subtitle">Discover opportunities and track your job applications</p>
+        </div>
+        <div class="page-header-actions">
+          <a href="jobs.html" class="btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Find Jobs
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Applications</p>
+            <h2 id="totalApplications" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">In Review</p>
+            <h2 id="inReview" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Interviews Scheduled</p>
+            <h2 id="interviewsScheduled" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Accepted Offers</p>
+            <h2 id="acceptedOffers" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Upcoming Interviews Section -->
+    <section id="interviewsSection" class="card" style="display: none; margin-bottom: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2;margin-right:8px;vertical-align:middle;color:var(--primary)">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          Upcoming Interviews
+        </h3>
+      </div>
+      <div id="interviewsList" class="interviews-grid">
+        <div class="loading-box"><span class="spinner"></span>Loading interviews...</div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <h3 class="panel-title">Applications by Status</h3>
+        <div class="chart-wrap">
+          <canvas id="statusPieChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Application Activity (Last 7 Days)</h3>
+        <div class="chart-wrap">
+          <canvas id="activityLineChart"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Recommended Jobs</h3>
+        <a class="btn secondary" href="jobs.html">Browse All Jobs</a>
+      </div>
+      <div id="recommendedJobs" class="card-list">
+        <div class="loading-box"><span class="spinner"></span>Finding jobs that match your skills...</div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Applications</h3>
+          <a class="btn secondary" href="applications.html">View All</a>
+        </div>
+        <div id="recentApplications" class="card-list">
+          <div class="loading-box"><span class="spinner"></span>Loading recent applications...</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Notifications</h3>
+        </div>
+        <div id="notificationsPreview" class="card-list">
+          <div class="loading-box"><span class="spinner"></span>Loading notifications...</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <!-- Interview Details Modal -->
+  <div id="interviewModal" class="modal" aria-hidden="true">
+    <div class="modal-card interview-detail-modal">
+      <button id="closeInterviewModalBtn" class="modal-close-btn" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="interviewModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const applicant = requireRole("APPLICANT");
+    const interviewModal = document.getElementById("interviewModal");
+    let pieChart = null;
+    let lineChart = null;
+    let allApps = [];
+
+    if (applicant) {
+      mountNotificationsBell();
+      
+      // Interview modal handlers
+      document.getElementById("closeInterviewModalBtn").addEventListener("click", closeInterviewModal);
+      interviewModal.addEventListener("click", (event) => {
+        if (event.target === interviewModal) closeInterviewModal();
+      });
+      
+      loadDashboard().catch((error) => {
+        console.error("Dashboard load error", error);
+        showToast(error.message || "Unable to load dashboard", "error");
+      });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "APPLIED") return "status-default";
+      if (normalized === "REVIEWED") return "status-pending";
+      if (normalized === "APPROVED") return "status-active";
+      if (normalized === "INTERVIEW") return "status-interview";
+      if (normalized === "HOLD") return "status-pending";
+      if (normalized === "ACCEPTED") return "status-active";
+      if (normalized === "REJECTED" || normalized === "REJECTED_FINAL") return "status-closed";
+      return "status-default";
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function calculateSkillMatch(jobSkills, userSkills) {
+      if (!jobSkills?.length || !userSkills?.length) return 0;
+      const jobSet = new Set(jobSkills.map(s => s.toLowerCase().trim()));
+      const userSet = new Set(userSkills.map(s => s.toLowerCase().trim()));
+      let matches = 0;
+      jobSet.forEach(skill => {
+        if (userSet.has(skill)) matches++;
+      });
+      return jobSkills.length > 0 ? Math.round((matches / jobSkills.length) * 100) : 0;
+    }
+
+    function renderRecommendedJobs(jobs, userSkills, appliedJobIds) {
+      const root = document.getElementById("recommendedJobs");
+      
+      const scoredJobs = jobs
+        .filter(job => !appliedJobIds.has(job.id) && String(job.status || "").toUpperCase() === "ACTIVE")
+        .map(job => ({
+          ...job,
+          matchScore: calculateSkillMatch(job.skills || [], userSkills)
+        }))
+        .filter(job => job.matchScore >= 50)
+        .sort((a, b) => b.matchScore - a.matchScore)
+        .slice(0, 4);
+
+      if (!scoredJobs.length) {
+        root.innerHTML = '<div class="empty-state">No recommended jobs found. Complete your profile to get better recommendations.</div>';
+        return;
+      }
+
+      root.innerHTML = scoredJobs.map(job => `
+        <article class="job-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${job.title || "Untitled Job"}</h3>
+              <p class="list-sub">${job.company?.name || "Company"} • ${job.location || "Remote"}</p>
+            </div>
+            <span class="status-badge status-active">${job.matchScore}% Match</span>
+          </div>
+          <div class="meta">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              ${job.salaryRange || "Competitive"}
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${job.location || "Not specified"}
+            </span>
+          </div>
+          <div class="skill-tags" style="margin-top: 8px;">
+            ${(job.skills || []).slice(0, 4).map(s => `<span class="skill-tag">${s}</span>`).join("")}
+          </div>
+          <div class="row" style="margin-top: 12px;">
+            <a class="btn" href="jobs.html">View & Apply</a>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderRecentApplications(applications) {
+      const root = document.getElementById("recentApplications");
+      if (!applications.length) {
+        root.innerHTML = '<div class="empty-state">No applications yet. Start exploring jobs!</div>';
+        return;
+      }
+
+      root.innerHTML = applications.slice(0, 5).map((app, index) => {
+        const isInterview = String(app.status || "").toUpperCase() === "INTERVIEW";
+        const statusBadgeHtml = isInterview 
+          ? `<button type="button" class="status-badge ${statusClass(app.status)} interview-badge-btn" data-app-index="${index}">Interview Scheduled</button>`
+          : `<span class="status-badge ${statusClass(app.status)}">${String(app.status || "APPLIED").toUpperCase()}</span>`;
+        
+        return `
+        <div class="list-row">
+          <div class="list-main">
+            <p class="list-title">${app.job?.title || "Job"}</p>
+            <p class="list-sub">${app.job?.company?.name || "Company"} • Applied ${formatDate(app.createdAt)}</p>
+          </div>
+          ${statusBadgeHtml}
+        </div>
+      `;
+      }).join("");
+
+      // Bind click handlers for interview badges
+      root.querySelectorAll(".interview-badge-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const app = applications[Number(btn.dataset.appIndex)];
+          if (app) openInterviewModal(app);
+        });
+      });
+    }
+
+    function renderNotificationsPreview(notifications) {
+      const root = document.getElementById("notificationsPreview");
+      if (!notifications.length) {
+        root.innerHTML = '<div class="empty-state">No notifications yet.</div>';
+        return;
+      }
+
+      root.innerHTML = notifications.slice(0, 3).map(notif => `
+        <div class="list-row ${notif.isRead ? "" : "notif-unread"}">
+          <div class="list-main">
+            <p class="list-title">${notif.title || "Notification"}</p>
+            <p class="list-sub">${notif.message || ""}</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderCharts(applications) {
+      const statusCounts = applications.reduce((acc, app) => {
+        const status = String(app.status || "APPLIED").toUpperCase();
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Generate last 7 days data
+      const today = new Date();
+      const last7Days = [];
+      const dailyData = {};
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(date.getDate() - i);
+        const key = date.toISOString().split('T')[0];
+        last7Days.push(key);
+        dailyData[key] = 0;
+      }
+
+      // Count applications per day
+      applications.forEach(app => {
+        const appDate = new Date(app.createdAt);
+        if (!isNaN(appDate.getTime())) {
+          const key = appDate.toISOString().split('T')[0];
+          if (dailyData.hasOwnProperty(key)) {
+            dailyData[key] = (dailyData[key] || 0) + 1;
+          }
+        }
+      });
+
+      // Create labels for chart
+      const dayLabels = last7Days.map((dateStr, index) => {
+        if (index === 6) return 'Today';
+        if (index === 5) return 'Yesterday';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+      });
+
+      const pieCtx = document.getElementById("statusPieChart");
+      const lineCtx = document.getElementById("activityLineChart");
+
+      if (pieChart) pieChart.destroy();
+      if (lineChart) lineChart.destroy();
+
+      const statusColors = {
+        APPLIED: "#94a3b8",
+        REVIEWED: "#3b82f6",
+        APPROVED: "#10b981",
+        INTERVIEW: "#8b5cf6",
+        HOLD: "#f59e0b",
+        ACCEPTED: "#059669",
+        REJECTED: "#ef4444",
+        REJECTED_FINAL: "#dc2626"
+      };
+
+      pieChart = new Chart(pieCtx, {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(statusCounts),
+          datasets: [{
+            data: Object.values(statusCounts),
+            backgroundColor: Object.keys(statusCounts).map(s => statusColors[s] || "#6b7280"),
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+          },
+        },
+      });
+
+      lineChart = new Chart(lineCtx, {
+        type: "line",
+        data: {
+          labels: dayLabels,
+          datasets: [{
+            label: "Applications",
+            data: last7Days.map(d => dailyData[d] || 0),
+            borderColor: "#176087",
+            backgroundColor: "rgba(23, 96, 135, 0.1)",
+            pointBackgroundColor: "#04395E",
+            pointBorderColor: "#04395E",
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: true,
+            tension: 0.4,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: { 
+              beginAtZero: true, 
+              ticks: { precision: 0 },
+              grid: { color: 'rgba(0, 0, 0, 0.05)' }
+            },
+            x: {
+              grid: { display: false }
+            }
+          },
+        },
+      });
+    }
+
+    function renderUpcomingInterviews(applications) {
+      const interviewSection = document.getElementById("interviewsSection");
+      const interviewsList = document.getElementById("interviewsList");
+      
+      // Filter applications that have interview status
+      const interviewApps = applications.filter(app => {
+        const status = String(app.status || "").toUpperCase();
+        return status === "INTERVIEW";
+      });
+
+      if (!interviewApps.length) {
+        interviewSection.style.display = "none";
+        return;
+      }
+
+      interviewSection.style.display = "block";
+
+      interviewsList.innerHTML = interviewApps.map((app, index) => {
+        const hasDetails = app.interviewDate;
+        const interviewDate = app.interviewDate ? new Date(app.interviewDate) : null;
+        const formattedDate = interviewDate ? interviewDate.toLocaleDateString(undefined, {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Date pending';
+        const formattedTime = app.interviewTime || (interviewDate ? interviewDate.toLocaleTimeString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : 'Time pending');
+        const isOnline = (app.interviewMode || "").toLowerCase() === "online";
+        const meetLink = app.meetLink || app.interviewLink || "";
+        const address = app.interviewAddress || app.officeAddress || "";
+
+        return `
+          <article class="interview-card" data-app-index="${index}">
+            <div class="interview-header">
+              <div class="interview-job-info">
+                <h4 class="interview-job-title">${app.job?.title || "Job Interview"}</h4>
+                <p class="interview-company">${app.job?.company?.name || "Company"}</p>
+              </div>
+              <button type="button" class="status-badge status-interview interview-card-badge" data-app-index="${index}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;margin-right:4px">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                View Details
+              </button>
+            </div>
+            
+            ${hasDetails ? `
+            <div class="interview-details">
+              <div class="interview-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                <span>${formattedDate}</span>
+              </div>
+              <div class="interview-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+                <span>${formattedTime}</span>
+              </div>
+              <div class="interview-detail-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  ${isOnline 
+                    ? '<path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M5 18h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>'
+                    : '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'
+                  }
+                </svg>
+                <span>${isOnline ? 'Online Meeting' : 'In-Person'}</span>
+              </div>
+            </div>
+
+            ${isOnline && meetLink ? `
+              <div class="interview-action">
+                <a href="${meetLink}" target="_blank" rel="noopener noreferrer" class="btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+                    <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M5 18h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>
+                  </svg>
+                  Join Meeting
+                </a>
+              </div>
+            ` : ''}
+
+            ${!isOnline && address ? `
+              <div class="interview-location">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>${address}</span>
+              </div>
+            ` : ''}
+            ` : `
+            <div class="interview-pending-notice">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              <span>Interview details will be shared soon</span>
+            </div>
+            `}
+          </article>
+        `;
+      }).join("");
+
+      // Bind click handlers for interview detail buttons
+      interviewsList.querySelectorAll(".interview-card-badge").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const app = interviewApps[Number(btn.dataset.appIndex)];
+          if (app) openInterviewModal(app);
+        });
+      });
+    }
+
+    function openInterviewModal(app) {
+      const interviewDate = app.interviewDate ? new Date(app.interviewDate) : null;
+      const formattedDate = interviewDate ? interviewDate.toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }) : 'Not specified';
+      
+      const formattedTime = app.interviewTime || (interviewDate ? interviewDate.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+      }) : 'Not specified');
+
+      const mode = app.interviewMode || 'Not specified';
+      const isOnline = mode.toLowerCase() === 'online';
+      const meetLink = app.meetLink || app.interviewLink || '';
+      const address = app.interviewAddress || app.officeAddress || '';
+      const hasDetails = app.interviewDate || meetLink || address;
+
+      document.getElementById("interviewModalContent").innerHTML = `
+        <div class="interview-modal-header">
+          <div class="interview-modal-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="interview-modal-title">Interview Details</h2>
+            <p class="interview-modal-subtitle">${app.job?.title || 'Job Position'} at ${app.job?.company?.name || 'Company'}</p>
+          </div>
+        </div>
+
+        ${hasDetails ? `
+        <div class="interview-info-grid">
+          <div class="interview-info-item">
+            <div class="interview-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+            </div>
+            <div class="interview-info-content">
+              <span class="interview-info-label">Date</span>
+              <span class="interview-info-value">${formattedDate}</span>
+            </div>
+          </div>
+          
+          <div class="interview-info-item">
+            <div class="interview-info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <div class="interview-info-content">
+              <span class="interview-info-label">Time</span>
+              <span class="interview-info-value">${formattedTime}</span>
+            </div>
+          </div>
+          
+          <div class="interview-info-item">
+            <div class="interview-info-icon ${isOnline ? 'online' : 'offline'}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                ${isOnline 
+                  ? '<path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M5 18h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>'
+                  : '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'
+                }
+              </svg>
+            </div>
+            <div class="interview-info-content">
+              <span class="interview-info-label">Mode</span>
+              <span class="interview-info-value">${mode}</span>
+            </div>
+          </div>
+        </div>
+
+        ${isOnline && meetLink ? `
+          <div class="interview-meeting-section">
+            <div class="interview-meeting-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              Meeting Link
+            </div>
+            <div class="interview-meeting-link">
+              <span class="meeting-url">${meetLink}</span>
+              <a href="${meetLink}" target="_blank" rel="noopener noreferrer" class="btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2">
+                  <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14M5 18h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2z"/>
+                </svg>
+                Join Meeting
+              </a>
+            </div>
+          </div>
+        ` : ''}
+
+        ${!isOnline && address ? `
+          <div class="interview-location-section">
+            <div class="interview-meeting-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              Interview Location
+            </div>
+            <div class="interview-address">
+              ${address}
+            </div>
+          </div>
+        ` : ''}
+        ` : `
+        <div class="interview-pending-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          <p>Interview details will be shared soon. Please check back later or contact the recruiter.</p>
+        </div>
+        `}
+      `;
+
+      interviewModal.classList.add("open");
+      interviewModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeInterviewModal() {
+      interviewModal.classList.remove("open");
+      interviewModal.setAttribute("aria-hidden", "true");
+    }
+
+    async function loadDashboard() {
+      try {
+        const [appsResponse, jobsResponse, notifResponse, profileResponse] = await Promise.all([
+          apiFetch("/applications/my"),
+          apiFetch("/jobs?limit=50"),
+          apiFetch("/notifications"),
+          apiFetch("/profile").catch(() => ({ data: {} }))
+        ]);
+
+        let applications = appsResponse?.data || [];
+        const jobs = jobsResponse?.data?.jobs || [];
+        const notifications = notifResponse?.data || [];
+        const profile = profileResponse?.data || {};
+
+        // Fetch interview details for applications with INTERVIEW status
+        const interviewApps = applications.filter(app => 
+          String(app.status || "").toUpperCase() === "INTERVIEW"
+        );
+        
+        if (interviewApps.length > 0) {
+          const interviewDetails = await Promise.all(
+            interviewApps.map(async (app) => {
+              try {
+                const interviewResp = await apiFetch(`/interviews/${app.id}`);
+                const interviews = interviewResp?.data || [];
+                // Get the most recent interview
+                const interview = interviews.sort((a, b) => 
+                  new Date(b.scheduledAt || 0) - new Date(a.scheduledAt || 0)
+                )[0];
+                return { appId: app.id, interview };
+              } catch {
+                return { appId: app.id, interview: null };
+              }
+            })
+          );
+
+          // Merge interview data into applications
+          applications = applications.map(app => {
+            const details = interviewDetails.find(d => d.appId === app.id);
+            if (details?.interview) {
+              const interview = details.interview;
+              const scheduledDate = interview.scheduledAt ? new Date(interview.scheduledAt) : null;
+              return {
+                ...app,
+                interviewDate: interview.scheduledAt,
+                interviewTime: scheduledDate ? scheduledDate.toLocaleTimeString(undefined, {
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }) : null,
+                interviewMode: interview.mode,
+                meetLink: interview.meetingLink,
+                interviewLink: interview.meetingLink,
+                interviewAddress: interview.location,
+                officeAddress: interview.location
+              };
+            }
+            return app;
+          });
+        }
+
+        const userSkills = profile.skills || [];
+        const appliedJobIds = new Set(applications.map(a => a.jobId));
+
+        const total = applications.length;
+        const inReview = applications.filter(a => ["REVIEWED", "APPROVED"].includes(String(a.status || "").toUpperCase())).length;
+        const interviews = applications.filter(a => String(a.status || "").toUpperCase() === "INTERVIEW").length;
+        const accepted = applications.filter(a => String(a.status || "").toUpperCase() === "ACCEPTED").length;
+
+        document.getElementById("totalApplications").textContent = String(total);
+        document.getElementById("inReview").textContent = String(inReview);
+        document.getElementById("interviewsScheduled").textContent = String(interviews);
+        document.getElementById("acceptedOffers").textContent = String(accepted);
+
+        renderRecommendedJobs(jobs, userSkills, appliedJobIds);
+        renderRecentApplications(applications);
+        renderNotificationsPreview(notifications);
+        renderCharts(applications);
+        renderUpcomingInterviews(applications);
+
+      } catch (error) {
+        showToast(error.message || "Failed to load dashboard", "error");
+      }
+    }
+  </script>
+
+  <!-- SmartHire AI Chatbot - Applicant Assistant -->
+  <script src="chatbot/chatbotEngine.js"></script>
+  <script src="chatbot/applicantKnowledge.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new SmartHireChatbot({
+        knowledgeBase: window.applicantKnowledge || [],
+        title: 'Applicant Assistant',
+        welcomeMessage: "Hello! 👋 I'm your Applicant Assistant. Ask me about finding jobs, applying, or tracking your applications.",
+        suggestions: ['How to apply?', 'Track application', 'Upload resume']
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Employee Profile</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+      </div>
+      <div>
+        <div class="brand">Smart Hire</div>
+        <div class="user-meta">Employee Portal</div>
+      </div>
+    </div>
+    <div class="topbar-nav">
+      <a href="employee-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="employee-screening.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Candidate Screening
+      </a>
+      <a href="employee-shortlist.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Shortlist Manager
+      </a>
+      <a href="employee-profile.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </div>
+    <div class="topbar-user">
+      <div class="user-avatar user-name">E</div>
+      <a href="#" class="btn danger small logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-text">
+        <h1 class="page-title">Employee Profile</h1>
+        <p class="page-subtitle">Manage your profile and expertise</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Personal Information</h3>
+      </div>
+      
+      <form id="profileForm" novalidate>
+        <div class="field">
+          <label for="name">Full Name *</label>
+          <input id="name" type="text" required placeholder="Enter your full name" />
+        </div>
+        
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="tel" placeholder="e.g., +1 (555) 123-4567" />
+          </div>
+          <div class="field">
+            <label for="department">Department</label>
+            <input id="department" type="text" placeholder="e.g., Human Resources" />
+          </div>
+        </div>
+        
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="position">Position</label>
+            <input id="position" type="text" placeholder="e.g., Senior Recruiter" />
+          </div>
+          <div class="field">
+            <label for="experience">Years of Experience</label>
+            <input id="experience" type="number" min="0" max="50" placeholder="e.g., 5" />
+          </div>
+        </div>
+        
+        <div class="field">
+          <label for="address">Address</label>
+          <input id="address" type="text" placeholder="City, State, Country" />
+        </div>
+        
+        <div class="field">
+          <label for="specialization">Specialization</label>
+          <input id="specialization" type="text" placeholder="e.g., Technical Hiring, Executive Search" />
+        </div>
+        
+        <div class="field">
+          <label for="bio">About Me</label>
+          <textarea id="bio" placeholder="Describe your experience in candidate screening and hiring..." style="min-height: 100px;"></textarea>
+        </div>
+        
+        <div class="field">
+          <label for="skills">Skills & Expertise</label>
+          <input id="skillsInput" type="text" placeholder="Type a skill and press Enter" />
+          <div id="skillsTags" class="skill-tags-input" style="margin-top: 8px;"></div>
+          <p class="hint">Add skills like: Interviewing, Technical Assessment, HR Compliance, etc.</p>
+        </div>
+        
+        <div class="row" style="margin-top: 16px;">
+          <button id="saveBtn" type="submit">Save Profile</button>
+          <button id="resetBtn" type="button" class="btn secondary">Reset Changes</button>
+        </div>
+        
+        <div id="formError" class="error"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Profile Completion</h3>
+      </div>
+      
+      <div class="profile-completion">
+        <div class="completion-circle">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="completionPath" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <text x="18" y="20.35" class="percentage" id="completionText">0%</text>
+          </svg>
+        </div>
+        <p class="completion-label">Profile Strength</p>
+      </div>
+      
+      <div class="completion-checklist" id="completionChecklist">
+        <div class="checklist-item" data-field="name">
+          <span class="checklist-icon">○</span>
+          <span>Add your name</span>
+        </div>
+        <div class="checklist-item" data-field="phone">
+          <span class="checklist-icon">○</span>
+          <span>Add phone number</span>
+        </div>
+        <div class="checklist-item" data-field="department">
+          <span class="checklist-icon">○</span>
+          <span>Specify department</span>
+        </div>
+        <div class="checklist-item" data-field="bio">
+          <span class="checklist-icon">○</span>
+          <span>Write a bio</span>
+        </div>
+        <div class="checklist-item" data-field="skills">
+          <span class="checklist-icon">○</span>
+          <span>Add your skills</span>
+        </div>
+        <div class="checklist-item" data-field="experience">
+          <span class="checklist-icon">○</span>
+          <span>Add experience</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px; background: var(--surface-2);">
+        <h4 style="margin: 0 0 8px;">Your Screening Stats</h4>
+        <div class="screening-stats">
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalReviewed">0</span>
+            <span class="mini-stat-label">Reviewed</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalApproved">0</span>
+            <span class="mini-stat-label">Approved</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalRejected">0</span>
+            <span class="mini-stat-label">Rejected</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px; background: var(--surface-2);">
+        <h4 style="margin: 0 0 8px;">Profile Tips</h4>
+        <ul class="tips-list">
+          <li>Complete profiles help team coordination</li>
+          <li>Add your specialization for better task assignment</li>
+          <li>Keep your skills updated</li>
+          <li>A good bio helps colleagues understand your expertise</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+const employee = requireRole("EMPLOYEE");
+const profileForm = document.getElementById("profileForm");
+const saveBtn = document.getElementById("saveBtn");
+const resetBtn = document.getElementById("resetBtn");
+const formError = document.getElementById("formError");
+const skillsInput = document.getElementById("skillsInput");
+const skillsTags = document.getElementById("skillsTags");
+
+let userSkills = [];
+let originalData = {};
+
+if (employee) {
+  mountNotificationsBell();
+  loadProfile();
+  loadScreeningStats();
+  
+  profileForm.addEventListener("submit", saveProfile);
+  resetBtn.addEventListener("click", resetForm);
+  skillsInput.addEventListener("keydown", handleSkillInput);
+  
+  ["name", "phone", "department", "bio", "experience"].forEach(field => {
+    document.getElementById(field).addEventListener("input", updateCompletion);
+  });
+}
+
+function handleSkillInput(e) {
+  if (e.key === "Enter" || e.key === ",") {
+    e.preventDefault();
+    const skill = skillsInput.value.trim().replace(/,/g, "");
+    if (skill && !userSkills.includes(skill)) {
+      userSkills.push(skill);
+      renderSkills();
+      updateCompletion();
+    }
+    skillsInput.value = "";
+  }
+}
+
+function renderSkills() {
+  skillsTags.innerHTML = userSkills.map((skill, index) => `
+    <span class="skill-tag editable">
+      ${skill}
+      <button type="button" class="skill-remove" data-index="${index}">×</button>
+    </span>
+  `).join("");
+  
+  document.querySelectorAll(".skill-remove").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      userSkills.splice(Number(btn.dataset.index), 1);
+      renderSkills();
+      updateCompletion();
+    });
+  });
+}
+
+function updateCompletion() {
+  const fields = {
+    name: document.getElementById("name").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    department: document.getElementById("department").value.trim(),
+    bio: document.getElementById("bio").value.trim(),
+    skills: userSkills.length > 0,
+    experience: document.getElementById("experience").value.trim()
+  };
+  
+  let completed = 0;
+  const total = Object.keys(fields).length;
+  
+  Object.entries(fields).forEach(([key, value]) => {
+    const item = document.querySelector(`[data-field="${key}"]`);
+    if (item) {
+      const hasValue = typeof value === "boolean" ? value : !!value;
+      item.classList.toggle("completed", hasValue);
+      item.querySelector(".checklist-icon").textContent = hasValue ? "✓" : "○";
+      if (hasValue) completed++;
+    }
+  });
+  
+  const percentage = Math.round((completed / total) * 100);
+  document.getElementById("completionPath").setAttribute("stroke-dasharray", `${percentage}, 100`);
+  document.getElementById("completionText").textContent = `${percentage}%`;
+}
+
+async function loadProfile() {
+  try {
+    const response = await apiFetch("/profile");
+    const profile = response?.data || {};
+    
+    document.getElementById("name").value = profile.name || "";
+    document.getElementById("phone").value = profile.phone || "";
+    document.getElementById("address").value = profile.address || "";
+    document.getElementById("bio").value = profile.bio || "";
+    document.getElementById("department").value = profile.department || "";
+    document.getElementById("position").value = profile.position || "";
+    document.getElementById("experience").value = profile.experience || "";
+    document.getElementById("specialization").value = profile.specialization || "";
+    
+    userSkills = profile.skills || [];
+    renderSkills();
+    
+    originalData = { ...profile, skills: [...userSkills] };
+    
+    updateCompletion();
+    
+  } catch (error) {
+    showToast(error.message || "Failed to load profile", "error");
+  }
+}
+
+async function loadScreeningStats() {
+  try {
+    const response = await apiFetch("/applications");
+    const applications = response?.data || [];
+    
+    const reviewed = applications.filter(a => String(a.status).toUpperCase() === "REVIEWED").length;
+    const approved = applications.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
+    const rejected = applications.filter(a => String(a.status).toUpperCase() === "REJECTED").length;
+    
+    document.getElementById("totalReviewed").textContent = String(reviewed);
+    document.getElementById("totalApproved").textContent = String(approved);
+    document.getElementById("totalRejected").textContent = String(rejected);
+    
+  } catch (error) {
+    console.error("Failed to load screening stats", error);
+  }
+}
+
+async function saveProfile(e) {
+  e.preventDefault();
+  formError.textContent = "";
+  
+  const name = document.getElementById("name").value.trim();
+  if (!name) {
+    formError.textContent = "Name is required";
+    return;
+  }
+  
+  const payload = {
+    name,
+    phone: document.getElementById("phone").value.trim() || null,
+    address: document.getElementById("address").value.trim() || null,
+    bio: document.getElementById("bio").value.trim() || null,
+    department: document.getElementById("department").value.trim() || null,
+    position: document.getElementById("position").value.trim() || null,
+    experience: document.getElementById("experience").value ? Number(document.getElementById("experience").value) : null,
+    specialization: document.getElementById("specialization").value.trim() || null,
+    skills: userSkills.length ? userSkills : null
+  };
+  
+  setButtonBusy(saveBtn, true, "Saving...");
+  
+  try {
+    await apiFetch("/profile", {
+      method: "PUT",
+      body: JSON.stringify(payload)
+    });
+    
+    originalData = { ...payload, skills: [...userSkills] };
+    showToast("Profile saved successfully!", "success");
+    updateCompletion();
+    
+  } catch (error) {
+    formError.textContent = error.message || "Failed to save profile";
+    showToast(error.message || "Failed to save profile", "error");
+  } finally {
+    setButtonBusy(saveBtn, false, "Save Profile");
+  }
+}
+
+function resetForm() {
+  document.getElementById("name").value = originalData.name || "";
+  document.getElementById("phone").value = originalData.phone || "";
+  document.getElementById("address").value = originalData.address || "";
+  document.getElementById("bio").value = originalData.bio || "";
+  document.getElementById("department").value = originalData.department || "";
+  document.getElementById("position").value = originalData.position || "";
+  document.getElementById("experience").value = originalData.experience || "";
+  document.getElementById("specialization").value = originalData.specialization || "";
+  
+  userSkills = originalData.skills ? [...originalData.skills] : [];
+  renderSkills();
+  
+  formError.textContent = "";
+  updateCompletion();
+  showToast("Changes reset", "info");
+}
+</script>
+</body>
+</html>

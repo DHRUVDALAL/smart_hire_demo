@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Accountant Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Accountant Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="accountant-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="accountant-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">$</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Accountant Dashboard</h1>
+          <p class="page-subtitle">Finance & billing operations</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Companies</p>
+            <h2 id="totalCompanies" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Active Subscriptions</p>
+            <h2 id="activeSubscriptions" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Revenue</p>
+            <h2 id="totalRevenue" class="stat-value">$0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Pending Payments</p>
+            <h2 id="pendingPayments" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Paid Invoices</p>
+            <h2 id="paidInvoices" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Overdue</p>
+            <h2 id="overdueInvoices" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+      <article class="card">
+        <h3 class="panel-title">Payment Status</h3>
+        <div class="chart-wrap">
+          <canvas id="paymentStatusChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Revenue per Company</h3>
+        <div class="chart-wrap">
+          <canvas id="revenueCompanyChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Monthly Revenue</h3>
+        <div class="chart-wrap">
+          <canvas id="monthlyRevenueChart"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Company Billing Accounts</h3>
+        <button id="refreshCompaniesBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="companySearch" class="search" placeholder="Search companies..." />
+        <select id="billingStatusFilter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="overdue">Overdue</option>
+        </select>
+      </div>
+      <div id="companiesList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading companies...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Invoice Management</h3>
+        <button id="refreshInvoicesBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="invoiceSearch" class="search" placeholder="Search invoices..." />
+        <select id="invoiceStatusFilter">
+          <option value="">All Status</option>
+          <option value="PAID">Paid</option>
+          <option value="PENDING">Pending</option>
+          <option value="OVERDUE">Overdue</option>
+        </select>
+      </div>
+      <div id="invoicesList" class="card-list" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading invoices...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Payment Collections</h3>
+        <button id="refreshPaymentsBtn" class="btn secondary">Refresh</button>
+      </div>
+      <div class="toolbar">
+        <select id="paymentStatusFilter">
+          <option value="">All Payments</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="PENDING">Pending</option>
+          <option value="FAILED">Failed</option>
+        </select>
+        <input type="date" id="paymentDateFilter" />
+      </div>
+      <div id="paymentsList" class="acc-payments-table" style="margin-top: 12px;">
+        <div class="loading-box"><span class="spinner"></span>Loading payments...</div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Revenue Overview</h3>
+      </div>
+      <div id="revenueOverview" class="revenue-summary-grid">
+        <div class="loading-box"><span class="spinner"></span>Loading revenue data...</div>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top: 24px;">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Payments</h3>
+        </div>
+        <div id="recentPayments" class="card-list">
+          <div class="empty-state">No recent payments</div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Overdue Alerts</h3>
+        </div>
+        <div id="overdueAlerts" class="card-list">
+          <div class="empty-state">No overdue alerts</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <div id="billingModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="max-width: 700px;">
+      <div class="section-head">
+        <h3 class="panel-title" id="billingModalTitle">Billing History</h3>
+        <button id="closeBillingModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="billingModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="invoiceModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Invoice Details</h3>
+        <button id="closeInvoiceModalBtn" class="btn secondary">Close</button>
+      </div>
+      <div id="invoiceModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const accountant = requireRole("ACCOUNTANT");
+    
+    let allCompanies = [];
+    let allInvoices = [];
+    let allPayments = [];
+    let allJobs = [];
+    
+    let paymentStatusChart = null;
+    let revenueCompanyChart = null;
+    let monthlyRevenueChart = null;
+    
+    let currentCompanyId = null;
+
+    if (accountant) {
+      mountNotificationsBell();
+      
+      document.getElementById("refreshCompaniesBtn").addEventListener("click", loadCompanies);
+      document.getElementById("refreshInvoicesBtn").addEventListener("click", loadInvoices);
+      document.getElementById("refreshPaymentsBtn").addEventListener("click", loadPayments);
+      
+      document.getElementById("companySearch").addEventListener("input", renderCompanies);
+      document.getElementById("billingStatusFilter").addEventListener("change", renderCompanies);
+      document.getElementById("invoiceSearch").addEventListener("input", renderInvoices);
+      document.getElementById("invoiceStatusFilter").addEventListener("change", renderInvoices);
+      document.getElementById("paymentStatusFilter").addEventListener("change", renderPayments);
+      document.getElementById("paymentDateFilter").addEventListener("change", renderPayments);
+      
+      document.getElementById("closeBillingModalBtn").addEventListener("click", closeBillingModal);
+      document.getElementById("billingModal").addEventListener("click", (e) => {
+        if (e.target.id === "billingModal") closeBillingModal();
+      });
+      
+      document.getElementById("closeInvoiceModalBtn").addEventListener("click", closeInvoiceModal);
+      document.getElementById("invoiceModal").addEventListener("click", (e) => {
+        if (e.target.id === "invoiceModal") closeInvoiceModal();
+      });
+
+      loadDashboard().catch((error) => {
+        console.error("Dashboard load error", error);
+        showToast(error.message || "Unable to load dashboard", "error");
+      });
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function formatCurrency(amount) {
+      return "₹" + (amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "PAID" || normalized === "ACTIVE" || normalized === "COMPLETED") return "status-paid";
+      if (normalized === "PENDING") return "status-pending";
+      if (normalized === "OVERDUE" || normalized === "FAILED") return "status-overdue";
+      return "status-default";
+    }
+
+    async function loadDashboard() {
+      try {
+        const jobsResponse = await apiFetch("/jobs?limit=500").catch(() => ({ data: { jobs: [] } }));
+        allJobs = jobsResponse?.data?.jobs || [];
+        
+        extractCompaniesFromJobs();
+        generateMockFinanceData();
+        
+        updateStats();
+        renderCompanies();
+        renderInvoices();
+        renderPayments();
+        renderRevenueOverview();
+        renderRecentActivity();
+        renderCharts();
+
+      } catch (error) {
+        showToast(error.message || "Failed to load dashboard", "error");
+      }
+    }
+
+    function extractCompaniesFromJobs() {
+      const companyMap = {};
+      allJobs.forEach(job => {
+        if (job.company) {
+          if (!companyMap[job.company.id]) {
+            companyMap[job.company.id] = {
+              ...job.company,
+              jobCount: 0,
+              plan: ["Basic", "Professional", "Enterprise"][Math.floor(Math.random() * 3)],
+              billingStatus: ["active", "active", "active", "pending", "overdue"][Math.floor(Math.random() * 5)],
+              monthlyFee: [299, 599, 999][Math.floor(Math.random() * 3)],
+              totalPaid: Math.floor(Math.random() * 50000) + 5000
+            };
+          }
+          companyMap[job.company.id].jobCount++;
+        }
+      });
+      allCompanies = Object.values(companyMap);
+      
+      if (allCompanies.length === 0) {
+        allCompanies = [
+          { id: 1, name: "TechCorp Solutions", jobCount: 12, plan: "Enterprise", billingStatus: "active", monthlyFee: 999, totalPaid: 35000 },
+          { id: 2, name: "InnovateTech Inc", jobCount: 8, plan: "Professional", billingStatus: "active", monthlyFee: 599, totalPaid: 22000 },
+          { id: 3, name: "StartupXYZ", jobCount: 3, plan: "Basic", billingStatus: "pending", monthlyFee: 299, totalPaid: 5000 },
+          { id: 4, name: "GlobalHire Ltd", jobCount: 15, plan: "Enterprise", billingStatus: "active", monthlyFee: 999, totalPaid: 48000 },
+          { id: 5, name: "CloudFirst Co", jobCount: 5, plan: "Professional", billingStatus: "overdue", monthlyFee: 599, totalPaid: 12000 }
+        ];
+      }
+    }
+
+    function generateMockFinanceData() {
+      allInvoices = allCompanies.flatMap((company, idx) => {
+        const invoices = [];
+        const statuses = ["PAID", "PAID", "PAID", "PENDING", "OVERDUE"];
+        for (let i = 0; i < 3; i++) {
+          invoices.push({
+            id: idx * 10 + i + 1,
+            companyId: company.id,
+            companyName: company.name,
+            amount: company.monthlyFee,
+            dueDate: new Date(Date.now() - (i * 30 - 10) * 24 * 60 * 60 * 1000).toISOString(),
+            status: statuses[(idx + i) % statuses.length],
+            invoiceNumber: `INV-${2024}${String(idx + 1).padStart(3, "0")}${i + 1}`
+          });
+        }
+        return invoices;
+      });
+
+      allPayments = allInvoices
+        .filter(inv => inv.status === "PAID")
+        .map((inv, idx) => ({
+          id: idx + 1,
+          invoiceId: inv.id,
+          companyName: inv.companyName,
+          amount: inv.amount,
+          date: new Date(Date.now() - idx * 5 * 24 * 60 * 60 * 1000).toISOString(),
+          method: ["Credit Card", "Bank Transfer", "PayPal", "Wire Transfer"][idx % 4],
+          status: "COMPLETED"
+        }));
+    }
+
+    async function loadCompanies() {
+      document.getElementById("companiesList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      extractCompaniesFromJobs();
+      renderCompanies();
+      showToast("Companies refreshed", "success");
+    }
+
+    async function loadInvoices() {
+      document.getElementById("invoicesList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      generateMockFinanceData();
+      renderInvoices();
+      showToast("Invoices refreshed", "success");
+    }
+
+    async function loadPayments() {
+      document.getElementById("paymentsList").innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading...</div>';
+      generateMockFinanceData();
+      renderPayments();
+      showToast("Payments refreshed", "success");
+    }
+
+    function updateStats() {
+      const totalCompanies = allCompanies.length;
+      const activeSubs = allCompanies.filter(c => c.billingStatus === "active").length;
+      const totalRevenue = allCompanies.reduce((sum, c) => sum + (c.totalPaid || 0), 0);
+      const pendingPayments = allInvoices.filter(i => i.status === "PENDING").length;
+      const paidInvoices = allInvoices.filter(i => i.status === "PAID").length;
+      const overdueInvoices = allInvoices.filter(i => i.status === "OVERDUE").length;
+
+      document.getElementById("totalCompanies").textContent = String(totalCompanies);
+      document.getElementById("activeSubscriptions").textContent = String(activeSubs);
+      document.getElementById("totalRevenue").textContent = formatCurrency(totalRevenue);
+      document.getElementById("pendingPayments").textContent = String(pendingPayments);
+      document.getElementById("paidInvoices").textContent = String(paidInvoices);
+      document.getElementById("overdueInvoices").textContent = String(overdueInvoices);
+    }
+
+    function renderCompanies() {
+      const container = document.getElementById("companiesList");
+      const search = document.getElementById("companySearch").value.toLowerCase();
+      const statusFilter = document.getElementById("billingStatusFilter").value;
+      
+      let filtered = allCompanies.filter(company => {
+        const matchSearch = !search || (company.name || "").toLowerCase().includes(search);
+        const matchStatus = !statusFilter || company.billingStatus === statusFilter;
+        return matchSearch && matchStatus;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No companies found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(company => `
+        <article class="acc-company-card">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${company.name || "Unknown Company"}</h3>
+              <p class="list-sub">${company.jobCount || 0} jobs posted • ${company.plan} Plan</p>
+            </div>
+            <span class="status-badge ${statusClass(company.billingStatus)}">${(company.billingStatus || "unknown").toUpperCase()}</span>
+          </div>
+          <div class="list-meta">
+            <span><strong>Monthly Fee:</strong> ${formatCurrency(company.monthlyFee)}</span>
+            <span><strong>Total Paid:</strong> ${formatCurrency(company.totalPaid)}</span>
+          </div>
+          <div class="row" style="margin-top: 12px; gap: 8px;">
+            <button class="btn small" onclick="viewBillingHistory(${company.id})">View History</button>
+            <button class="btn small secondary" onclick="generateInvoice(${company.id})">Generate Invoice</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderInvoices() {
+      const container = document.getElementById("invoicesList");
+      const search = document.getElementById("invoiceSearch").value.toLowerCase();
+      const statusFilter = document.getElementById("invoiceStatusFilter").value;
+      
+      let filtered = allInvoices.filter(invoice => {
+        const matchSearch = !search || 
+          (invoice.companyName || "").toLowerCase().includes(search) ||
+          (invoice.invoiceNumber || "").toLowerCase().includes(search);
+        const matchStatus = !statusFilter || invoice.status === statusFilter;
+        return matchSearch && matchStatus;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No invoices found</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(invoice => `
+        <article class="acc-invoice-card ${invoice.status.toLowerCase()}">
+          <div class="row" style="justify-content: space-between; align-items: flex-start;">
+            <div class="list-main">
+              <h3 class="list-title">${invoice.invoiceNumber}</h3>
+              <p class="list-sub">${invoice.companyName}</p>
+            </div>
+            <span class="status-badge ${statusClass(invoice.status)}">${invoice.status}</span>
+          </div>
+          <div class="list-meta">
+            <span><strong>Amount:</strong> ${formatCurrency(invoice.amount)}</span>
+            <span><strong>Due:</strong> ${formatDate(invoice.dueDate)}</span>
+          </div>
+          <div class="row" style="margin-top: 12px; gap: 8px;">
+            ${invoice.status !== "PAID" ? `<button class="btn small success" onclick="markAsPaid(${invoice.id})">Mark as Paid</button>` : ""}
+            ${invoice.status === "PENDING" || invoice.status === "OVERDUE" ? `<button class="btn small secondary" onclick="sendReminder(${invoice.id})">Send Reminder</button>` : ""}
+            <button class="btn small" onclick="downloadInvoice(${invoice.id})">Download</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderPayments() {
+      const container = document.getElementById("paymentsList");
+      const statusFilter = document.getElementById("paymentStatusFilter").value;
+      const dateFilter = document.getElementById("paymentDateFilter").value;
+      
+      let filtered = allPayments.filter(payment => {
+        const matchStatus = !statusFilter || payment.status === statusFilter;
+        const matchDate = !dateFilter || (payment.date && payment.date.startsWith(dateFilter));
+        return matchStatus && matchDate;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state">No payments found</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="acc-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Method</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filtered.map(payment => `
+              <tr>
+                <td><strong>${payment.companyName}</strong></td>
+                <td>${formatCurrency(payment.amount)}</td>
+                <td>${formatDate(payment.date)}</td>
+                <td>${payment.method}</td>
+                <td><span class="status-badge ${statusClass(payment.status)}">${payment.status}</span></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderRevenueOverview() {
+      const container = document.getElementById("revenueOverview");
+      const totalRevenue = allCompanies.reduce((sum, c) => sum + (c.totalPaid || 0), 0);
+      const monthlyRevenue = allCompanies.reduce((sum, c) => sum + (c.monthlyFee || 0), 0);
+      const topCompanies = [...allCompanies].sort((a, b) => (b.totalPaid || 0) - (a.totalPaid || 0)).slice(0, 3);
+
+      container.innerHTML = `
+        <div class="revenue-card total">
+          <span class="revenue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="24" height="24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+          <div class="revenue-info">
+            <span class="revenue-label">Total Revenue</span>
+            <span class="revenue-value">${formatCurrency(totalRevenue)}</span>
+          </div>
+        </div>
+        <div class="revenue-card monthly">
+          <span class="revenue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="24" height="24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+          <div class="revenue-info">
+            <span class="revenue-label">Monthly Revenue</span>
+            <span class="revenue-value">${formatCurrency(monthlyRevenue)}</span>
+          </div>
+        </div>
+        <div class="revenue-card top">
+          <span class="revenue-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="24" height="24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
+          <div class="revenue-info">
+            <span class="revenue-label">Top Paying Companies</span>
+            <div class="top-companies">
+              ${topCompanies.map((c, i) => `<span class="top-company">${i + 1}. ${c.name} (${formatCurrency(c.totalPaid)})</span>`).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRecentActivity() {
+      const recentPaymentsContainer = document.getElementById("recentPayments");
+      const overdueAlertsContainer = document.getElementById("overdueAlerts");
+      
+      const recentPayments = allPayments.slice(0, 5);
+      if (recentPayments.length) {
+        recentPaymentsContainer.innerHTML = recentPayments.map(payment => `
+          <div class="activity-item">
+            <span class="activity-icon" style="background:rgba(16,185,129,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+            <div class="activity-content">
+              <p class="activity-title">${payment.companyName}</p>
+              <p class="activity-sub">${formatCurrency(payment.amount)} • ${formatDate(payment.date)}</p>
+            </div>
+          </div>
+        `).join("");
+      }
+      
+      const overdueInvoices = allInvoices.filter(i => i.status === "OVERDUE");
+      if (overdueInvoices.length) {
+        overdueAlertsContainer.innerHTML = overdueInvoices.map(invoice => `
+          <div class="activity-item alert">
+            <span class="activity-icon" style="background:rgba(239,68,68,0.1)"><svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" width="16" height="16"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <div class="activity-content">
+              <p class="activity-title">${invoice.companyName}</p>
+              <p class="activity-sub">${formatCurrency(invoice.amount)} overdue since ${formatDate(invoice.dueDate)}</p>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        overdueAlertsContainer.innerHTML = '<div class="empty-state">No overdue invoices!</div>';
+      }
+    }
+
+    function renderCharts() {
+      const paid = allInvoices.filter(i => i.status === "PAID").length;
+      const pending = allInvoices.filter(i => i.status === "PENDING").length;
+      const overdue = allInvoices.filter(i => i.status === "OVERDUE").length;
+      
+      if (paymentStatusChart) paymentStatusChart.destroy();
+      paymentStatusChart = new Chart(document.getElementById("paymentStatusChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Paid", "Pending", "Overdue"],
+          datasets: [{
+            data: [paid, pending, overdue],
+            backgroundColor: ["#10b981", "#f59e0b", "#ef4444"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+
+      const companyRevenue = allCompanies.slice(0, 5).map(c => ({
+        name: c.name.length > 12 ? c.name.substring(0, 12) + "..." : c.name,
+        revenue: c.totalPaid || 0
+      }));
+      
+      if (revenueCompanyChart) revenueCompanyChart.destroy();
+      revenueCompanyChart = new Chart(document.getElementById("revenueCompanyChart"), {
+        type: "bar",
+        data: {
+          labels: companyRevenue.map(c => c.name),
+          datasets: [{
+            label: "Revenue",
+            data: companyRevenue.map(c => c.revenue),
+            backgroundColor: "#3b82f6",
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+      const monthlyData = months.map(() => Math.floor(Math.random() * 30000) + 10000);
+      
+      if (monthlyRevenueChart) monthlyRevenueChart.destroy();
+      monthlyRevenueChart = new Chart(document.getElementById("monthlyRevenueChart"), {
+        type: "line",
+        data: {
+          labels: months,
+          datasets: [{
+            label: "Revenue",
+            data: monthlyData,
+            borderColor: "#10b981",
+            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    function viewBillingHistory(companyId) {
+      const company = allCompanies.find(c => c.id === companyId);
+      if (!company) return;
+      
+      currentCompanyId = companyId;
+      const companyInvoices = allInvoices.filter(i => i.companyId === companyId);
+      const companyPayments = allPayments.filter(p => companyInvoices.some(i => i.id === p.invoiceId));
+      
+      const modal = document.getElementById("billingModal");
+      document.getElementById("billingModalTitle").textContent = `Billing History - ${company.name}`;
+      
+      document.getElementById("billingModalContent").innerHTML = `
+        <div class="billing-summary">
+          <div class="billing-stat">
+            <span class="billing-stat-label">Plan</span>
+            <span class="billing-stat-value">${company.plan}</span>
+          </div>
+          <div class="billing-stat">
+            <span class="billing-stat-label">Monthly Fee</span>
+            <span class="billing-stat-value">${formatCurrency(company.monthlyFee)}</span>
+          </div>
+          <div class="billing-stat">
+            <span class="billing-stat-label">Total Paid</span>
+            <span class="billing-stat-value">${formatCurrency(company.totalPaid)}</span>
+          </div>
+        </div>
+        <h4 style="margin: 20px 0 12px;">Recent Invoices</h4>
+        <div class="billing-invoices">
+          ${companyInvoices.length ? companyInvoices.map(inv => `
+            <div class="billing-invoice-row">
+              <span>${inv.invoiceNumber}</span>
+              <span>${formatCurrency(inv.amount)}</span>
+              <span>${formatDate(inv.dueDate)}</span>
+              <span class="status-badge ${statusClass(inv.status)}">${inv.status}</span>
+            </div>
+          `).join("") : '<p class="empty-state">No invoices</p>'}
+        </div>
+      `;
+      
+      modal.setAttribute("aria-hidden", "false");
+      modal.classList.add("open");
+    }
+
+    function closeBillingModal() {
+      const modal = document.getElementById("billingModal");
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+      currentCompanyId = null;
+    }
+
+    function closeInvoiceModal() {
+      const modal = document.getElementById("invoiceModal");
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+    }
+
+    function generateInvoice(companyId) {
+      const company = allCompanies.find(c => c.id === companyId);
+      if (!company) return;
+      
+      const newInvoice = {
+        id: allInvoices.length + 1,
+        companyId: company.id,
+        companyName: company.name,
+        amount: company.monthlyFee,
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        status: "PENDING",
+        invoiceNumber: `INV-${2024}${String(allInvoices.length + 1).padStart(4, "0")}`
+      };
+      
+      allInvoices.unshift(newInvoice);
+      renderInvoices();
+      updateStats();
+      showToast(`Invoice ${newInvoice.invoiceNumber} generated for ${company.name}`, "success");
+    }
+
+    function markAsPaid(invoiceId) {
+      const invoice = allInvoices.find(i => i.id === invoiceId);
+      if (!invoice) return;
+      
+      invoice.status = "PAID";
+      
+      allPayments.unshift({
+        id: allPayments.length + 1,
+        invoiceId: invoice.id,
+        companyName: invoice.companyName,
+        amount: invoice.amount,
+        date: new Date().toISOString(),
+        method: "Manual Entry",
+        status: "COMPLETED"
+      });
+      
+      renderInvoices();
+      renderPayments();
+      renderRecentActivity();
+      renderCharts();
+      updateStats();
+      showToast(`Invoice ${invoice.invoiceNumber} marked as paid`, "success");
+    }
+
+    function sendReminder(invoiceId) {
+      const invoice = allInvoices.find(i => i.id === invoiceId);
+      if (!invoice) return;
+      showToast(`Payment reminder sent to ${invoice.companyName}`, "success");
+    }
+
+    function downloadInvoice(invoiceId) {
+      const invoice = allInvoices.find(i => i.id === invoiceId);
+      if (!invoice) return;
+      showToast(`Downloading ${invoice.invoiceNumber}...`, "info");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Recruiter Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Recruiter Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="recruiter-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="post-job.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+          Post Job
+        </a>
+        <a href="recruiter-jobs.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Manage Jobs
+        </a>
+        <a href="recruiter-applications.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Applications
+        </a>
+        <a href="interview-schedule.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Interviews
+        </a>
+        <a href="recruiter-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">R</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <!-- Profile Status Notice (shown when profile incomplete or not approved) -->
+    <div id="profileNotice" class="profile-notice" style="display: none;">
+      <div class="notice-content">
+        <div class="notice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:24px;height:24px;stroke-width:2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="notice-text">
+          <h3 id="noticeTitle">Profile Incomplete</h3>
+          <p id="noticeMessage">Complete your company profile to submit it for admin approval.</p>
+        </div>
+        <a href="recruiter-profile.html" class="btn" id="completeProfileBtn">Complete Profile</a>
+      </div>
+    </div>
+
+    <!-- Restriction Notice (shown when trying to access disabled features) -->
+    <div id="restrictionNotice" class="restriction-notice" style="display: none;">
+      <div class="restriction-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg>
+        <p>You cannot post jobs until your profile is completed and approved by admin.</p>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Recruiter Dashboard</h1>
+          <p class="page-subtitle">Overview of jobs, applicants, and interview pipeline</p>
+        </div>
+        <div class="page-header-actions">
+          <a href="post-job.html" class="btn" id="postJobBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:18px;height:18px;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>
+            Post New Job
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Approved Candidates</p>
+            <h2 id="approvedCandidates" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Interviews Scheduled</p>
+            <h2 id="scheduledInterviews" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Candidates On Hold</p>
+            <h2 id="holdCandidates" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Accepted Candidates</p>
+            <h2 id="acceptedCandidates" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Applications</h3>
+          <a class="btn secondary" href="recruiter-applications.html">Open Applications</a>
+        </div>
+        <div id="recentApplications" class="card-list">
+          <div class="loading-box"><span class="spinner"></span>Loading recent applications...</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recent Jobs</h3>
+          <a class="btn secondary" href="recruiter-jobs.html">Manage Jobs</a>
+        </div>
+        <div id="recentJobs" class="card-list">
+          <div class="loading-box"><span class="spinner"></span>Loading recent jobs...</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <h3 class="panel-title">Applications Per Job</h3>
+        <div class="chart-wrap">
+          <canvas id="applicationsBarChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Job Status Distribution</h3>
+        <div class="chart-wrap">
+          <canvas id="jobStatusPieChart"></canvas>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const recruiter = requireRole("RECRUITER");
+    let barChart = null;
+    let pieChart = null;
+    let profileComplete = false;
+    let isApproved = false;
+
+    if (recruiter) {
+      mountNotificationsBell();
+      checkProfileStatus().then(() => {
+        loadDashboard().catch((error) => {
+          console.error("Dashboard load error", error);
+          showToast(error.message || "Unable to load dashboard", "error");
+        });
+      });
+    }
+
+    async function checkProfileStatus() {
+      try {
+        const response = await apiFetch("/profile");
+        const profile = response?.data || {};
+        
+        // Calculate profile completion based on required fields for recruiter
+        // Required: name, company name
+        // Optional but counted: phone, address, bio
+        const requiredFields = [
+          !!(profile.name && profile.name.trim()),
+          !!(profile.company?.name && profile.company.name.trim())
+        ];
+        const optionalFields = [
+          !!(profile.phone && profile.phone.trim()),
+          !!(profile.address && profile.address.trim()),
+          !!(profile.bio && profile.bio.trim())
+        ];
+        
+        const requiredComplete = requiredFields.every(Boolean);
+        const optionalCount = optionalFields.filter(Boolean).length;
+        
+        // Profile is complete if all required fields are filled
+        // and at least some optional fields (or all required = 100% minimum)
+        const totalFields = requiredFields.length + optionalFields.length;
+        const completedFields = requiredFields.filter(Boolean).length + optionalCount;
+        const completionPercentage = Math.round((completedFields / totalFields) * 100);
+        
+        // Profile is considered complete when 100% OR when all required fields are filled
+        profileComplete = requiredComplete && completionPercentage === 100;
+        
+        // Get approval status directly from profile response
+        isApproved = profile.isApproved === true;
+        
+        updateProfileNotice();
+        updateNavRestrictions();
+      } catch (error) {
+        console.error("Failed to check profile status", error);
+        // Show notice if we can't determine status
+        profileComplete = false;
+        isApproved = false;
+        updateProfileNotice();
+        updateNavRestrictions();
+      }
+    }
+
+    function updateProfileNotice() {
+      const notice = document.getElementById("profileNotice");
+      const noticeTitle = document.getElementById("noticeTitle");
+      const noticeMessage = document.getElementById("noticeMessage");
+      const completeBtn = document.getElementById("completeProfileBtn");
+      
+      // Remove any existing state classes
+      notice.classList.remove("pending");
+      
+      // Case 1: Profile not complete - show profile warning
+      if (!profileComplete) {
+        notice.style.display = "block";
+        noticeTitle.textContent = "⚠ Profile Incomplete";
+        noticeMessage.textContent = "Your company profile must be completed before it can be reviewed by the admin. Please complete your profile to request approval.";
+        completeBtn.textContent = "Complete Profile";
+        completeBtn.href = "recruiter-profile.html";
+      }
+      // Case 2: Profile complete but not approved - show pending message
+      else if (!isApproved) {
+        notice.style.display = "block";
+        notice.classList.add("pending");
+        noticeTitle.textContent = "⏳ Approval Pending";
+        noticeMessage.textContent = "Your profile has been submitted for admin review. You will gain full access once approved.";
+        completeBtn.textContent = "View Profile";
+        completeBtn.href = "recruiter-profile.html";
+      }
+      // Case 3: Profile complete AND approved - hide all notices
+      else {
+        notice.style.display = "none";
+      }
+    }
+
+    function updateNavRestrictions() {
+      const canAccess = profileComplete && isApproved;
+      const restrictedLinks = [
+        { selector: 'a[href="post-job.html"]', text: "Post Job" },
+        { selector: 'a[href="recruiter-jobs.html"]', text: "Manage Jobs" },
+        { selector: 'a[href="recruiter-applications.html"]', text: "Applications" }
+      ];
+      
+      const restrictionNotice = document.getElementById("restrictionNotice");
+      const postJobBtn = document.getElementById("postJobBtn");
+      
+      if (!canAccess) {
+        restrictionNotice.style.display = "block";
+        
+        // Disable the main Post Job button
+        if (postJobBtn) {
+          postJobBtn.classList.add("disabled");
+          postJobBtn.addEventListener("click", preventNavigation);
+        }
+        
+        // Add visual indication to nav links
+        restrictedLinks.forEach(link => {
+          const el = document.querySelector(`.topbar-nav ${link.selector}`);
+          if (el) {
+            el.classList.add("nav-disabled");
+            el.addEventListener("click", preventNavigation);
+          }
+        });
+      } else {
+        restrictionNotice.style.display = "none";
+      }
+    }
+
+    function preventNavigation(e) {
+      e.preventDefault();
+      showToast("You cannot access this feature until your profile is completed and approved by admin.", "error");
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "ACTIVE") return "status-active";
+      if (normalized === "APPROVED") return "status-active";
+      if (normalized === "INTERVIEW") return "status-active";
+      if (normalized === "ACCEPTED") return "status-active";
+      if (normalized === "HOLD") return "status-pending";
+      if (normalized === "PENDING") return "status-pending";
+      if (normalized === "PAUSED") return "status-pending";
+      if (normalized === "REJECTED_FINAL") return "status-closed";
+      if (normalized === "CLOSED") return "status-closed";
+      return "status-default";
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function renderRecentJobs(jobs) {
+      const root = document.getElementById("recentJobs");
+      if (!jobs.length) {
+        root.innerHTML = '<div class="empty-state">No jobs yet. Start by posting your first role.</div>';
+        return;
+      }
+
+      root.innerHTML = jobs.slice(0, 6).map((job) => `
+        <div class="list-row">
+          <div class="list-main">
+            <p class="list-title">${job.title || "Untitled Job"}</p>
+            <p class="list-sub">${job.location || "Location not specified"} | Posted ${formatDate(job.createdAt)}</p>
+          </div>
+          <span class="status-badge ${statusClass(job.status)}">${String(job.status || "UNKNOWN").toUpperCase()}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderRecentApplications(applications) {
+      const root = document.getElementById("recentApplications");
+      if (!applications.length) {
+        root.innerHTML = '<div class="empty-state">No applications yet. Share your jobs to attract candidates.</div>';
+        return;
+      }
+
+      root.innerHTML = applications.slice(0, 8).map((item) => `
+        <div class="list-row">
+          <div class="list-main">
+            <p class="list-title">${item.applicantName}</p>
+            <p class="list-sub">${item.jobTitle} | ${formatDate(item.createdAt)}</p>
+          </div>
+          <span class="status-badge ${statusClass(item.status)}">${String(item.status || "APPLIED").toUpperCase()}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderCharts(jobs, applications) {
+      const appCountByJob = jobs.map((job) => ({
+        label: job.title || "Untitled",
+        value: Number(job?._count?.applications || 0),
+      }));
+
+      const statusMap = jobs.reduce((acc, job) => {
+        const key = String(job.status || "UNKNOWN").toUpperCase();
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+      }, {});
+
+      const barCtx = document.getElementById("applicationsBarChart");
+      const pieCtx = document.getElementById("jobStatusPieChart");
+
+      if (barChart) barChart.destroy();
+      if (pieChart) pieChart.destroy();
+
+      barChart = new Chart(barCtx, {
+        type: "bar",
+        data: {
+          labels: appCountByJob.map((row) => row.label.length > 22 ? `${row.label.slice(0, 22)}...` : row.label),
+          datasets: [
+            {
+              label: "Applications",
+              data: appCountByJob.map((row) => row.value),
+              backgroundColor: "rgba(15, 107, 255, 0.7)",
+              borderRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 },
+            },
+          },
+        },
+      });
+
+      pieChart = new Chart(pieCtx, {
+        type: "pie",
+        data: {
+          labels: Object.keys(statusMap),
+          datasets: [
+            {
+              data: Object.values(statusMap),
+              backgroundColor: ["#0f6bff", "#f59e0b", "#dc2626", "#7c8ca5"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+          },
+        },
+      });
+    }
+
+    async function loadDashboard() {
+      const companyId = recruiter.companyId;
+      if (!companyId) {
+        showToast("Recruiter account is missing company information", "error");
+        return;
+      }
+
+      const jobsResponse = await apiFetch(`/jobs?companyId=${encodeURIComponent(companyId)}&limit=100`);
+      const jobs = jobsResponse?.data?.jobs || [];
+
+      const appGroups = await Promise.all(
+        jobs.map(async (job) => {
+          try {
+            const response = await apiFetch(`/jobs/${job.id}/applicants`);
+            const applications = response?.data || [];
+            return applications.map((application) => ({
+              ...application,
+              jobTitle: job.title || application?.job?.title || "Job",
+              applicantName: application?.applicant?.name || "Applicant",
+            }));
+          } catch {
+            return [];
+          }
+        })
+      );
+
+      const applications = appGroups.flat().sort((a, b) =>
+        new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+      );
+
+      const interviewCounts = await Promise.all(
+        applications.map(async (application) => {
+          try {
+            const result = await apiFetch(`/interviews/${application.id}`);
+            return Array.isArray(result?.data) ? result.data.length : 0;
+          } catch {
+            return 0;
+          }
+        })
+      );
+
+      const totalInterviews = interviewCounts.reduce((sum, count) => sum + count, 0);
+      const approved = applications.filter((item) => String(item.status || "").toUpperCase() === "APPROVED").length;
+      const onHold = applications.filter((item) => String(item.status || "").toUpperCase() === "HOLD").length;
+      const accepted = applications.filter((item) => String(item.status || "").toUpperCase() === "ACCEPTED").length;
+
+      document.getElementById("approvedCandidates").textContent = String(approved);
+      document.getElementById("scheduledInterviews").textContent = String(totalInterviews);
+      document.getElementById("holdCandidates").textContent = String(onHold);
+      document.getElementById("acceptedCandidates").textContent = String(accepted);
+
+      renderRecentJobs(jobs);
+      renderRecentApplications(applications);
+      renderCharts(jobs, applications);
+    }
+  </script>
+
+  <!-- SmartHire AI Chatbot - Recruiter Assistant -->
+  <script src="chatbot/chatbotEngine.js"></script>
+  <script src="chatbot/recruiterKnowledge.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new SmartHireChatbot({
+        knowledgeBase: window.recruiterKnowledge || [],
+        title: 'Recruiter Assistant',
+        welcomeMessage: "Hello! 👋 I'm your Recruiter Assistant. Ask me about posting jobs, managing applications, or scheduling interviews.",
+        suggestions: ['How to post a job?', 'Schedule interview', 'View applications']
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Recruiter Pipeline</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Recruiter Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="recruiter-dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="post-job.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+          Post Job
+        </a>
+        <a href="recruiter-jobs.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Manage Jobs
+        </a>
+        <a href="recruiter-applications.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Applications
+        </a>
+        <a href="interview-schedule.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Interviews
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">R</div>
+        <a href="#" class="btn danger small logout-btn">Logout</a>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Applications</h1>
+          <p class="page-subtitle">Review and manage candidate applications</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Approved Candidates</h3>
+        <button id="refreshBtn" type="button" class="btn secondary">Refresh</button>
+      </div>
+      <div id="applicationsRoot" class="card-list">
+        <div class="loading-box"><span class="spinner"></span>Loading approved candidates...</div>
+      </div>
+    </section>
+  </div>
+
+  <div id="scheduleModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="section-head">
+        <h3 class="panel-title">Schedule Interview</h3>
+        <button id="closeScheduleModal" type="button" class="btn secondary">Close</button>
+      </div>
+      <form id="scheduleForm" novalidate>
+        <div class="field">
+          <label>Candidate</label>
+          <input id="candidateSummary" disabled />
+        </div>
+        <div class="field">
+          <label for="scheduledAt">Date and Time</label>
+          <input id="scheduledAt" type="datetime-local" required />
+        </div>
+        <div class="field">
+          <label for="mode">Mode</label>
+          <select id="mode">
+            <option value="ONLINE">ONLINE</option>
+            <option value="OFFLINE">OFFLINE</option>
+          </select>
+        </div>
+        <div class="field" id="meetingWrap">
+          <label for="meetingLink">Meeting Link</label>
+          <input id="meetingLink" placeholder="https://meet.example.com/room" />
+        </div>
+        <div class="field" id="locationWrap" style="display:none;">
+          <label for="location">Location</label>
+          <input id="location" placeholder="Office location" />
+        </div>
+        <div class="row">
+          <button id="confirmScheduleBtn" type="submit">Schedule</button>
+          <button id="cancelScheduleBtn" type="button" class="btn secondary">Cancel</button>
+        </div>
+        <div id="scheduleErr" class="error"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Candidate Review Modal -->
+  <div id="reviewModal" class="modal" aria-hidden="true">
+    <div class="modal-card job-detail-modal" style="max-width: 720px;">
+      <button id="closeReviewModal" type="button" class="modal-close-btn" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="reviewModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading candidate details...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interview Details Modal -->
+  <div id="interviewModal" class="modal" aria-hidden="true">
+    <div class="modal-card job-detail-modal">
+      <button id="closeInterviewModal" type="button" class="modal-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div id="interviewModalContent">
+        <div class="loading-box"><span class="spinner"></span>Loading interview details...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const recruiter = requireRole("RECRUITER");
+    const applicationsRoot = document.getElementById("applicationsRoot");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    const scheduleModal = document.getElementById("scheduleModal");
+    const scheduleForm = document.getElementById("scheduleForm");
+    const closeScheduleModal = document.getElementById("closeScheduleModal");
+    const cancelScheduleBtn = document.getElementById("cancelScheduleBtn");
+    const confirmScheduleBtn = document.getElementById("confirmScheduleBtn");
+    const scheduleErr = document.getElementById("scheduleErr");
+    const reviewModal = document.getElementById("reviewModal");
+    const reviewModalContent = document.getElementById("reviewModalContent");
+    const closeReviewModalBtn = document.getElementById("closeReviewModal");
+    const interviewModal = document.getElementById("interviewModal");
+    const interviewModalContent = document.getElementById("interviewModalContent");
+    const closeInterviewModalBtn = document.getElementById("closeInterviewModal");
+
+    let approvedApplications = [];
+    let selectedApplication = null;
+
+    if (recruiter) {
+      mountNotificationsBell();
+      refreshBtn.addEventListener("click", loadApprovedApplications);
+      scheduleForm.addEventListener("submit", scheduleInterviewForCandidate);
+      document.getElementById("mode").addEventListener("change", updateModeFields);
+      closeScheduleModal.addEventListener("click", hideScheduleModal);
+      cancelScheduleBtn.addEventListener("click", hideScheduleModal);
+      scheduleModal.addEventListener("click", (event) => {
+        if (event.target === scheduleModal) hideScheduleModal();
+      });
+      closeReviewModalBtn.addEventListener("click", closeReviewModal);
+      reviewModal.addEventListener("click", (event) => {
+        if (event.target === reviewModal) closeReviewModal();
+      });
+      closeInterviewModalBtn.addEventListener("click", closeInterviewModal);
+      interviewModal.addEventListener("click", (event) => {
+        if (event.target === interviewModal) closeInterviewModal();
+      });
+
+      loadApprovedApplications().catch((error) => {
+        console.error("Failed to load approved candidates", error);
+        showToast(error.message || "Unable to load approved candidates", "error");
+      });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (["APPROVED", "ACCEPTED"].includes(normalized)) return "status-active";
+      if (normalized === "INTERVIEW") return "status-interview";
+      if (["HOLD"].includes(normalized)) return "status-hold";
+      if (["REJECTED", "REJECTED_FINAL"].includes(normalized)) return "status-closed";
+      return "status-default";
+    }
+
+    function statusLabel(status) {
+      const normalized = String(status || "").toUpperCase();
+      const labels = {
+        APPROVED: "Approved",
+        INTERVIEW: "Interview Scheduled",
+        HOLD: "On Hold",
+        ACCEPTED: "Accepted",
+        REJECTED: "Rejected",
+        REJECTED_FINAL: "Rejected (Final)"
+      };
+      return labels[normalized] || normalized;
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function setLoading() {
+      applicationsRoot.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading approved candidates...</div>';
+    }
+
+    async function loadApprovedApplications() {
+      setButtonBusy(refreshBtn, true, "Refreshing...");
+      setLoading();
+      try {
+        // Fetch APPROVED, INTERVIEW, and HOLD status applications
+        const [approvedRes, interviewRes, holdRes] = await Promise.all([
+          apiFetch("/applications?status=APPROVED"),
+          apiFetch("/applications?status=INTERVIEW"),
+          apiFetch("/applications?status=HOLD")
+        ]);
+        
+        const approved = approvedRes?.data || [];
+        const interviews = interviewRes?.data || [];
+        const holds = holdRes?.data || [];
+        approvedApplications = [...approved, ...interviews, ...holds];
+        
+        // Sort by status (INTERVIEW first, then APPROVED, then HOLD) then by date
+        approvedApplications.sort((a, b) => {
+          const statusOrder = { INTERVIEW: 0, APPROVED: 1, HOLD: 2 };
+          const statusA = statusOrder[String(a.status).toUpperCase()] ?? 3;
+          const statusB = statusOrder[String(b.status).toUpperCase()] ?? 3;
+          if (statusA !== statusB) return statusA - statusB;
+          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+        });
+
+        if (!approvedApplications.length) {
+          applicationsRoot.innerHTML = '<div class="empty-state">No approved candidates yet. HR/Admin approvals will appear here.</div>';
+          return;
+        }
+
+        applicationsRoot.innerHTML = approvedApplications.map((application, index) => {
+          const resumeUrl = application?.resumeUrl || application?.applicant?.applicant?.resumeUrl || "";
+          // Build full URL for viewing resume (API_BASE ends with /api, so we remove that part)
+          const backendBase = API_BASE.replace(/\/api$/, '');
+          const fullResumeUrl = resumeUrl && !resumeUrl.startsWith('http') ? `${backendBase}${resumeUrl}` : resumeUrl;
+          const status = String(application.status || "APPROVED").toUpperCase();
+          const isInterviewScheduled = status === "INTERVIEW";
+          const isOnHold = status === "HOLD";
+          
+          return `
+            <article class="list-row ${isInterviewScheduled ? 'interview-scheduled' : ''} ${isOnHold ? 'on-hold' : ''}">
+              <div class="list-main">
+                <p class="list-title">${application?.applicant?.name || "Candidate"}</p>
+                <p class="list-sub">${application?.job?.title || "Job"} | Applied ${formatDate(application.createdAt)}</p>
+              </div>
+              <span class="status-badge ${statusClass(status)}">${statusLabel(status)}</span>
+              <div class="row">
+                ${!isInterviewScheduled && !isOnHold ? `<button type="button" class="interview-btn" data-index="${index}">Schedule Interview</button>` : ''}
+                ${isInterviewScheduled ? `<button type="button" class="btn secondary view-interview-btn" data-index="${index}">View Interview</button>` : ''}
+                ${!isOnHold ? `<button type="button" class="btn secondary hold-btn" data-index="${index}">Mark HOLD</button>` : `<button type="button" class="btn secondary remove-hold-btn" data-index="${index}">Remove HOLD</button>`}
+                <button type="button" class="btn danger reject-btn" data-index="${index}">Reject</button>
+                <button type="button" class="accept-btn" data-index="${index}">Accept</button>
+                <button type="button" class="btn secondary review-btn" data-index="${index}">Candidate Review</button>
+                ${fullResumeUrl ? `<a class="btn secondary" target="_blank" rel="noopener" href="${fullResumeUrl}">View Resume</a>` : `<button type="button" class="btn secondary" disabled>No Resume</button>`}
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        bindActionButtons();
+      } finally {
+        setButtonBusy(refreshBtn, false);
+      }
+    }
+
+    function bindActionButtons() {
+      document.querySelectorAll(".interview-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          const index = Number(button.getAttribute("data-index"));
+          const application = approvedApplications[index];
+          if (!application) return;
+          openScheduleModal(application);
+        });
+      });
+
+      document.querySelectorAll(".view-interview-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          const index = Number(button.getAttribute("data-index"));
+          const application = approvedApplications[index];
+          if (!application) return;
+          viewInterviewDetails(application);
+        });
+      });
+
+      document.querySelectorAll(".hold-btn").forEach((button) => {
+        button.addEventListener("click", () => updateCandidateStatus(button, "HOLD", "Move candidate to HOLD?"));
+      });
+
+      document.querySelectorAll(".remove-hold-btn").forEach((button) => {
+        button.addEventListener("click", () => updateCandidateStatus(button, "APPROVED", "Remove HOLD and move back to Approved?"));
+      });
+
+      document.querySelectorAll(".reject-btn").forEach((button) => {
+        button.addEventListener("click", () => updateCandidateStatus(button, "REJECTED_FINAL", "Reject this candidate in final stage?"));
+      });
+
+      document.querySelectorAll(".accept-btn").forEach((button) => {
+        button.addEventListener("click", () => updateCandidateStatus(button, "ACCEPTED", "Mark candidate as accepted?"));
+      });
+
+      document.querySelectorAll(".review-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          const index = Number(button.getAttribute("data-index"));
+          const application = approvedApplications[index];
+          if (!application) return;
+          openReviewModal(application);
+        });
+      });
+    }
+
+    async function viewInterviewDetails(application) {
+      // Show modal with loading state
+      interviewModal.classList.add("open");
+      interviewModal.setAttribute("aria-hidden", "false");
+      interviewModalContent.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading interview details...</div>';
+
+      try {
+        // Fetch interview details from API
+        const response = await apiFetch(`/interviews/${application.id}`);
+        const interviews = response?.data || [];
+        
+        // Get the most recent interview
+        const interview = interviews.sort((a, b) => 
+          new Date(b.scheduledAt || 0) - new Date(a.scheduledAt || 0)
+        )[0];
+
+        if (!interview) {
+          interviewModalContent.innerHTML = `
+            <div class="job-modal-header">
+              <h2 class="job-modal-title">Interview Details</h2>
+            </div>
+            <div class="empty-state" style="padding: 32px 0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:48px;height:48px;margin-bottom:16px;opacity:0.5;">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+              <p>Interview details will be shared soon.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const scheduledDate = interview.scheduledAt ? new Date(interview.scheduledAt) : null;
+        const formattedDate = scheduledDate ? scheduledDate.toLocaleDateString(undefined, {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : 'Not specified';
+        
+        const formattedTime = scheduledDate ? scheduledDate.toLocaleTimeString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : 'Not specified';
+
+        const mode = interview.mode || 'Not specified';
+        const isOnline = mode.toLowerCase() === 'online';
+        const meetLink = interview.meetingLink || '';
+        const address = interview.location || '';
+
+        interviewModalContent.innerHTML = `
+          <div class="job-modal-header">
+            <h2 class="job-modal-title">Interview Details</h2>
+            <div class="job-modal-company">
+              <span>${application?.applicant?.name || 'Candidate'}</span>
+              <span class="separator">•</span>
+              <span>${application?.job?.title || 'Position'}</span>
+            </div>
+          </div>
+
+          <div class="interview-detail-cards">
+            <div class="interview-detail-card">
+              <div class="interview-detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </div>
+              <div class="interview-detail-content">
+                <span class="interview-detail-label">Date</span>
+                <span class="interview-detail-value">${formattedDate}</span>
+              </div>
+            </div>
+            <div class="interview-detail-card">
+              <div class="interview-detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="interview-detail-content">
+                <span class="interview-detail-label">Time</span>
+                <span class="interview-detail-value">${formattedTime}</span>
+              </div>
+            </div>
+            <div class="interview-detail-card">
+              <div class="interview-detail-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${isOnline 
+                  ? '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' 
+                  : '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'}</svg>
+              </div>
+              <div class="interview-detail-content">
+                <span class="interview-detail-label">Mode</span>
+                <span class="interview-detail-value">${mode}</span>
+              </div>
+            </div>
+          </div>
+
+          ${isOnline && meetLink ? `
+            <div class="job-modal-section">
+              <h4 class="job-modal-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                Meeting Link
+              </h4>
+              <a href="${meetLink}" target="_blank" rel="noopener" class="btn" style="width: fit-content;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2;"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                Join Meeting
+              </a>
+            </div>
+          ` : ''}
+
+          ${!isOnline && address ? `
+            <div class="job-modal-section">
+              <h4 class="job-modal-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Office Location
+              </h4>
+              <div class="location-card" style="background: var(--surface-2); padding: 12px 16px; border-radius: 8px;">
+                <p style="margin: 0; color: var(--text-1);">${address}</p>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="job-modal-section">
+            <h4 class="job-modal-section-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              Job Information
+            </h4>
+            <div class="job-info-cards">
+              <div class="job-info-card">
+                <div class="job-info-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </div>
+                <div class="job-info-content">
+                  <span class="job-info-label">Position</span>
+                  <span class="job-info-value">${application?.job?.title || 'Not specified'}</span>
+                </div>
+              </div>
+              <div class="job-info-card">
+                <div class="job-info-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+                </div>
+                <div class="job-info-content">
+                  <span class="job-info-label">Company</span>
+                  <span class="job-info-value">${application?.job?.company || 'Not specified'}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error("Failed to fetch interview details:", error);
+        interviewModalContent.innerHTML = `
+          <div class="job-modal-header">
+            <h2 class="job-modal-title">Interview Details</h2>
+          </div>
+          <div class="empty-state" style="padding: 32px 0;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:48px;height:48px;margin-bottom:16px;opacity:0.5;">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p>Unable to load interview details.</p>
+            <p class="text-muted">${error.message || 'Please try again later.'}</p>
+          </div>
+        `;
+      }
+    }
+
+    function closeInterviewModal() {
+      interviewModal.classList.remove("open");
+      interviewModal.setAttribute("aria-hidden", "true");
+    }
+
+    async function updateCandidateStatus(button, status, confirmationMessage) {
+      const confirmed = window.confirm(confirmationMessage);
+      if (!confirmed) return;
+
+      const index = Number(button.getAttribute("data-index"));
+      const application = approvedApplications[index];
+      if (!application?.id) return;
+
+      setButtonBusy(button, true, "Updating...");
+      try {
+        await apiFetch(`/applications/${application.id}/status`, {
+          method: "PUT",
+          body: JSON.stringify({ status }),
+        });
+
+        showToast("Candidate status updated", "success");
+        await loadApprovedApplications();
+      } catch (error) {
+        showToast(error.message || "Unable to update candidate", "error");
+      } finally {
+        setButtonBusy(button, false);
+      }
+    }
+
+    function openScheduleModal(application) {
+      selectedApplication = application;
+      scheduleErr.textContent = "";
+      scheduleForm.reset();
+      updateModeFields();
+      document.getElementById("candidateSummary").value = `${application?.applicant?.name || "Candidate"} | ${application?.job?.title || "Job"}`;
+      scheduleModal.classList.add("open");
+      scheduleModal.setAttribute("aria-hidden", "false");
+    }
+
+    function hideScheduleModal() {
+      selectedApplication = null;
+      scheduleModal.classList.remove("open");
+      scheduleModal.setAttribute("aria-hidden", "true");
+    }
+
+    function updateModeFields() {
+      const mode = String(document.getElementById("mode").value || "").toUpperCase();
+      document.getElementById("meetingWrap").style.display = mode === "ONLINE" ? "block" : "none";
+      document.getElementById("locationWrap").style.display = mode === "OFFLINE" ? "block" : "none";
+    }
+
+    async function scheduleInterviewForCandidate(event) {
+      event.preventDefault();
+      scheduleErr.textContent = "";
+
+      if (!selectedApplication?.id) {
+        scheduleErr.textContent = "Select a candidate first.";
+        return;
+      }
+
+      const scheduledAt = document.getElementById("scheduledAt").value;
+      const mode = String(document.getElementById("mode").value || "").toUpperCase();
+      const meetingLink = document.getElementById("meetingLink").value.trim();
+      const location = document.getElementById("location").value.trim();
+
+      if (!scheduledAt) {
+        scheduleErr.textContent = "Date and time are required.";
+        return;
+      }
+
+      if (mode === "ONLINE" && !meetingLink) {
+        scheduleErr.textContent = "Meeting link is required for online mode.";
+        return;
+      }
+
+      if (mode === "OFFLINE" && !location) {
+        scheduleErr.textContent = "Location is required for offline mode.";
+        return;
+      }
+
+      setButtonBusy(confirmScheduleBtn, true, "Scheduling...");
+      try {
+        await apiFetch("/interviews", {
+          method: "POST",
+          body: JSON.stringify({
+            applicationId: selectedApplication.id,
+            scheduledAt: new Date(scheduledAt).toISOString(),
+            mode,
+            meetingLink: mode === "ONLINE" ? meetingLink : null,
+            location: mode === "OFFLINE" ? location : null,
+          }),
+        });
+
+        showToast("Interview scheduled and candidate moved to INTERVIEW", "success");
+        hideScheduleModal();
+        await loadApprovedApplications();
+      } catch (error) {
+        scheduleErr.textContent = error.message || "Unable to schedule interview.";
+        showToast(scheduleErr.textContent, "error");
+      } finally {
+        setButtonBusy(confirmScheduleBtn, false);
+      }
+    }
+
+    async function openReviewModal(application) {
+      reviewModalContent.innerHTML = '<div class="loading-box"><span class="spinner"></span>Loading candidate details...</div>';
+      reviewModal.classList.add("open");
+      reviewModal.setAttribute("aria-hidden", "false");
+
+      const applicantData = application.applicant || {};
+      const applicantProfile = applicantData.applicant || {};
+      const jobTitle = application?.job?.title || "Job Position";
+      const candidateName = applicantData.name || "Candidate";
+      const candidateEmail = applicantData.email || "N/A";
+      const candidatePhone = applicantData.phone || "N/A";
+      const candidateLocation = applicantData.address || "N/A";
+      const candidateBio = applicantData.bio || "";
+      const skills = applicantProfile.skills || [];
+      const experienceYears = applicantProfile.experienceYears || 0;
+      const education = applicantProfile.education || "";
+      const designation = applicantProfile.designation || "";
+      const resumeUrl = applicantProfile.resumeUrl || application.resumeUrl || "";
+      const appliedDate = formatDate(application.createdAt);
+      const applicationStatus = application.status || "PENDING";
+
+      try {
+        const response = await apiFetch(`/reviews/${application.id}`);
+        const reviews = response?.data || [];
+
+        const skillsHtml = skills.length > 0 
+          ? skills.map(skill => `<span class="skill-tag">${skill}</span>`).join("") 
+          : '<span class="muted">No skills listed</span>';
+
+        const reviewsHtml = reviews.length > 0 
+          ? reviews.map(review => `
+              <div class="review-card">
+                <div class="review-card-header">
+                  <span class="reviewer-name">${review.reviewer?.name || "Reviewer"}</span>
+                  <span class="review-date">${formatDateTime(review.createdAt)}</span>
+                </div>
+                ${review.notes ? `
+                  <div class="review-section">
+                    <span class="review-label">Evaluation Notes</span>
+                    <p class="review-text">${review.notes}</p>
+                  </div>
+                ` : ''}
+                ${review.comments ? `
+                  <div class="review-section">
+                    <span class="review-label">Profile Feedback</span>
+                    <p class="review-text">${review.comments}</p>
+                  </div>
+                ` : ''}
+                ${review.decision ? `
+                  <div class="review-decision">
+                    <span class="status-badge ${review.decision === 'APPROVE' ? 'status-active' : review.decision === 'REJECT' ? 'status-closed' : 'status-pending'}">${review.decision}</span>
+                  </div>
+                ` : ''}
+              </div>
+            `).join("") 
+          : `<div class="empty-reviews">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-icon">
+                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <p>No employee reviews submitted yet.</p>
+            </div>`;
+
+        const resumeHtml = resumeUrl 
+          ? `<a href="${API_BASE.replace('/api', '')}${resumeUrl}" target="_blank" class="btn secondary resume-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;margin-right:6px;">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              View Resume
+            </a>` 
+          : '<span class="muted">No resume uploaded</span>';
+
+        reviewModalContent.innerHTML = `
+          <div class="candidate-review-modal">
+            <!-- Header Section -->
+            <div class="candidate-header">
+              <div class="candidate-avatar">
+                <span>${candidateName.charAt(0).toUpperCase()}</span>
+              </div>
+              <div class="candidate-title">
+                <h3>${candidateName}</h3>
+                <p class="job-applied">${designation || jobTitle}</p>
+              </div>
+              <span class="status-badge ${applicationStatus === 'APPROVED' ? 'status-active' : applicationStatus === 'REJECTED' ? 'status-closed' : 'status-pending'}">${applicationStatus.replace(/_/g, ' ')}</span>
+            </div>
+
+            <!-- Candidate Info Section -->
+            <div class="review-section-card">
+              <h4 class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Candidate Information
+              </h4>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Email</span>
+                  <span class="info-value">${candidateEmail}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Phone</span>
+                  <span class="info-value">${candidatePhone}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Location</span>
+                  <span class="info-value">${candidateLocation}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Resume</span>
+                  <span class="info-value">${resumeHtml}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Summary Section -->
+            <div class="review-section-card">
+              <h4 class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Profile Summary
+              </h4>
+              ${candidateBio ? `<p class="bio-text">${candidateBio}</p>` : ''}
+              <div class="profile-details">
+                <div class="profile-detail-item">
+                  <span class="detail-label">Experience</span>
+                  <span class="detail-value">${experienceYears} ${experienceYears === 1 ? 'year' : 'years'}</span>
+                </div>
+                ${education ? `
+                <div class="profile-detail-item">
+                  <span class="detail-label">Education</span>
+                  <span class="detail-value">${education}</span>
+                </div>
+                ` : ''}
+              </div>
+              <div class="skills-section">
+                <span class="detail-label">Skills</span>
+                <div class="skills-tags">${skillsHtml}</div>
+              </div>
+            </div>
+
+            <!-- Application Details Section -->
+            <div class="review-section-card">
+              <h4 class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Application Details
+              </h4>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Applied Date</span>
+                  <span class="info-value">${appliedDate}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Position</span>
+                  <span class="info-value">${jobTitle}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Employee Reviews Section -->
+            <div class="review-section-card">
+              <h4 class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Employee Reviews
+              </h4>
+              <div class="reviews-list">
+                ${reviewsHtml}
+              </div>
+            </div>
+          </div>
+        `;
+
+      } catch (error) {
+        reviewModalContent.innerHTML = `
+          <div class="candidate-review-modal">
+            <div class="candidate-header">
+              <div class="candidate-avatar">
+                <span>${candidateName.charAt(0).toUpperCase()}</span>
+              </div>
+              <div class="candidate-title">
+                <h3>${candidateName}</h3>
+                <p class="job-applied">${jobTitle}</p>
+              </div>
+            </div>
+            <div class="error-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="error-icon">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <p>Failed to load reviews. ${error.message || ''}</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function closeReviewModal() {
+      reviewModal.classList.remove("open");
+      reviewModal.setAttribute("aria-hidden", "true");
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+  </script>
+</body>
+</html>

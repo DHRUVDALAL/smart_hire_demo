@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Hire | Create Account</title>
+    <link rel="stylesheet" href="css/frontend-modern.css" />
+    <link rel="stylesheet" href="css/saas-landing.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="saas-page">
+    <div class="saas-auth">
+        <!-- Left Side - Visual -->
+        <div class="saas-auth-visual">
+            <div class="saas-auth-visual-content">
+                <a href="index.html" class="saas-auth-visual-logo">
+                    <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
+                        <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.2)"/>
+                        <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Smart Hire
+                </a>
+                <h2>Start hiring smarter today</h2>
+                <p>Create your account and experience the future of recruitment. Join thousands of companies streamlining their hiring process.</p>
+                
+                <div class="saas-auth-visual-features">
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Free 14-day trial, no credit card required
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Post unlimited jobs during trial
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Access all platform features
+                    </div>
+                    <div class="saas-auth-visual-feature">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Cancel anytime, no commitment
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="saas-auth-form-container">
+            <div class="saas-auth-form-wrapper">
+                <div class="saas-auth-form-header">
+                    <h1>Create Account</h1>
+                    <p>Fill in your details to get started</p>
+                </div>
+
+                <form id="registerForm" class="saas-auth-form" novalidate>
+                    <div class="saas-auth-field">
+                        <label for="name">Full Name</label>
+                        <input id="name" type="text" placeholder="Enter your full name" required />
+                    </div>
+
+                    <div class="saas-auth-field">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" placeholder="name@company.com" required />
+                    </div>
+
+                    <div class="saas-auth-field">
+                        <label for="role">Role</label>
+                        <select id="role" required>
+                            <option value="">Select your role</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="RECRUITER">Recruiter</option>
+                            <option value="APPLICANT">Applicant</option>
+                            <option value="EMPLOYEE">Employee</option>
+                            <option value="HR">HR</option>
+                            <option value="ACCOUNTANT">Accountant</option>
+                        </select>
+                    </div>
+
+                    <div class="saas-auth-field-row">
+                        <div class="saas-auth-field">
+                            <label for="password">Password</label>
+                            <input id="password" type="password" placeholder="Min. 6 characters" required />
+                        </div>
+                        <div class="saas-auth-field">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" type="password" placeholder="Re-enter password" required />
+                        </div>
+                    </div>
+
+                    <!-- Recruiter Fields -->
+                    <div id="recruiterFields" class="saas-auth-conditional">
+                        <div class="saas-auth-field">
+                            <label for="companyName">Company Name <span style="color: #ef4444;">*</span></label>
+                            <input id="companyName" type="text" placeholder="Acme Talent Pvt Ltd" />
+                        </div>
+                        <div class="saas-auth-field">
+                            <label for="designation">Designation (Optional)</label>
+                            <input id="designation" type="text" placeholder="Senior Recruiter" />
+                        </div>
+                    </div>
+
+                    <!-- Employee Fields -->
+                    <div id="employeeFields" class="saas-auth-conditional">
+                        <div class="saas-auth-field">
+                            <label for="department">Department (Optional)</label>
+                            <input id="department" type="text" placeholder="Engineering" />
+                            <span class="saas-auth-hint">This will be included in your profile.</span>
+                        </div>
+                    </div>
+
+                    <div id="errorText" class="saas-auth-error"></div>
+                    <button id="submitBtn" class="saas-btn saas-btn-primary saas-btn-large" type="submit">Create Account</button>
+                </form>
+
+                <div class="saas-auth-footer">
+                    Already have an account? <a href="login.html">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        const roleEl = document.getElementById("role");
+        const recruiterFields = document.getElementById("recruiterFields");
+        const employeeFields = document.getElementById("employeeFields");
+        const companyNameEl = document.getElementById("companyName");
+        const designationEl = document.getElementById("designation");
+        const departmentEl = document.getElementById("department");
+        const errorText = document.getElementById("errorText");
+        const submitBtn = document.getElementById("submitBtn");
+
+        function onRoleChange() {
+            const role = roleEl.value;
+            recruiterFields.classList.toggle('show', role === "RECRUITER");
+            employeeFields.classList.toggle('show', role === "EMPLOYEE");
+        }
+
+        roleEl.addEventListener("change", onRoleChange);
+
+        document.getElementById("registerForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            errorText.textContent = "";
+            errorText.classList.remove('show');
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const role = String(roleEl.value || "").toUpperCase();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (!name || !email || !role || !password || !confirmPassword) {
+                errorText.textContent = "Please fill all required fields.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                errorText.textContent = "Please enter a valid email.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            if (password.length < 6) {
+                errorText.textContent = "Password must be at least 6 characters.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorText.textContent = "Password and confirm password must match.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            if (role === "RECRUITER" && !companyNameEl.value.trim()) {
+                errorText.textContent = "Company Name is required for recruiter registration.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            const payload = { name, email, password, role };
+
+            if (role === "RECRUITER") {
+                payload.companyName = companyNameEl.value.trim();
+                payload.designation = designationEl.value.trim() || "";
+            }
+
+            if (role === "EMPLOYEE" && departmentEl.value.trim()) {
+                payload.department = departmentEl.value.trim();
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Creating account...";
+
+            try {
+                const result = await apiFetch("/auth/register", {
+                    method: "POST",
+                    body: JSON.stringify(payload),
+                });
+
+                console.log("REGISTER RESPONSE:", result);
+
+                const token = result?.data?.token;
+                const user = result?.data?.user;
+
+                if (!token || !user) {
+                    throw new Error("Unexpected response from server.");
+                }
+
+                localStorage.setItem("token", token);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                window.location.href = getDashboardForRole(user.role);
+            } catch (error) {
+                errorText.textContent = error.message || "Unable to register. Please try again.";
+                errorText.classList.add('show');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Create Account";
+            }
+        });
+
+        onRoleChange();
+    </script>
+</body>
+</html>

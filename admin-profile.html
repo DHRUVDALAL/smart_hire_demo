@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Admin Profile</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+      </div>
+      <div>
+        <div class="brand">Smart Hire</div>
+        <div class="user-meta">Admin Portal</div>
+      </div>
+    </div>
+    <div class="topbar-nav">
+      <a href="admin-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="admin-recruiters.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Recruiters
+      </a>
+      <a href="admin-employees.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Employees
+      </a>
+      <a href="admin-profile.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </div>
+    <div class="topbar-user">
+      <div class="user-avatar user-name">A</div>
+      <a href="#" class="btn danger small logout-btn">Logout</a>
+    </div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-header-text">
+        <h1 class="page-title">Admin Profile</h1>
+        <p class="page-subtitle">Manage your administrator account</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Personal Information</h3>
+      </div>
+      
+      <form id="profileForm" novalidate>
+        <div class="field">
+          <label for="name">Full Name *</label>
+          <input id="name" type="text" required placeholder="Enter your full name" />
+        </div>
+        
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" readonly class="readonly-field" />
+          <p class="hint">Email cannot be changed</p>
+        </div>
+        
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" type="tel" placeholder="e.g., +1 (555) 123-4567" />
+          </div>
+          <div class="field">
+            <label for="role">Role</label>
+            <input id="role" type="text" value="ADMIN" readonly class="readonly-field" />
+          </div>
+        </div>
+        
+        <div class="field">
+          <label for="address">Address</label>
+          <input id="address" type="text" placeholder="City, State, Country" />
+        </div>
+        
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="department">Department</label>
+            <input id="department" type="text" placeholder="e.g., Administration" />
+          </div>
+          <div class="field">
+            <label for="experience">Years of Experience</label>
+            <input id="experience" type="number" min="0" max="50" placeholder="e.g., 10" />
+          </div>
+        </div>
+        
+        <div class="field">
+          <label for="bio">Bio</label>
+          <textarea id="bio" placeholder="Tell us about your role and responsibilities..." style="min-height: 100px;"></textarea>
+        </div>
+        
+        <div class="row" style="margin-top: 16px;">
+          <button id="saveBtn" type="submit">Save Profile</button>
+          <button id="resetBtn" type="button" class="btn secondary">Reset Changes</button>
+        </div>
+        
+        <div id="formError" class="error"></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h3 class="panel-title">Profile Completion</h3>
+      </div>
+      
+      <div class="profile-completion">
+        <div class="completion-circle">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="completionPath" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <text x="18" y="20.35" class="percentage" id="completionText">0%</text>
+          </svg>
+        </div>
+        <p class="completion-label">Profile Strength</p>
+      </div>
+      
+      <div class="completion-checklist" id="completionChecklist">
+        <div class="checklist-item" data-field="name">
+          <span class="checklist-icon">○</span>
+          <span>Add your name</span>
+        </div>
+        <div class="checklist-item" data-field="phone">
+          <span class="checklist-icon">○</span>
+          <span>Add phone number</span>
+        </div>
+        <div class="checklist-item" data-field="address">
+          <span class="checklist-icon">○</span>
+          <span>Add address</span>
+        </div>
+        <div class="checklist-item" data-field="bio">
+          <span class="checklist-icon">○</span>
+          <span>Write a bio</span>
+        </div>
+        <div class="checklist-item" data-field="department">
+          <span class="checklist-icon">○</span>
+          <span>Specify department</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px; background: var(--surface-2);">
+        <h4 style="margin: 0 0 8px;">Admin Privileges</h4>
+        <ul class="tips-list">
+          <li>Approve or reject job postings</li>
+          <li>Monitor all platform activity</li>
+          <li>View company performance metrics</li>
+          <li>Access full application pipeline</li>
+          <li>Manage interview schedules</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px; background: var(--surface-2);">
+        <h4 style="margin: 0 0 8px;">Platform Stats</h4>
+        <div class="screening-stats">
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalJobsCount">0</span>
+            <span class="mini-stat-label">Jobs</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalAppsCount">0</span>
+            <span class="mini-stat-label">Applications</span>
+          </div>
+          <div class="mini-stat">
+            <span class="mini-stat-value" id="totalHiredCount">0</span>
+            <span class="mini-stat-label">Hired</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+const admin = requireRole("ADMIN");
+const profileForm = document.getElementById("profileForm");
+const saveBtn = document.getElementById("saveBtn");
+const resetBtn = document.getElementById("resetBtn");
+const formError = document.getElementById("formError");
+
+let originalData = {};
+
+if (admin) {
+  mountNotificationsBell();
+  loadProfile();
+  loadPlatformStats();
+  
+  profileForm.addEventListener("submit", saveProfile);
+  resetBtn.addEventListener("click", resetForm);
+  
+  ["name", "phone", "address", "bio", "department"].forEach(field => {
+    document.getElementById(field).addEventListener("input", updateCompletion);
+  });
+}
+
+function updateCompletion() {
+  const fields = {
+    name: document.getElementById("name").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    address: document.getElementById("address").value.trim(),
+    bio: document.getElementById("bio").value.trim(),
+    department: document.getElementById("department").value.trim()
+  };
+  
+  let completed = 0;
+  const total = Object.keys(fields).length;
+  
+  Object.entries(fields).forEach(([key, value]) => {
+    const item = document.querySelector(`[data-field="${key}"]`);
+    if (item) {
+      const hasValue = !!value;
+      item.classList.toggle("completed", hasValue);
+      item.querySelector(".checklist-icon").textContent = hasValue ? "✓" : "○";
+      if (hasValue) completed++;
+    }
+  });
+  
+  const percentage = Math.round((completed / total) * 100);
+  document.getElementById("completionPath").setAttribute("stroke-dasharray", `${percentage}, 100`);
+  document.getElementById("completionText").textContent = `${percentage}%`;
+}
+
+async function loadProfile() {
+  try {
+    const response = await apiFetch("/profile");
+    const profile = response?.data || {};
+    const user = getStoredUser() || {};
+    
+    document.getElementById("name").value = profile.name || "";
+    document.getElementById("email").value = user.email || profile.email || "";
+    document.getElementById("phone").value = profile.phone || "";
+    document.getElementById("address").value = profile.address || "";
+    document.getElementById("bio").value = profile.bio || "";
+    document.getElementById("department").value = profile.department || "";
+    document.getElementById("experience").value = profile.experience || "";
+    
+    originalData = { ...profile };
+    
+    updateCompletion();
+    
+  } catch (error) {
+    showToast(error.message || "Failed to load profile", "error");
+  }
+}
+
+async function loadPlatformStats() {
+  try {
+    const [jobsResponse, appsResponse] = await Promise.all([
+      apiFetch("/jobs?limit=500"),
+      apiFetch("/applications")
+    ]);
+    
+    const jobs = jobsResponse?.data?.jobs || [];
+    const applications = appsResponse?.data || [];
+    const hired = applications.filter(a => String(a.status).toUpperCase() === "ACCEPTED").length;
+    
+    document.getElementById("totalJobsCount").textContent = String(jobs.length);
+    document.getElementById("totalAppsCount").textContent = String(applications.length);
+    document.getElementById("totalHiredCount").textContent = String(hired);
+    
+  } catch (error) {
+    console.error("Failed to load platform stats", error);
+  }
+}
+
+async function saveProfile(e) {
+  e.preventDefault();
+  formError.textContent = "";
+  
+  const name = document.getElementById("name").value.trim();
+  if (!name) {
+    formError.textContent = "Name is required";
+    return;
+  }
+  
+  const payload = {
+    name,
+    phone: document.getElementById("phone").value.trim() || null,
+    address: document.getElementById("address").value.trim() || null,
+    bio: document.getElementById("bio").value.trim() || null,
+    department: document.getElementById("department").value.trim() || null,
+    experience: document.getElementById("experience").value ? Number(document.getElementById("experience").value) : null
+  };
+  
+  setButtonBusy(saveBtn, true, "Saving...");
+  
+  try {
+    await apiFetch("/profile", {
+      method: "PUT",
+      body: JSON.stringify(payload)
+    });
+    
+    originalData = { ...payload };
+    showToast("Profile saved successfully!", "success");
+    updateCompletion();
+    
+  } catch (error) {
+    formError.textContent = error.message || "Failed to save profile";
+    showToast(error.message || "Failed to save profile", "error");
+  } finally {
+    setButtonBusy(saveBtn, false, "Save Profile");
+  }
+}
+
+function resetForm() {
+  document.getElementById("name").value = originalData.name || "";
+  document.getElementById("phone").value = originalData.phone || "";
+  document.getElementById("address").value = originalData.address || "";
+  document.getElementById("bio").value = originalData.bio || "";
+  document.getElementById("department").value = originalData.department || "";
+  document.getElementById("experience").value = originalData.experience || "";
+  
+  formError.textContent = "";
+  updateCompletion();
+  showToast("Changes reset", "info");
+}
+</script>
+</body>
+</html>

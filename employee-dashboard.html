@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Hire | Employee Dashboard</title>
+  <link rel="stylesheet" href="css/frontend-modern.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        </div>
+        <div>
+          <div class="brand">Smart Hire</div>
+          <div class="user-meta">Employee Portal</div>
+        </div>
+      </div>
+      <div class="topbar-nav">
+        <a href="employee-dashboard.html" class="active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="employee-screening.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Candidate Screening
+        </a>
+        <a href="employee-shortlist.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Shortlist Manager
+        </a>
+        <a href="employee-profile.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+      </div>
+      <div class="topbar-user">
+        <div class="notif-wrap" id="notificationBell"></div>
+        <div class="user-avatar user-name">E</div>
+        <a href="#" class="btn danger small logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </a>
+      </div>
+    </div>
+
+    <!-- Profile Status Notice (shown when profile incomplete or not approved) -->
+    <div id="profileNotice" class="profile-notice" style="display: none;">
+      <div class="notice-content">
+        <div class="notice-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:24px;height:24px;stroke-width:2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="notice-text">
+          <h3 id="noticeTitle">Profile Incomplete</h3>
+          <p id="noticeMessage">Complete your employee profile to request admin approval.</p>
+        </div>
+        <a href="employee-profile.html" class="btn" id="completeProfileBtn">Complete Profile</a>
+      </div>
+    </div>
+
+    <!-- Restriction Notice (shown when trying to access disabled features) -->
+    <div id="restrictionNotice" class="restriction-notice" style="display: none;">
+      <div class="restriction-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg>
+        <p>Your profile is awaiting admin approval. Access to screening features will be enabled after approval.</p>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div class="page-header-content">
+        <div class="page-header-text">
+          <h1 class="page-title">Employee Dashboard</h1>
+          <p class="page-subtitle">Candidate screening & pipeline control</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Total Applications</p>
+            <h2 id="totalApplications" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Reviewed</p>
+            <h2 id="reviewedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon success">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Approved</p>
+            <h2 id="approvedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+      <article class="stat-card">
+        <div class="stat-head">
+          <span class="stat-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>
+          </span>
+          <div class="stat-content">
+            <p class="stat-title">Rejected</p>
+            <h2 id="rejectedCount" class="stat-value">0</h2>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="card">
+        <h3 class="panel-title">Status Distribution</h3>
+        <div class="chart-wrap">
+          <canvas id="statusPieChart"></canvas>
+        </div>
+      </article>
+      <article class="card">
+        <h3 class="panel-title">Applications per Job</h3>
+        <div class="chart-wrap">
+          <canvas id="jobsBarChart"></canvas>
+        </div>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top: 24px;">
+      <div class="section-head">
+        <h3 class="panel-title">Quick Actions</h3>
+      </div>
+      <div class="quick-actions-grid">
+        <a href="employee-screening.html" class="quick-action-card">
+          <div class="quick-action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <h4>Candidate Screening</h4>
+            <p>Review, approve, reject, or blacklist candidates</p>
+          </div>
+          <svg class="quick-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a href="employee-shortlist.html" class="quick-action-card">
+          <div class="quick-action-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="quick-action-content">
+            <h4>Shortlist Manager</h4>
+            <p>Set and manage shortlist limits per job role</p>
+          </div>
+          <svg class="quick-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="grid-2" style="margin-top: 24px;">
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recently Reviewed</h3>
+        </div>
+        <div id="recentReviewed" class="card-list">
+          <div class="empty-state">No recent reviews</div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="section-head">
+          <h3 class="panel-title">Recently Approved</h3>
+        </div>
+        <div id="recentApproved" class="card-list">
+          <div class="empty-state">No recent approvals</div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const employee = requireRole("EMPLOYEE");
+    let allApplications = [];
+    let allJobs = [];
+    let pieChart = null;
+    let barChart = null;
+    let profileComplete = false;
+    let isApproved = false;
+
+    if (employee) {
+      mountNotificationsBell();
+      checkProfileStatus().then(() => {
+        loadDashboard().catch((error) => {
+          console.error("Dashboard load error", error);
+          showToast(error.message || "Unable to load dashboard", "error");
+        });
+      });
+    }
+
+    async function checkProfileStatus() {
+      try {
+        const response = await apiFetch("/profile");
+        const profile = response?.data || {};
+        
+        // Calculate profile completion based on required fields for employee
+        // Required: name
+        // Optional but counted: phone, department, position, bio, skills, experience
+        const requiredFields = [
+          !!(profile.name && profile.name.trim())
+        ];
+        const optionalFields = [
+          !!(profile.phone && profile.phone.trim()),
+          !!(profile.department && profile.department.trim()),
+          !!(profile.position && profile.position.trim()),
+          !!(profile.bio && profile.bio.trim()),
+          !!(profile.skills && profile.skills.length > 0),
+          !!(profile.experience && profile.experience > 0)
+        ];
+        
+        const requiredComplete = requiredFields.every(Boolean);
+        const optionalCount = optionalFields.filter(Boolean).length;
+        
+        // Calculate completion percentage
+        const totalFields = requiredFields.length + optionalFields.length;
+        const completedFields = requiredFields.filter(Boolean).length + optionalCount;
+        const completionPercentage = Math.round((completedFields / totalFields) * 100);
+        
+        // Profile is considered complete when 100%
+        profileComplete = requiredComplete && completionPercentage === 100;
+        
+        // Get approval status directly from profile response
+        isApproved = profile.isApproved === true;
+        
+        updateProfileNotice();
+        updateNavRestrictions();
+      } catch (error) {
+        console.error("Failed to check profile status", error);
+        // Show notice if we can't determine status
+        profileComplete = false;
+        isApproved = false;
+        updateProfileNotice();
+        updateNavRestrictions();
+      }
+    }
+
+    function updateProfileNotice() {
+      const notice = document.getElementById("profileNotice");
+      const noticeTitle = document.getElementById("noticeTitle");
+      const noticeMessage = document.getElementById("noticeMessage");
+      const completeBtn = document.getElementById("completeProfileBtn");
+      
+      // Remove any existing state classes
+      notice.classList.remove("pending");
+      
+      // Case 1: Profile not complete - show profile warning
+      if (!profileComplete) {
+        notice.style.display = "block";
+        noticeTitle.textContent = "⚠ Profile Incomplete";
+        noticeMessage.textContent = "Your profile must be completed before admin approval. After approval you will gain access to candidate screening.";
+        completeBtn.textContent = "Complete Profile";
+        completeBtn.href = "employee-profile.html";
+      }
+      // Case 2: Profile complete but not approved - show pending message
+      else if (!isApproved) {
+        notice.style.display = "block";
+        notice.classList.add("pending");
+        noticeTitle.textContent = "⏳ Approval Pending";
+        noticeMessage.textContent = "Your profile has been submitted for admin review. You will gain access to candidate screening after approval.";
+        completeBtn.textContent = "View Profile";
+        completeBtn.href = "employee-profile.html";
+      }
+      // Case 3: Profile complete AND approved - hide all notices
+      else {
+        notice.style.display = "none";
+      }
+    }
+
+    function updateNavRestrictions() {
+      const canAccess = profileComplete && isApproved;
+      const restrictedLinks = [
+        { selector: 'a[href="employee-screening.html"]', text: "Candidate Screening" },
+        { selector: 'a[href="employee-shortlist.html"]', text: "Shortlist Manager" }
+      ];
+      
+      const restrictionNotice = document.getElementById("restrictionNotice");
+      
+      if (!canAccess) {
+        restrictionNotice.style.display = "block";
+        
+        // Add visual indication to nav links
+        restrictedLinks.forEach(link => {
+          const el = document.querySelector(`.topbar-nav ${link.selector}`);
+          if (el) {
+            el.classList.add("nav-disabled");
+            el.addEventListener("click", preventNavigation);
+          }
+        });
+        
+        // Disable quick action cards
+        document.querySelectorAll(".quick-action-card").forEach(card => {
+          card.classList.add("disabled");
+          card.addEventListener("click", preventNavigation);
+        });
+      } else {
+        restrictionNotice.style.display = "none";
+      }
+    }
+
+    function preventNavigation(e) {
+      e.preventDefault();
+      showToast("Your profile is awaiting admin approval.", "error");
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function statusClass(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "APPLIED") return "status-applied";
+      if (normalized === "REVIEWED") return "status-reviewed";
+      if (normalized === "APPROVED") return "status-approved";
+      if (normalized === "HOLD") return "status-hold";
+      if (normalized === "REJECTED") return "status-rejected";
+      return "status-default";
+    }
+
+    function renderRecentActivity(applications) {
+      const reviewed = applications
+        .filter(a => String(a.status).toUpperCase() === "REVIEWED")
+        .slice(0, 5);
+      const approved = applications
+        .filter(a => String(a.status).toUpperCase() === "APPROVED")
+        .slice(0, 5);
+
+      const reviewedContainer = document.getElementById("recentReviewed");
+      const approvedContainer = document.getElementById("recentApproved");
+
+      if (!reviewed.length) {
+        reviewedContainer.innerHTML = '<div class="empty-state">No recent reviews</div>';
+      } else {
+        reviewedContainer.innerHTML = reviewed.map(app => `
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">${app.applicant?.name || "Candidate"}</p>
+              <p class="list-sub">${app.job?.title || "Job"}</p>
+            </div>
+            <span class="status-badge status-reviewed">REVIEWED</span>
+          </div>
+        `).join("");
+      }
+
+      if (!approved.length) {
+        approvedContainer.innerHTML = '<div class="empty-state">No recent approvals</div>';
+      } else {
+        approvedContainer.innerHTML = approved.map(app => `
+          <div class="list-row">
+            <div class="list-main">
+              <p class="list-title">${app.applicant?.name || "Candidate"}</p>
+              <p class="list-sub">${app.job?.title || "Job"}</p>
+            </div>
+            <span class="status-badge status-approved">APPROVED</span>
+          </div>
+        `).join("");
+      }
+    }
+
+    function renderCharts(applications, jobs) {
+      const statusCounts = applications.reduce((acc, app) => {
+        const status = String(app.status || "APPLIED").toUpperCase();
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const jobCounts = jobs.map(job => ({
+        title: job.title?.length > 20 ? job.title.slice(0, 20) + "..." : job.title,
+        count: applications.filter(a => a.jobId === job.id).length
+      })).filter(j => j.count > 0).slice(0, 8);
+
+      const pieCtx = document.getElementById("statusPieChart");
+      const barCtx = document.getElementById("jobsBarChart");
+
+      if (pieChart) pieChart.destroy();
+      if (barChart) barChart.destroy();
+
+      const statusColors = {
+        APPLIED: "#94a3b8",
+        REVIEWED: "#3b82f6",
+        APPROVED: "#10b981",
+        HOLD: "#f59e0b",
+        REJECTED: "#ef4444",
+        INTERVIEW: "#8b5cf6",
+        ACCEPTED: "#059669"
+      };
+
+      pieChart = new Chart(pieCtx, {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(statusCounts),
+          datasets: [{
+            data: Object.values(statusCounts),
+            backgroundColor: Object.keys(statusCounts).map(s => statusColors[s] || "#6b7280"),
+            borderWidth: 0,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" },
+          },
+        },
+      });
+
+      barChart = new Chart(barCtx, {
+        type: "bar",
+        data: {
+          labels: jobCounts.map(j => j.title),
+          datasets: [{
+            label: "Applications",
+            data: jobCounts.map(j => j.count),
+            backgroundColor: "rgba(23, 96, 135, 0.7)",
+            borderRadius: 8,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0 } },
+          },
+        },
+      });
+    }
+
+    async function loadDashboard() {
+      try {
+        const [appsResponse, jobsResponse] = await Promise.all([
+          apiFetch("/applications"),
+          apiFetch("/jobs?limit=100")
+        ]);
+
+        allApplications = appsResponse?.data || [];
+        allJobs = jobsResponse?.data?.jobs || [];
+
+        allApplications.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+        const total = allApplications.length;
+        const reviewed = allApplications.filter(a => String(a.status).toUpperCase() === "REVIEWED").length;
+        const approved = allApplications.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
+        const rejected = allApplications.filter(a => String(a.status).toUpperCase() === "REJECTED").length;
+
+        document.getElementById("totalApplications").textContent = String(total);
+        document.getElementById("reviewedCount").textContent = String(reviewed);
+        document.getElementById("approvedCount").textContent = String(approved);
+        document.getElementById("rejectedCount").textContent = String(rejected);
+
+        renderRecentActivity(allApplications);
+        renderCharts(allApplications, allJobs);
+
+      } catch (error) {
+        showToast(error.message || "Failed to load dashboard", "error");
+      }
+    }
+  </script>
+
+  <!-- SmartHire AI Chatbot - Employee Assistant -->
+  <script src="chatbot/chatbotEngine.js"></script>
+  <script src="chatbot/employeeKnowledge.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new SmartHireChatbot({
+        knowledgeBase: window.employeeKnowledge || [],
+        title: 'Employee Assistant',
+        welcomeMessage: "Hello! 👋 I'm your Employee Assistant. Ask me about screening candidates, managing shortlists, or using the dashboard.",
+        suggestions: ['Screen candidates', 'Approve candidate', 'Shortlist manager']
+      });
+    });
+  </script>
+</body>
+</html>
