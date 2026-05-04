@@ -123,6 +123,8 @@ function setButtonBusy(button, busy, busyText = "Loading...") {
 function mountNotificationsBell(options = {}) {
     const user = getStoredUser();
     if (!user) return;
+    const showUnreadOnly = options.showUnreadOnly === true;
+    const markReadLabel = options.markReadLabel || "Mark all read";
 
     // Try multiple selectors for different topbar structures
     const bellContainer = document.getElementById("notificationBell") || 
@@ -146,7 +148,7 @@ function mountNotificationsBell(options = {}) {
         <div class="notif-dropdown">
             <div class="notif-header">
                 <span>Notifications</span>
-                <span class="mark-read" id="markAllRead">Mark all read</span>
+                <span class="mark-read" id="markAllRead">${markReadLabel}</span>
             </div>
             <div class="notif-list">
                 <div class="notif-empty">Loading...</div>
@@ -167,6 +169,7 @@ function mountNotificationsBell(options = {}) {
     const dropdown = wrapper.querySelector(".notif-dropdown");
     const list = wrapper.querySelector(".notif-list");
     const markAllReadBtn = wrapper.querySelector("#markAllRead");
+    let latestItems = [];
 
     function getNotificationIcon(title) {
         const titleLower = (title || "").toLowerCase();
@@ -203,8 +206,9 @@ function mountNotificationsBell(options = {}) {
 
     async function loadNotifications() {
         try {
-            const response = await apiFetch("/notifications");
+            const response = await apiFetch(`/notifications${showUnreadOnly ? "?unread=true" : ""}`);
             const items = response?.data || [];
+            latestItems = items;
             const unread = items.filter((item) => !item.isRead).length;
 
             if (unread > 0) {
@@ -234,6 +238,7 @@ function mountNotificationsBell(options = {}) {
                         <span class="notif-title">${item.title || "Notification"}</span>
                         <span class="notif-msg">${item.message || ""}</span>
                         <span class="notif-time">${formatTimeAgo(item.createdAt)}</span>
+                        ${!item.isRead ? '<span class="notif-item-mark-read" data-action="mark-read" style="margin-top:4px;display:inline-block;color:#176087;font-size:0.75rem;font-weight:600;">Mark as Read</span>' : ""}
                     </div>
                 </button>
             `).join("");
@@ -252,16 +257,28 @@ function mountNotificationsBell(options = {}) {
 
     markAllReadBtn.addEventListener("click", async (event) => {
         event.stopPropagation();
+        const unreadItems = latestItems.filter((item) => !item.isRead);
+        if (!unreadItems.length) return;
         try {
-            await apiFetch("/notifications/read-all", { method: "PUT" });
+            try {
+                await apiFetch("/notifications/read-all", { method: "PUT" });
+            } catch {
+                await Promise.all(
+                    unreadItems.map((item) => apiFetch(`/notifications/${item.id}/read`, { method: "PUT" }))
+                );
+            }
             await loadNotifications();
-            showToast("All notifications marked as read", "success");
+            showToast("Notifications marked as read", "success");
         } catch {
-            // Silently fail if endpoint doesn't exist
+            showToast("Unable to mark notification as read", "error");
         }
     });
 
     list.addEventListener("click", async (event) => {
+        const markBtn = event.target.closest("[data-action='mark-read']");
+        if (markBtn) {
+            event.stopPropagation();
+        }
         const item = event.target.closest(".notif-item");
         if (!item) return;
 

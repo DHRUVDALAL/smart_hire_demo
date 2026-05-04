@@ -39,6 +39,9 @@ export async function getProfile(userId) {
                     website: true,
                     industry: true,
                     logo: true,
+                    description: true,
+                    location: true,
+                    size: true,
                 },
             },
             employee: {
@@ -123,15 +126,33 @@ export async function updateProfile(userId, data) {
     // Ensure user exists
     const existing = await prisma.user.findUnique({
         where: { id: userId },
-        include: { applicant: true, employee: true },
+        include: { applicant: true, employee: true, recruiter: true },
     });
 
     if (!existing) {
         throw new AppError("User not found.", 404);
     }
 
-    // Separate user fields from applicant/employee fields
-    const { skills, experience, education, portfolio, designation, alternatePhone, department, position, specialization, ...userFields } = data;
+    // Separate user fields from role-specific fields
+    const {
+        skills,
+        experience,
+        education,
+        portfolio,
+        designation,
+        alternatePhone,
+        department,
+        position,
+        specialization,
+        companyName,
+        industry,
+        companySize,
+        companyDescription,
+        companyAddress,
+        city,
+        country,
+        ...userFields
+    } = data;
 
     // Filter userFields to only include fields that exist in the User model
     const validUserFields = {};
@@ -225,6 +246,29 @@ export async function updateProfile(userId, data) {
                     },
                 });
             }
+        }
+    }
+
+    // Update recruiter/company fields if user is a recruiter
+    if (existing.role === "RECRUITER" && existing.recruiter?.companyId) {
+        const companyData = {};
+        if (companyName !== undefined) companyData.name = companyName;
+        if (industry !== undefined) companyData.industry = industry;
+        if (companySize !== undefined) companyData.size = companySize;
+        if (companyDescription !== undefined) companyData.description = companyDescription;
+
+        if (companyAddress !== undefined || city !== undefined || country !== undefined) {
+            const parts = [companyAddress, city, country]
+                .map(v => (typeof v === "string" ? v.trim() : ""))
+                .filter(Boolean);
+            companyData.location = parts.length ? parts.join(", ") : null;
+        }
+
+        if (Object.keys(companyData).length > 0) {
+            await prisma.company.update({
+                where: { id: existing.recruiter.companyId },
+                data: companyData,
+            });
         }
     }
 

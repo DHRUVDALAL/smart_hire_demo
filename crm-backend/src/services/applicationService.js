@@ -8,6 +8,7 @@
 import prisma from "../utils/prisma.js";
 import { AppError } from "../middleware/errorHandler.js";
 import * as notificationService from "./notificationService.js";
+import { sendEmail, templates } from "./emailService.js";
 
 /**
  * Apply to a job.
@@ -23,7 +24,7 @@ export async function applyToJob(applicantId, data) {
     // Verify user is an applicant
     const user = await prisma.user.findUnique({
         where: { id: applicantId },
-        select: { id: true, role: true },
+        select: { id: true, role: true, name: true, email: true },
     });
 
     if (!user) {
@@ -87,6 +88,17 @@ export async function applyToJob(applicantId, data) {
         });
     } catch (err) {
         console.error("Failed to send notification:", err.message);
+    }
+
+    // Email (best-effort)
+    try {
+        void sendEmail(
+            user.email,
+            "Application Submitted",
+            templates.applicationSubmitted(user.name, job.title)
+        );
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
     }
 
     // Log the activity
@@ -337,8 +349,14 @@ export async function updateApplicationStatus(applicationId, userId, userRole, p
 
     const requestedStatus = String(payload.status || "").toUpperCase();
 
-    const reviewerAllowed = ["APPROVED", "REJECTED", "REVIEWED"];
-    const recruiterAllowed = ["INTERVIEW", "HOLD", "ACCEPTED", "REJECTED_FINAL"];
+    const reviewerAllowed = ["APPROVED", "REJECTED", "REVIEWED", "HOLD"];
+
+    const currentStatus = String(application.status || "").toUpperCase();
+    const recruiterAllowedBase = ["INTERVIEW", "HOLD", "ACCEPTED", "REJECTED_FINAL"];
+    const recruiterAllowed =
+        currentStatus === "HOLD"
+            ? [...recruiterAllowedBase, "APPROVED", "REVIEWED"]
+            : recruiterAllowedBase;
 
     if (["HR", "EMPLOYEE", "ADMIN"].includes(userRole)) {
         if (!reviewerAllowed.includes(requestedStatus)) {
@@ -355,10 +373,13 @@ export async function updateApplicationStatus(applicationId, userId, userRole, p
         }
 
         if (!recruiterAllowed.includes(requestedStatus)) {
-            throw new AppError("Recruiter can only move candidates to INTERVIEW, HOLD, ACCEPTED, or REJECTED_FINAL.", 403);
+            throw new AppError(
+                "Recruiter can only move candidates to INTERVIEW, HOLD, ACCEPTED, REJECTED_FINAL (and can revert HOLD to APPROVED/REVIEWED).",
+                403
+            );
         }
 
-        if (!["APPROVED", "INTERVIEW", "HOLD"].includes(application.status)) {
+        if (!["APPROVED", "INTERVIEW", "HOLD"].includes(currentStatus)) {
             throw new AppError("Recruiter can only process approved/active pipeline candidates.", 400);
         }
     } else {
@@ -413,6 +434,27 @@ export async function updateApplicationStatus(applicationId, userId, userRole, p
             }),
         },
     });
+
+    // Applicant email updates (best-effort)
+    try {
+        if (requestedStatus === "APPROVED") {
+            void sendEmail(
+                updated.applicant.email,
+                "Application Approved",
+                templates.applicationApproved(updated.applicant.name, updated.job.title)
+            );
+        }
+
+        if (requestedStatus === "REJECTED" || requestedStatus === "REJECTED_FINAL") {
+            void sendEmail(
+                updated.applicant.email,
+                "Application Update",
+                templates.applicationRejected(updated.applicant.name, updated.job.title)
+            );
+        }
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     return updated;
 }

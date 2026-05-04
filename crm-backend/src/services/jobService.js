@@ -7,6 +7,7 @@
 
 import prisma from "../utils/prisma.js";
 import { AppError } from "../middleware/errorHandler.js";
+import { sendEmail, templates } from "./emailService.js";
 
 /**
  * Create a new job listing.
@@ -47,6 +48,23 @@ export async function createJob(userId, data) {
             },
         },
     });
+
+    // Optional job alerts (disabled by default)
+    try {
+        if (process.env.JOB_ALERTS_ENABLED === "true") {
+            const recipients = await prisma.user.findMany({
+                where: { role: "APPLICANT", isActive: true },
+                select: { email: true },
+                take: 50,
+            });
+
+            for (const r of recipients) {
+                void sendEmail(r.email, "New Job Posted", templates.newJobPosted(job.title));
+            }
+        }
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     // Log the activity
     await prisma.activityLog.create({
@@ -158,7 +176,7 @@ export async function getJobById(jobId) {
 export async function updateJob(jobId, userId, userRole, data) {
     const job = await prisma.job.findUnique({
         where: { id: jobId },
-        select: { id: true, companyId: true },
+        select: { id: true, companyId: true, status: true, title: true },
     });
 
     if (!job) {
@@ -186,6 +204,45 @@ export async function updateJob(jobId, userId, userRole, data) {
             },
         },
     });
+
+    // Admin job status emails (best-effort)
+    try {
+        const newStatus = Object.prototype.hasOwnProperty.call(data, "status")
+            ? String(data.status || "").toUpperCase()
+            : null;
+        const prevStatus = String(job.status || "").toUpperCase();
+
+        if (userRole === "ADMIN" && newStatus && newStatus !== prevStatus) {
+            const recruiters = await prisma.user.findMany({
+                where: {
+                    companyId: job.companyId,
+                    role: "RECRUITER",
+                    isActive: true,
+                },
+                select: { name: true, email: true },
+            });
+
+            for (const r of recruiters) {
+                if (newStatus === "ACTIVE") {
+                    void sendEmail(
+                        r.email,
+                        "Job Posting Approved",
+                        templates.jobPostingApproved(r.name || "Recruiter", job.title)
+                    );
+                }
+
+                if (newStatus === "HOLD") {
+                    void sendEmail(
+                        r.email,
+                        "Job Posting On Hold",
+                        templates.jobPostingOnHold(r.name || "Recruiter", job.title)
+                    );
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     // Log the activity
     await prisma.activityLog.create({

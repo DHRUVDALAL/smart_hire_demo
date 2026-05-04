@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Applicant Dashboard</title>
+  <title>रोजगार केंद्र | Applicant Dashboard</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
         <div class="topbar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
         </div>
         <div>
-          <div class="brand">Smart Hire</div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
           <div class="user-meta">Applicant Portal</div>
         </div>
       </div>
@@ -193,7 +196,7 @@
     let allApps = [];
 
     if (applicant) {
-      mountNotificationsBell();
+      mountNotificationsBell({ showUnreadOnly: true, markReadLabel: "Mark as Read" });
       
       // Interview modal handlers
       document.getElementById("closeInterviewModalBtn").addEventListener("click", closeInterviewModal);
@@ -241,37 +244,77 @@
       return jobSkills.length > 0 ? Math.round((matches / jobSkills.length) * 100) : 0;
     }
 
-    function renderRecommendedJobs(jobs, userSkills, appliedJobIds) {
+    function formatSalaryDisplay(value) {
+      if (!value) return "Competitive";
+      return String(value).replace(/\$/g, "₹");
+    }
+
+    function toLowerArray(value) {
+      if (Array.isArray(value)) {
+        return value.map((item) => String(item || "").toLowerCase().trim()).filter(Boolean);
+      }
+      if (typeof value === "string") {
+        return value.split(",").map((item) => item.toLowerCase().trim()).filter(Boolean);
+      }
+      return [];
+    }
+
+    function renderRecommendedJobs(jobs, userSkills, appliedJobIds, profile = {}) {
       const root = document.getElementById("recommendedJobs");
-      
+      const preferredTypes = new Set([
+        ...toLowerArray(profile.preferredJobType),
+        ...toLowerArray(profile.preferredJobTypes),
+        ...toLowerArray(profile.jobType),
+      ]);
+      const preferredLocations = new Set([
+        ...toLowerArray(profile.location),
+        ...toLowerArray(profile.city),
+        ...toLowerArray(profile.preferredLocation),
+        ...toLowerArray(profile.preferredCity),
+      ]);
+
       const scoredJobs = jobs
         .filter(job => !appliedJobIds.has(job.id) && String(job.status || "").toUpperCase() === "ACTIVE")
         .map(job => ({
           ...job,
-          matchScore: calculateSkillMatch(job.skills || [], userSkills)
+          skillMatch: calculateSkillMatch(job.skills || [], userSkills),
+          typeMatch: preferredTypes.size > 0 && preferredTypes.has(String(job.jobType || job.type || "").toLowerCase().trim()),
+          locationMatch: preferredLocations.size > 0 && preferredLocations.has(String(job.location || "").toLowerCase().trim()),
         }))
-        .filter(job => job.matchScore >= 50)
-        .sort((a, b) => b.matchScore - a.matchScore)
+        .map((job) => ({
+          ...job,
+          matchScore: Math.min(100, job.skillMatch + (job.typeMatch ? 25 : 0) + (job.locationMatch ? 25 : 0)),
+        }))
+        .filter(job => job.matchScore >= 50 || job.typeMatch || job.locationMatch || job.skillMatch >= 30)
+        .sort((a, b) => b.matchScore - a.matchScore || new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
         .slice(0, 4);
 
-      if (!scoredJobs.length) {
+      const displayJobs = scoredJobs.length
+        ? scoredJobs
+        : jobs
+            .filter(job => !appliedJobIds.has(job.id) && String(job.status || "").toUpperCase() === "ACTIVE")
+            .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+            .slice(0, 4)
+            .map((job) => ({ ...job, matchScore: calculateSkillMatch(job.skills || [], userSkills) }));
+
+      if (!displayJobs.length) {
         root.innerHTML = '<div class="empty-state">No recommended jobs found. Complete your profile to get better recommendations.</div>';
         return;
       }
 
-      root.innerHTML = scoredJobs.map(job => `
+      root.innerHTML = displayJobs.map(job => `
         <article class="job-card">
           <div class="row" style="justify-content: space-between; align-items: flex-start;">
             <div class="list-main">
               <h3 class="list-title">${job.title || "Untitled Job"}</h3>
               <p class="list-sub">${job.company?.name || "Company"} • ${job.location || "Remote"}</p>
             </div>
-            <span class="status-badge status-active">${job.matchScore}% Match</span>
+            <span class="status-badge status-active">${job.matchScore > 0 ? `${job.matchScore}% Match` : "New"}</span>
           </div>
           <div class="meta">
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              ${job.salaryRange || "Competitive"}
+              ${formatSalaryDisplay(job.salaryRange)}
             </span>
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -456,9 +499,15 @@
       const interviewsList = document.getElementById("interviewsList");
       
       // Filter applications that have interview status
+      const now = Date.now();
+      const retentionMs = 24 * 60 * 60 * 1000;
       const interviewApps = applications.filter(app => {
         const status = String(app.status || "").toUpperCase();
-        return status === "INTERVIEW";
+        if (status !== "INTERVIEW") return false;
+        if (!app.interviewDate) return true;
+        const interviewTime = new Date(app.interviewDate).getTime();
+        if (Number.isNaN(interviewTime)) return true;
+        return now <= (interviewTime + retentionMs);
       });
 
       if (!interviewApps.length) {
@@ -777,7 +826,7 @@
         document.getElementById("interviewsScheduled").textContent = String(interviews);
         document.getElementById("acceptedOffers").textContent = String(accepted);
 
-        renderRecommendedJobs(jobs, userSkills, appliedJobIds);
+        renderRecommendedJobs(jobs, userSkills, appliedJobIds, profile);
         renderRecentApplications(applications);
         renderNotificationsPreview(notifications);
         renderCharts(applications);

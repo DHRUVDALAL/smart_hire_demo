@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Candidate Screening</title>
+  <title>रोजगार केंद्र | Candidate Screening</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
         <div class="topbar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
         </div>
         <div>
-          <div class="brand">Smart Hire</div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
           <div class="user-meta">Employee Portal</div>
         </div>
       </div>
@@ -246,6 +249,33 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
     let currentReviewAppId = null;
     let currentBlacklistAppId = null;
 
+    const statusUpdateInFlight = new Set();
+
+    const HOLD_PREV_STATUS_KEY = "holdPrevStatusByApp";
+    let holdPrevStatusByApp = {};
+    try {
+      holdPrevStatusByApp = JSON.parse(localStorage.getItem(HOLD_PREV_STATUS_KEY) || "{}") || {};
+    } catch {
+      holdPrevStatusByApp = {};
+    }
+
+    function setHoldPreviousStatus(appId, status) {
+      holdPrevStatusByApp[appId] = String(status || "APPLIED").toUpperCase();
+      localStorage.setItem(HOLD_PREV_STATUS_KEY, JSON.stringify(holdPrevStatusByApp));
+    }
+
+    function getHoldPreviousStatus(appId) {
+      const value = holdPrevStatusByApp[appId];
+      return value ? String(value).toUpperCase() : null;
+    }
+
+    function clearHoldPreviousStatus(appId) {
+      if (holdPrevStatusByApp[appId]) {
+        delete holdPrevStatusByApp[appId];
+        localStorage.setItem(HOLD_PREV_STATUS_KEY, JSON.stringify(holdPrevStatusByApp));
+      }
+    }
+
     if (employee) {
       mountNotificationsBell();
       loadBlacklist();
@@ -253,7 +283,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
       document.getElementById("refreshBtn").addEventListener("click", loadApplications);
       searchInput.addEventListener("input", renderApplications);
       statusFilter.addEventListener("change", renderApplications);
-      companyFilter.addEventListener("change", renderApplications);
+      companyFilter.addEventListener("change", handleCompanyFilterChange);
       jobFilter.addEventListener("change", renderApplications);
       
       document.getElementById("closeReviewModalBtn").addEventListener("click", closeReviewModal);
@@ -299,6 +329,12 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
       return "status-default";
     }
 
+    function displayStatus(status) {
+      const normalized = String(status || "").toUpperCase();
+      if (normalized === "HOLD") return "ON HOLD";
+      return normalized.replace(/_/g, " ");
+    }
+
     function formatDate(value) {
       if (!value) return "-";
       const date = new Date(value);
@@ -310,10 +346,47 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
       });
     }
 
+    function updateHeaderStats() {
+      const total = allApplications.length;
+      const reviewed = allApplications.filter(a => String(a.status).toUpperCase() === "REVIEWED").length;
+      const approved = allApplications.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
+      const rejected = allApplications.filter(a => String(a.status).toUpperCase() === "REJECTED").length;
+
+      document.getElementById("totalApplications").textContent = String(total);
+      document.getElementById("reviewedCount").textContent = String(reviewed);
+      document.getElementById("approvedCount").textContent = String(approved);
+      document.getElementById("rejectedCount").textContent = String(rejected);
+    }
+
     function populateJobFilters(jobs) {
       const jobFilterHtml = '<option value="">All Jobs</option>' + 
         jobs.map(j => `<option value="${j.id}">${j.title}</option>`).join("");
       jobFilter.innerHTML = jobFilterHtml;
+    }
+
+    function jobsForSelectedCompany() {
+      const selectedCompany = companyFilter.value;
+      if (!selectedCompany) return allJobs;
+
+      const filtered = allJobs.filter(j => j.company?.name === selectedCompany);
+      if (filtered.length) return filtered;
+
+      // Fallback: derive jobs from applications (in case /jobs is paginated)
+      const seen = new Set();
+      return allApplications
+        .filter(app => app.job?.company?.name === selectedCompany)
+        .map(app => ({ id: app.jobId, title: app.job?.title || "Job" }))
+        .filter(j => {
+          if (!j.id || seen.has(j.id)) return false;
+          seen.add(j.id);
+          return true;
+        });
+    }
+
+    function handleCompanyFilterChange() {
+      jobFilter.value = "";
+      populateJobFilters(jobsForSelectedCompany());
+      renderApplications();
     }
 
     function populateCompanyFilter(applications) {
@@ -362,7 +435,8 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
         const status = isBlacklisted ? "BLACKLISTED" : String(app.status || "APPLIED").toUpperCase();
         const canApprove = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
         const canReject = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
-        const canHold = !isBlacklisted && !["APPROVED", "REJECTED", "HOLD"].includes(status);
+        const canHoldToggle = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
+        const holdLabel = status === "HOLD" ? "UNHOLD" : "HOLD";
         const canReview = !isBlacklisted && !["APPROVED", "REJECTED"].includes(status);
         const canBlacklist = !isBlacklisted && !["APPROVED"].includes(status);
 
@@ -373,7 +447,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
                 <h3 class="list-title">${app.applicant?.name || "Unknown Candidate"}</h3>
                 <p class="list-sub">${app.job?.title || "Job"} • ${app.job?.company?.name || "Company"}</p>
               </div>
-              <span class="status-badge ${statusClass(status)}">${status}</span>
+              <span class="status-badge ${statusClass(status)}">${displayStatus(status)}</span>
             </div>
 
             <div class="meta">
@@ -392,7 +466,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
             <div class="row" style="margin-top: 14px;">
               ${canReview ? `<button type="button" data-app-id="${app.id}" class="btn review-btn">Review</button>` : ''}
               ${canApprove ? `<button type="button" data-app-id="${app.id}" class="approve-btn">Approve</button>` : ''}
-              ${canHold ? `<button type="button" data-app-id="${app.id}" class="btn secondary hold-btn">Hold</button>` : ''}
+              ${canHoldToggle ? `<button type="button" data-app-id="${app.id}" class="btn secondary hold-toggle-btn">${holdLabel}</button>` : ''}
               ${canReject ? `<button type="button" data-app-id="${app.id}" class="btn danger reject-btn">Reject</button>` : ''}
               ${canBlacklist ? `<button type="button" data-app-id="${app.id}" class="btn blacklist-btn" style="background: #7f1d1d; color: white;">Blacklist</button>` : ''}
               ${isBlacklisted ? `<button type="button" data-app-id="${app.id}" class="btn secondary unblacklist-btn">Remove from Blacklist</button>` : ''}
@@ -410,8 +484,8 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
         btn.addEventListener("click", () => updateStatus(btn.dataset.appId, "APPROVED", btn));
       });
 
-      document.querySelectorAll(".hold-btn").forEach(btn => {
-        btn.addEventListener("click", () => updateStatus(btn.dataset.appId, "HOLD", btn));
+      document.querySelectorAll(".hold-toggle-btn").forEach(btn => {
+        btn.addEventListener("click", () => toggleHoldStatus(btn.dataset.appId));
       });
 
       document.querySelectorAll(".reject-btn").forEach(btn => {
@@ -528,15 +602,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
 
         allApplications.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
-        const total = allApplications.length;
-        const reviewed = allApplications.filter(a => String(a.status).toUpperCase() === "REVIEWED").length;
-        const approved = allApplications.filter(a => String(a.status).toUpperCase() === "APPROVED").length;
-        const rejected = allApplications.filter(a => String(a.status).toUpperCase() === "REJECTED").length;
-
-        document.getElementById("totalApplications").textContent = String(total);
-        document.getElementById("reviewedCount").textContent = String(reviewed);
-        document.getElementById("approvedCount").textContent = String(approved);
-        document.getElementById("rejectedCount").textContent = String(rejected);
+        updateHeaderStats();
 
         populateJobFilters(allJobs);
         populateCompanyFilter(allApplications);
@@ -628,9 +694,13 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
           body: JSON.stringify({ status: "REVIEWED" })
         });
 
+        const updated = allApplications.find(a => a.id === currentReviewAppId);
+        if (updated) updated.status = "REVIEWED";
+        updateHeaderStats();
+        renderApplications();
+
         showToast("Review submitted successfully!", "success");
         closeReviewModal();
-        await loadApplications();
 
       } catch (error) {
         reviewError.textContent = error.message || "Failed to submit review";
@@ -640,14 +710,70 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
       }
     }
 
+    async function toggleHoldStatus(appId) {
+      if (statusUpdateInFlight.has(appId)) return;
+
+      const app = allApplications.find(a => a.id === appId);
+      if (!app) return;
+
+      const fromStatus = String(app.status || "APPLIED").toUpperCase();
+      let toStatus;
+
+      if (fromStatus === "HOLD") {
+        const previous = getHoldPreviousStatus(appId) || "REVIEWED";
+        toStatus = previous;
+        clearHoldPreviousStatus(appId);
+      } else {
+        setHoldPreviousStatus(appId, fromStatus);
+        toStatus = "HOLD";
+      }
+
+      statusUpdateInFlight.add(appId);
+
+      // Optimistic UI update
+      app.status = toStatus;
+      updateHeaderStats();
+      renderApplications();
+
+      try {
+        await apiFetch(`/applications/${appId}/status`, {
+          method: "PUT",
+          body: JSON.stringify({ status: toStatus })
+        });
+
+        showToast(toStatus === "HOLD" ? "Candidate placed on hold" : "Candidate removed from hold", "info");
+      } catch (error) {
+        // Revert on failure
+        app.status = fromStatus;
+
+        if (toStatus === "HOLD") {
+          clearHoldPreviousStatus(appId);
+        } else if (fromStatus === "HOLD") {
+          setHoldPreviousStatus(appId, toStatus);
+        }
+
+        updateHeaderStats();
+        renderApplications();
+        showToast(error.message || "Failed to update status", "error");
+      } finally {
+        statusUpdateInFlight.delete(appId);
+      }
+    }
+
     async function updateStatus(appId, newStatus, triggerBtn) {
-      setButtonBusy(triggerBtn, true, "Updating...");
+      if (triggerBtn) setButtonBusy(triggerBtn, true, "Updating...");
 
       try {
         await apiFetch(`/applications/${appId}/status`, {
           method: "PUT",
           body: JSON.stringify({ status: newStatus })
         });
+
+        const updated = allApplications.find(a => a.id === appId);
+        if (updated) updated.status = newStatus;
+
+        updateHeaderStats();
+        renderApplications();
 
         const statusMessages = {
           APPROVED: "Candidate approved and sent to recruiter!",
@@ -656,12 +782,10 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
         };
 
         showToast(statusMessages[newStatus] || "Status updated", newStatus === "APPROVED" ? "success" : "info");
-        await loadApplications();
-
       } catch (error) {
         showToast(error.message || "Failed to update status", "error");
       } finally {
-        setButtonBusy(triggerBtn, false);
+        if (triggerBtn) setButtonBusy(triggerBtn, false);
       }
     }
 
@@ -723,7 +847,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
               <h3>${candidateName}</h3>
               <p class="job-applied">${jobData.title || "Job"} at ${companyName}</p>
             </div>
-            <span class="status-badge ${statusClass(applicationStatus)}">${applicationStatus.replace(/_/g, ' ')}</span>
+            <span class="status-badge ${statusClass(applicationStatus)}">${displayStatus(applicationStatus)}</span>
           </div>
 
           <!-- Candidate Info Section -->
@@ -792,7 +916,7 @@ Recommended for recruiter interview." style="min-height: 140px;"></textarea>
               </div>
               <div class="info-item">
                 <span class="info-label">Status</span>
-                <span class="info-value">${applicationStatus.replace(/_/g, ' ')}</span>
+                <span class="info-value">${displayStatus(applicationStatus)}</span>
               </div>
             </div>
           </div>

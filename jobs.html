@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Browse Jobs</title>
+  <title>रोजगार केंद्र | Browse Jobs</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
         <div class="topbar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
         </div>
         <div>
-          <div class="brand">Smart Hire</div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
           <div class="user-meta">Applicant Portal</div>
         </div>
       </div>
@@ -160,6 +163,11 @@
       return jobSkills.length > 0 ? Math.round((matches / jobSkills.length) * 100) : 0;
     }
 
+    function formatSalaryDisplay(value) {
+      if (!value) return "Competitive";
+      return String(value).replace(/\$/g, "₹");
+    }
+
     function populateLocationFilter(jobs) {
       const locations = [...new Set(jobs.map(j => j.location).filter(Boolean))].sort();
       locationFilter.innerHTML = '<option value="">All Cities</option>' +
@@ -245,7 +253,7 @@
 
           <div class="meta">
             <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${locationDisplay}</span>
-            <span>${job.salaryRange || "Competitive"}</span>
+            <span>${formatSalaryDisplay(job.salaryRange)}</span>
             <span>Posted ${formatDate(job.createdAt)}</span>
           </div>
 
@@ -327,7 +335,7 @@
             </div>
             <div class="job-info-content">
               <span class="job-info-label">Salary</span>
-              <span class="job-info-value">${job.salaryRange || "Competitive"}</span>
+              <span class="job-info-value">${formatSalaryDisplay(job.salaryRange)}</span>
             </div>
           </div>
           <div class="job-info-card">
@@ -336,7 +344,10 @@
             </div>
             <div class="job-info-content">
               <span class="job-info-label">Location</span>
-              <span class="job-info-value">${job.location || "Not specified"}</span>
+              <span class="job-info-value">
+                City: ${job.location || "Not specified"}
+                ${job.locality ? `<br><small>Locality: ${job.locality}</small>` : ""}
+              </span>
             </div>
           </div>
         </div>

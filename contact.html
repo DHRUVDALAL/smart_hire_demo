@@ -1,39 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Contact Us</title>
+  <title>संपर्क | खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
   <link rel="stylesheet" href="css/saas-landing.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    }
+  </style>
 </head>
 <body class="saas-page">
   <!-- Navigation -->
   <nav class="saas-nav">
     <div class="saas-nav-inner">
       <a href="index.html" class="saas-nav-logo">
-        <svg viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="8" fill="url(#logo-gradient)"/>
-          <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <defs>
-            <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-              <stop stop-color="#176087"/>
-              <stop offset="1" stop-color="#04395E"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        Smart Hire
+        <img src="images/Logo.png" alt="Logo" />
+        <div class="brand-name">
+          <span class="line1">खासदार मुरलीधर मोहोळ</span>
+          <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+        </div>
       </a>
       <div class="saas-nav-links">
-        <a href="index.html" class="saas-nav-link">Home</a>
-        <a href="features.html" class="saas-nav-link">Features</a>
-        <a href="about.html" class="saas-nav-link">About</a>
-        <a href="contact.html" class="saas-nav-link active">Contact</a>
+        <a href="index.html" class="saas-nav-link" data-key="navHome">मुख्यपृष्ठ</a>
+        <a href="features.html" class="saas-nav-link" data-key="navFeatures">वैशिष्ट्ये</a>
+        <a href="about.html" class="saas-nav-link" data-key="navAbout">आमच्याबद्दल</a>
+        <a href="contact.html" class="saas-nav-link active" data-key="navContact">संपर्क</a>
+      </div>
+      <div class="language-switcher">
+        <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <a href="#" class="language-option active" data-lang="marathi">मराठी</a>
+        <span class="language-divider">|</span>
+        <a href="#" class="language-option" data-lang="english">English</a>
       </div>
       <div class="saas-nav-actions">
-        <a href="login.html" class="saas-btn saas-btn-ghost">Login</a>
-        <a href="register.html" class="saas-btn saas-btn-primary">Get Started</a>
+        <a href="login.html" class="saas-btn saas-btn-ghost" data-key="navLogin">लॉगिन</a>
+        <a href="register.html" class="saas-btn saas-btn-primary" data-key="navRegister">नोंदणी करा</a>
       </div>
       <button class="saas-nav-mobile-toggle" aria-label="Toggle menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -48,8 +59,8 @@
   <!-- Page Header -->
   <header class="saas-page-header">
     <div class="saas-page-header-content">
-      <h1>Get in <span class="gradient-text">Touch</span></h1>
-      <p>Have questions or need help? We'd love to hear from you. Our team is ready to assist.</p>
+      <h1 data-key="contactPageTitle">आमच्याशी <span class="gradient-text">संपर्क साधा</span></h1>
+      <p data-key="contactPageSubtitle">रोजगार शोधणाऱ्या नागरिकांसाठी आणि कर्मचारी शोधणाऱ्या नियोक्त्यांसाठी आम्ही येथे आहोत</p>
     </div>
   </header>
 
@@ -57,8 +68,8 @@
   <section class="saas-contact">
     <div class="saas-contact-inner">
       <div class="saas-contact-info reveal">
-        <h2>Contact Information</h2>
-        <p>Reach out to us through any of these channels. We typically respond within 24 hours.</p>
+        <h2 data-key="contactInfoTitle">संपर्क माहिती</h2>
+        <p data-key="contactInfoDesc">कोणत्याही प्रश्नासाठी किंवा मदतीसाठी आमच्याशी संपर्क साधा. आमची टीम आपल्याला मदत करण्यासाठी तयार आहे.</p>
         
         <div class="saas-contact-list">
           <article class="saas-contact-item">
@@ -69,8 +80,9 @@
               </svg>
             </div>
             <div class="saas-contact-details">
-              <h4>Email</h4>
-              <p><a href="mailto:support@smarthire.com">support@smarthire.com</a></p>
+              <h4 data-key="contactEmail">ईमेल</h4>
+              <p><a href="mailto:employment@mpmohol.in">employment@mpmohol.in</a></p>
+              <p><a href="mailto:support@mpmohol.in">support@mpmohol.in</a></p>
             </div>
           </article>
 
@@ -81,8 +93,9 @@
               </svg>
             </div>
             <div class="saas-contact-details">
-              <h4>Phone</h4>
-              <p><a href="tel:+1234567890">+1 (234) 567-890</a></p>
+              <h4 data-key="contactPhone">फोन</h4>
+              <p><a href="tel:+912025123456">+91 20 2512 3456</a></p>
+              <p><a href="tel:+912025123457">+91 20 2512 3457</a></p>
             </div>
           </article>
 
@@ -94,8 +107,8 @@
               </svg>
             </div>
             <div class="saas-contact-details">
-              <h4>Office Location</h4>
-              <p>123 Business Park<br>San Francisco, CA 94107</p>
+              <h4 data-key="contactOffice">कार्यालय</h4>
+              <p data-key="contactAddress">खासदार मुरलीधर मोहोळ<br>रोजगार व स्वयंरोजगार केंद्र<br>पुणे, महाराष्ट्र</p>
             </div>
           </article>
 
@@ -107,62 +120,142 @@
               </svg>
             </div>
             <div class="saas-contact-details">
-              <h4>Business Hours</h4>
-              <p>Monday - Friday: 9am - 6pm PST</p>
+              <h4 data-key="contactHours">कार्यालयीन वेळ</h4>
+              <p data-key="contactHoursWeekdays">सोमवार - शुक्रवार: सकाळी 10:00 - संध्याकाळी 6:00</p>
+              <p data-key="contactHoursSaturday">शनिवार: सकाळी 10:00 - दुपारी 2:00</p>
             </div>
           </article>
         </div>
       </div>
 
       <div class="saas-contact-form-section reveal">
-        <h2>Send us a message</h2>
+        <h2 data-key="contactFormTitle">संदेश पाठवा</h2>
+        <p style="margin-bottom: 24px;" data-key="contactFormDesc">आपले प्रश्न किंवा सूचना आम्हाला कळवा. आम्ही लवकरच आपल्याशी संपर्क साधू.</p>
         <form class="saas-contact-form" id="contactForm">
           <div class="saas-auth-field">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" placeholder="John Doe" required />
+            <label for="name" data-key="formLabelName">आपले नाव *</label>
+            <input type="text" id="name" name="name" placeholder="पूर्ण नाव टाका" required data-key="formPlaceholderName" />
           </div>
           <div class="saas-auth-field">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="john@example.com" required />
+            <label for="phone" data-key="formLabelPhone">फोन नंबर *</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 1234567890" required />
           </div>
           <div class="saas-auth-field">
-            <label for="subject">Subject</label>
-            <input type="text" id="subject" name="subject" placeholder="How can we help?" />
+            <label for="email" data-key="formLabelEmail">ईमेल पत्ता *</label>
+            <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
           </div>
           <div class="saas-auth-field">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" placeholder="Tell us more about your inquiry..." required></textarea>
+            <label for="subject" data-key="formLabelSubject">विषय</label>
+            <select id="subject" name="subject">
+              <option value="job-seeker" data-key="formSubjectJobSeeker">नोकरी शोधक</option>
+              <option value="employer" data-key="formSubjectEmployer">नियोक्ता</option>
+              <option value="self-employment" data-key="formSubjectSelfEmployment">स्वयंरोजगार</option>
+              <option value="training" data-key="formSubjectTraining">प्रशिक्षण</option>
+              <option value="other" data-key="formSubjectOther">इतर</option>
+            </select>
           </div>
-          <button type="submit" class="saas-btn saas-btn-primary" style="width: 100%;">Send Message</button>
-          <div id="formSuccess" class="saas-contact-success">Thank you! Your message has been sent successfully.</div>
+          <div class="saas-auth-field">
+            <label for="message" data-key="formLabelMessage">संदेश *</label>
+            <textarea id="message" name="message" placeholder="आपला संदेश येथे लिहा..." required style="min-height: 120px;" data-key="formPlaceholderMessage"></textarea>
+          </div>
+          <button type="submit" class="saas-btn saas-btn-primary" style="width: 100%;" data-key="formButtonSend">संदेश पाठवा</button>
+          <div id="formSuccess" class="saas-contact-success" data-key="formSuccessMessage">धन्यवाद! आपला संदेश यशस्वीरित्या पाठवला गेला आहे.</div>
         </form>
       </div>
     </div>
   </section>
 
-  <!-- FAQ Section -->
-  <section class="saas-features" style="background: var(--surface-2);">
+  <!-- Support Section -->
+  <section class="saas-features" style="background: var(--bg-light);">
     <div class="saas-features-inner">
       <div class="saas-section-header">
-        <h2>Frequently Asked Questions</h2>
-        <p>Quick answers to common questions about Smart Hire</p>
+        <h2 data-key="supportTitle">आम्ही कशी मदत करू शकतो</h2>
+        <p data-key="supportSubtitle">नोकरी शोधणाऱ्या आणि नियोक्त्यांसाठी सहाय्य</p>
       </div>
       <div class="saas-features-grid" style="grid-template-columns: repeat(2, 1fr);">
         <article class="saas-feature-card reveal" style="text-align: left;">
-          <h3 style="margin-bottom: 8px;">How do I get started?</h3>
-          <p>Simply click "Get Started" and create your account. You can start posting jobs immediately after registration. No credit card required for the free trial.</p>
+          <h3 style="margin-bottom: 12px; color: var(--gov-green);" data-key="supportJobSeekersTitle">नोकरी शोधणाऱ्यांसाठी</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;" data-key="supportJobSeekers1">• नोकरी शोधण्यात मदत</li>
+            <li style="margin-bottom: 8px;" data-key="supportJobSeekers2">• रेझ्युमे तयार करण्यात मदत</li>
+            <li style="margin-bottom: 8px;" data-key="supportJobSeekers3">• मुलाखत तयारी</li>
+            <li style="margin-bottom: 8px;" data-key="supportJobSeekers4">• कौशल्य विकास मार्गदर्शन</li>
+            <li style="margin-bottom: 8px;" data-key="supportJobSeekers5">• करिअर सल्लामसलत</li>
+          </ul>
         </article>
+
         <article class="saas-feature-card reveal" style="text-align: left;">
-          <h3 style="margin-bottom: 8px;">Is there a free trial?</h3>
-          <p>Yes! We offer a 14-day free trial with full access to all features. Experience the complete platform before making a decision.</p>
+          <h3 style="margin-bottom: 12px; color: var(--gov-orange);" data-key="supportEmployersTitle">नियोक्त्यांसाठी</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;" data-key="supportEmployers1">• नोकरी पोस्टिंग सहाय्य</li>
+            <li style="margin-bottom: 8px;" data-key="supportEmployers2">• उमेदवार शोध</li>
+            <li style="margin-bottom: 8px;" data-key="supportEmployers3">• भरती प्रक्रिया मार्गदर्शन</li>
+            <li style="margin-bottom: 8px;" data-key="supportEmployers4">• स्क्रीनिंग सेवा</li>
+            <li style="margin-bottom: 8px;" data-key="supportEmployers5">• भरती कार्यक्रम आयोजन</li>
+          </ul>
         </article>
+
         <article class="saas-feature-card reveal" style="text-align: left;">
-          <h3 style="margin-bottom: 8px;">Can I upgrade my plan later?</h3>
-          <p>Absolutely. You can upgrade or downgrade your plan at any time from your account settings. Changes take effect immediately.</p>
+          <h3 style="margin-bottom: 12px; color: var(--gov-green);" data-key="supportSelfEmpTitle">स्वयंरोजगारासाठी</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;" data-key="supportSelfEmp1">• व्यवसाय योजना मार्गदर्शन</li>
+            <li style="margin-bottom: 8px;" data-key="supportSelfEmp2">• सरकारी योजनांची माहिती</li>
+            <li style="margin-bottom: 8px;" data-key="supportSelfEmp3">• आर्थिक सहाय्य मार्गदर्शन</li>
+            <li style="margin-bottom: 8px;" data-key="supportSelfEmp4">• व्यवसाय प्रशिक्षण</li>
+            <li style="margin-bottom: 8px;" data-key="supportSelfEmp5">• नेटवर्किंग संधी</li>
+          </ul>
         </article>
+
         <article class="saas-feature-card reveal" style="text-align: left;">
-          <h3 style="margin-bottom: 8px;">How do I contact support?</h3>
-          <p>You can reach our support team via email at support@smarthire.com or through the contact form above. We respond within 24 hours.</p>
+          <h3 style="margin-bottom: 12px; color: var(--gov-orange);" data-key="supportTechTitle">तांत्रिक सहाय्य</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;" data-key="supportTech1">• पोर्टल वापर मार्गदर्शन</li>
+            <li style="margin-bottom: 8px;" data-key="supportTech2">• नोंदणी मदत</li>
+            <li style="margin-bottom: 8px;" data-key="supportTech3">• लॉगिन समस्या निवारण</li>
+            <li style="margin-bottom: 8px;" data-key="supportTech4">• प्रोफाइल अपडेट मदत</li>
+            <li style="margin-bottom: 8px;" data-key="supportTech5">• डॉक्युमेंट अपलोड सहाय्य</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="saas-features">
+    <div class="saas-features-inner">
+      <div class="saas-section-header">
+        <h2 data-key="faqTitle">वारंवार विचारले जाणारे प्रश्न</h2>
+        <p data-key="faqSubtitle">सामान्य प्रश्नांची उत्तरे</p>
+      </div>
+      <div class="saas-features-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq1Question">नोंदणी कशी करावी?</h3>
+          <p data-key="faq1Answer">"नोंदणी करा" बटणावर क्लिक करा आणि आपली माहिती भरा. नोंदणी पूर्णपणे मोफत आहे.</p>
+        </article>
+
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq2Question">नोकरीसाठी अर्ज कसा करावा?</h3>
+          <p data-key="faq2Answer">लॉगिन करा, नोकरी शोधा आणि "अर्ज करा" बटणावर क्लिक करा. आपला रेझ्युमे अपलोड करा आणि सबमिट करा.</p>
+        </article>
+
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq3Question">पोर्टल वापरण्यासाठी शुल्क आहे का?</h3>
+          <p data-key="faq3Answer">नाही, हे पोर्टल नोकरी शोधणाऱ्यांसाठी पूर्णपणे मोफत आहे. कोणतेही लपलेले शुल्क नाही.</p>
+        </article>
+
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq4Question">अर्जाची स्थिती कशी तपासावी?</h3>
+          <p data-key="faq4Answer">आपल्या डॅशबोर्डमध्ये लॉगिन करा. "माझे अर्ज" विभागात सर्व अर्जांची स्थिती दिसेल.</p>
+        </article>
+
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq5Question">नियोक्ता कसे नोंदणी करू शकतात?</h3>
+          <p data-key="faq5Answer">नोंदणी करताना "भरतीदार" पर्याय निवडा. आपल्या कंपनीची माहिती भरा आणि सत्यापनासाठी प्रतीक्षा करा.</p>
+        </article>
+
+        <article class="saas-feature-card reveal" style="text-align: left;">
+          <h3 style="margin-bottom: 8px;" data-key="faq6Question">सहाय्य कसे मिळवावे?</h3>
+          <p data-key="faq6Answer">आपण आम्हाला ईमेल, फोन किंवा संपर्क फॉर्मद्वारे संपर्क करू शकता. आमची टीम 24 तासांत प्रतिसाद देते.</p>
         </article>
       </div>
     </div>
@@ -171,11 +264,11 @@
   <!-- CTA Section -->
   <section class="saas-cta">
     <div class="saas-cta-inner">
-      <h2>Ready to Get Started?</h2>
-      <p>Join thousands of companies using Smart Hire to build amazing teams.</p>
+      <h2 data-key="ctaTitle">आजच सुरुवात करा</h2>
+      <p data-key="ctaSubtitle">नोंदणी करा आणि हजारो रोजगार संधींमध्ये प्रवेश मिळवा</p>
       <div class="saas-cta-buttons">
-        <a href="register.html" class="saas-btn saas-btn-primary saas-btn-large">Start Free Trial</a>
-        <a href="features.html" class="saas-btn saas-btn-secondary saas-btn-large">View Features</a>
+        <a href="register.html" class="saas-btn saas-btn-primary saas-btn-large" data-key="ctaButtonRegister">आता नोंदणी करा</a>
+        <a href="jobs.html" class="saas-btn saas-btn-secondary saas-btn-large" data-key="ctaButtonJobs">नोकऱ्या पहा</a>
       </div>
     </div>
   </section>
@@ -186,71 +279,65 @@
       <div class="saas-footer-grid">
         <div class="saas-footer-brand">
           <a href="index.html" class="saas-footer-logo">
-            <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
-              <rect width="32" height="32" rx="8" fill="url(#footer-logo-gradient)"/>
-              <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <defs>
-                <linearGradient id="footer-logo-gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stop-color="#176087"/>
-                  <stop offset="1" stop-color="#04395E"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            Smart Hire
+            <img src="images/Logo.png" alt="Logo" />
+            <div class="brand-name">
+              <span class="line1">खासदार मुरलीधर मोहोळ</span>
+              <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+            </div>
           </a>
-          <p>Modern hiring infrastructure for smart companies. Streamline your recruitment process and build amazing teams.</p>
+          <p data-key="footerTagline">पुण्यातील नागरिकांना रोजगार आणि स्वयंरोजगाराच्या संधी उपलब्ध करून देणारे सरकारी उपक्रम.</p>
         </div>
         <div class="saas-footer-column">
-          <h4>Company</h4>
+          <h4 data-key="footerPortalTitle">पोर्टल</h4>
           <ul class="saas-footer-links">
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><a href="about.html" data-key="footerAbout">आमच्याबद्दल</a></li>
+            <li><a href="contact.html" data-key="footerContact">संपर्क</a></li>
+            <li><a href="features.html" data-key="footerFeatures">वैशिष्ट्ये</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Product</h4>
+          <h4 data-key="footerCitizensTitle">नागरिकांसाठी</h4>
           <ul class="saas-footer-links">
-            <li><a href="features.html">Features</a></li>
-            <li><a href="#">Pricing</a></li>
-            <li><a href="#">Integrations</a></li>
+            <li><a href="jobs.html" data-key="footerJobs">नोकऱ्या</a></li>
+            <li><a href="register.html" data-key="footerRegister">नोंदणी</a></li>
+            <li><a href="login.html" data-key="footerLogin">लॉगिन</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Resources</h4>
+          <h4 data-key="footerEmployersTitle">नियोक्त्यांसाठी</h4>
           <ul class="saas-footer-links">
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">API Reference</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="post-job.html" data-key="footerPostJob">नोकरी पोस्ट करा</a></li>
+            <li><a href="login.html" data-key="footerRecruitmentPortal">भरती पोर्टल</a></li>
+            <li><a href="contact.html" data-key="footerHelp">सहाय्य</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Account</h4>
+          <h4 data-key="footerInfoTitle">माहिती</h4>
           <ul class="saas-footer-links">
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Sign Up</a></li>
-            <li><a href="#">Support</a></li>
+            <li><a href="contact.html" data-key="footerSupport">सपोर्ट</a></li>
+            <li><a href="#" data-key="footerPrivacy">गोपनीयता धोरण</a></li>
+            <li><a href="#" data-key="footerTerms">अटी व शर्ती</a></li>
           </ul>
         </div>
       </div>
       <div class="saas-footer-bottom">
-        <p class="saas-footer-copyright">© 2024 Smart Hire. All rights reserved.</p>
+        <p class="saas-footer-copyright" data-key="footerCopyright">© 2024 खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र. सर्व हक्क राखीव.</p>
         <div class="saas-footer-social">
           <a href="#" aria-label="Twitter">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
             </svg>
           </a>
-          <a href="#" aria-label="LinkedIn">
+          <a href="#" aria-label="Facebook">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-              <rect x="2" y="9" width="4" height="12"></rect>
-              <circle cx="4" cy="4" r="2"></circle>
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
             </svg>
           </a>
-          <a href="#" aria-label="GitHub">
+          <a href="#" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
             </svg>
           </a>
         </div>
@@ -261,6 +348,15 @@
   <!-- Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      const mobileToggle = document.querySelector('.saas-nav-mobile-toggle');
+      const navLinks = document.querySelector('.saas-nav-links');
+      
+      if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+        });
+      }
+
       // Scroll reveal
       const reveals = document.querySelectorAll('.reveal');
       
@@ -285,12 +381,12 @@
         const form = this;
         const btn = form.querySelector('button');
         btn.disabled = true;
-        btn.textContent = 'Sending...';
+        btn.textContent = 'पाठवत आहे...';
         
         setTimeout(() => {
           form.reset();
           btn.disabled = false;
-          btn.textContent = 'Send Message';
+          btn.textContent = 'संदेश पाठवा';
           document.getElementById('formSuccess').classList.add('show');
           setTimeout(() => {
             document.getElementById('formSuccess').classList.remove('show');
@@ -299,5 +395,6 @@
       });
     });
   </script>
+  <script src="js/language.js"></script>
 </body>
 </html>

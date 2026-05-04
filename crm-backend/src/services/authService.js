@@ -9,6 +9,7 @@ import prisma from "../utils/prisma.js";
 import { hashPassword, comparePassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
 import { AppError } from "../middleware/errorHandler.js";
+import { sendEmail, templates } from "./emailService.js";
 
 /**
  * Register a new user.
@@ -35,13 +36,14 @@ export async function register({ name, email, password, role, phone, companyId, 
     const hashedPassword = await hashPassword(password);
 
     let resolvedCompanyId = null;
+    let resolvedCompanyName = null;
 
     // Recruiters must belong to a company; use existing companyId or create one.
     if (role === "RECRUITER") {
         if (companyId) {
             const existingCompany = await prisma.company.findUnique({
                 where: { id: companyId },
-                select: { id: true },
+                select: { id: true, name: true },
             });
 
             if (!existingCompany) {
@@ -49,12 +51,14 @@ export async function register({ name, email, password, role, phone, companyId, 
             }
 
             resolvedCompanyId = existingCompany.id;
+            resolvedCompanyName = existingCompany.name;
         } else if (companyName) {
             const newCompany = await prisma.company.create({
                 data: { name: companyName },
-                select: { id: true },
+                select: { id: true, name: true },
             });
             resolvedCompanyId = newCompany.id;
+            resolvedCompanyName = newCompany.name;
         } else {
             throw new AppError("Recruiter registration requires companyId or companyName.", 400);
         }
@@ -93,6 +97,24 @@ export async function register({ name, email, password, role, phone, companyId, 
                 designation: designation || "Recruiter",
             },
         });
+
+        // Email admin about new recruiter signup (best-effort)
+        try {
+            const adminTo = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+            if (adminTo) {
+                void sendEmail(
+                    adminTo,
+                    "New Recruiter Registration",
+                    templates.newRecruiterSignupAdmin(
+                        user.name,
+                        resolvedCompanyName || companyName || "(Unknown)",
+                        user.email
+                    )
+                );
+            }
+        } catch (err) {
+            console.error("Email failed:", err?.message || err);
+        }
     }
 
     // If the user is an internal role, create an Employee record

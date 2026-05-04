@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | My Applications</title>
+  <title>रोजगार केंद्र | My Applications</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
 <div class="page">
   <div class="topbar">
     <div class="topbar-brand">
-      <div class="topbar-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        <div class="topbar-logo">
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
+        </div>
+        <div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
+          <div class="user-meta">Applicant Portal</div>
+        </div>
       </div>
-      <div>
-        <div class="brand">Smart Hire</div>
-        <div class="user-meta">Applicant Portal</div>
-      </div>
-    </div>
     <div class="topbar-nav">
       <a href="applicant-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -231,13 +234,19 @@ function formatDateTime(value) {
   });
 }
 
+function formatSalaryDisplay(value) {
+  if (!value) return "Competitive";
+  const normalized = String(value).replace(/\$/g, "").trim();
+  return normalized.startsWith("₹") ? normalized : `₹ ${normalized}`;
+}
+
 function filteredApplications() {
   const term = searchInput.value.trim().toLowerCase();
   const status = statusFilter.value.toUpperCase();
 
   return allApplications.filter((app) => {
     const matchesStatus = !status || String(app.status || "").toUpperCase() === status;
-    const hay = `${app.job?.title || ""} ${app.job?.company?.name || ""} ${app.job?.location || ""}`.toLowerCase();
+    const hay = `${app.job?.title || ""} ${app.job?.company?.name || ""} ${app.job?.location || ""} ${app.job?.locality || ""}`.toLowerCase();
     const matchesTerm = !term || hay.includes(term);
     return matchesStatus && matchesTerm;
   });
@@ -258,12 +267,15 @@ function renderApplications() {
 
   applicationsList.innerHTML = applications.map((app, index) => {
     const isInterview = String(app.status).toUpperCase() === 'INTERVIEW';
+    const locationDisplay = app.job?.locality ? `${app.job?.location} • ${app.job?.locality}` : (app.job?.location || "Not specified");
+    const description = app.job?.description || "";
+    const shortDescription = description ? `${description.substring(0, 150)}${description.length > 150 ? "..." : ""}` : "No description provided.";
     const statusBadgeHtml = isInterview 
       ? `<button type="button" class="status-badge ${statusClass(app.status)} interview-badge-btn" data-app-index="${index}">${statusLabel(app.status)}</button>`
       : `<span class="status-badge ${statusClass(app.status)}">${statusLabel(app.status)}</span>`;
 
     return `
-    <article class="application-card">
+    <article class="job-card">
       <div class="row" style="justify-content: space-between; align-items: flex-start;">
         <div class="list-main">
           <h3 class="list-title">${app.job?.title || "Job Position"}</h3>
@@ -272,19 +284,25 @@ function renderApplications() {
         ${statusBadgeHtml}
       </div>
 
+      <p class="job-description">${shortDescription}</p>
+
       <div class="meta">
         <span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          ${app.job?.location || "Not specified"}
+          ${locationDisplay}
         </span>
         <span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          ${app.job?.salaryRange || "Competitive"}
+          ${formatSalaryDisplay(app.job?.salaryRange)}
         </span>
         <span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:14px;height:14px;stroke-width:2;vertical-align:middle;margin-right:4px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           Applied ${formatDate(app.createdAt)}
         </span>
+      </div>
+
+      <div class="skill-tags" style="margin-top: 10px;">
+        ${(app.job?.skills || []).slice(0, 5).map(s => `<span class="skill-tag">${s}</span>`).join("")}
+        ${(app.job?.skills || []).length > 5 ? `<span class="skill-tag">+${app.job.skills.length - 5} more</span>` : ''}
       </div>
 
       <div class="application-timeline" style="margin-top: 12px;">
@@ -408,7 +426,8 @@ async function loadApplications() {
 }
 
 function viewApplication(app) {
-  const locationDisplay = app.job?.locality ? `${app.job?.location} • ${app.job?.locality}` : (app.job?.location || "Not specified");
+  const locality = String(app.job?.locality || "").trim();
+  const locationDisplay = locality ? `${app.job?.location} • ${locality}` : (app.job?.location || "Not specified");
   
   document.getElementById("modalTitle").textContent = app.job?.title || "Application Details";
   document.getElementById("modalContent").innerHTML = `
@@ -427,11 +446,13 @@ function viewApplication(app) {
     <div class="job-info-cards">
       <div class="job-info-card">
         <div class="job-info-icon salary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="none">
+            <text x="12" y="16" text-anchor="middle" font-size="14" fill="currentColor">₹</text>
+          </svg>
         </div>
         <div class="job-info-content">
           <span class="job-info-label">Salary</span>
-          <span class="job-info-value">${app.job?.salaryRange || "Competitive"}</span>
+          <span class="job-info-value">${formatSalaryDisplay(app.job?.salaryRange)}</span>
         </div>
       </div>
       <div class="job-info-card">
@@ -440,7 +461,10 @@ function viewApplication(app) {
         </div>
         <div class="job-info-content">
           <span class="job-info-label">Location</span>
-          <span class="job-info-value">${app.job?.location || "Not specified"}</span>
+          <span class="job-info-value">
+            City: ${app.job?.location || "Not specified"}
+            ${locality ? `<br><small>Locality: ${locality}</small>` : ""}
+          </span>
         </div>
       </div>
     </div>

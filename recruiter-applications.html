@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Recruiter Pipeline</title>
+  <title>रोजगार केंद्र | Recruiter Pipeline</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
         <div class="topbar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
         </div>
         <div>
-          <div class="brand">Smart Hire</div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
           <div class="user-meta">Recruiter Portal</div>
         </div>
       </div>
@@ -151,6 +154,7 @@
 
     let approvedApplications = [];
     let selectedApplication = null;
+    const previousStatusByApplicationId = new Map();
 
     if (recruiter) {
       mountNotificationsBell();
@@ -299,11 +303,30 @@
       });
 
       document.querySelectorAll(".hold-btn").forEach((button) => {
-        button.addEventListener("click", () => updateCandidateStatus(button, "HOLD", "Move candidate to HOLD?"));
+        button.addEventListener("click", () => {
+          const index = Number(button.getAttribute("data-index"));
+          const application = approvedApplications[index];
+          if (application?.id) {
+            previousStatusByApplicationId.set(application.id, String(application.status || "APPROVED").toUpperCase());
+          }
+          updateCandidateStatus(button, "HOLD", "Move candidate to HOLD?");
+        });
       });
 
       document.querySelectorAll(".remove-hold-btn").forEach((button) => {
-        button.addEventListener("click", () => updateCandidateStatus(button, "APPROVED", "Remove HOLD and move back to Approved?"));
+        button.addEventListener("click", () => {
+          const index = Number(button.getAttribute("data-index"));
+          const application = approvedApplications[index];
+
+          let previousStatus = application?.id ? previousStatusByApplicationId.get(application.id) : null;
+          if (!previousStatus || previousStatus === "HOLD") previousStatus = "APPROVED";
+
+          updateCandidateStatus(
+            button,
+            previousStatus,
+            `Remove HOLD and move back to ${statusLabel(previousStatus)}?`
+          );
+        });
       });
 
       document.querySelectorAll(".reject-btn").forEach((button) => {
@@ -606,7 +629,7 @@
       const candidateBio = applicantData.bio || "";
       const skills = applicantProfile.skills || [];
       const experienceYears = applicantProfile.experienceYears || 0;
-      const education = applicantProfile.education || "";
+      const education = (applicantProfile.education || "").trim() || "N/A";
       const designation = applicantProfile.designation || "";
       const resumeUrl = applicantProfile.resumeUrl || application.resumeUrl || "";
       const appliedDate = formatDate(application.createdAt);
@@ -718,12 +741,10 @@
                   <span class="detail-label">Experience</span>
                   <span class="detail-value">${experienceYears} ${experienceYears === 1 ? 'year' : 'years'}</span>
                 </div>
-                ${education ? `
                 <div class="profile-detail-item">
                   <span class="detail-label">Education</span>
                   <span class="detail-value">${education}</span>
                 </div>
-                ` : ''}
               </div>
               <div class="skills-section">
                 <span class="detail-label">Skills</span>

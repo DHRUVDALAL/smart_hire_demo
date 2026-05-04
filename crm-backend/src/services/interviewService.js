@@ -8,6 +8,7 @@ import prisma from "../utils/prisma.js";
 import { AppError } from "../middleware/errorHandler.js";
 import * as notificationService from "./notificationService.js";
 import { sendWhatsAppMessage } from "../utils/whatsapp.js";
+import { sendEmail, templates } from "./emailService.js";
 
 export async function scheduleInterview(recruiterId, payload) {
     const recruiter = await prisma.user.findUnique({
@@ -26,7 +27,7 @@ export async function scheduleInterview(recruiterId, payload) {
     const application = await prisma.application.findUnique({
         where: { id: payload.applicationId },
         include: {
-            applicant: { select: { id: true, name: true } },
+            applicant: { select: { id: true, name: true, email: true } },
             job: { select: { id: true, title: true, companyId: true } },
         },
     });
@@ -75,6 +76,28 @@ export async function scheduleInterview(recruiterId, payload) {
         "Interview Scheduled",
         `Interview scheduled for \"${application.job.title}\" on ${new Date(payload.scheduledAt).toLocaleString()}.`
     );
+
+    // Email applicant (best-effort)
+    try {
+        const dt = new Date(payload.scheduledAt);
+        const date = dt.toLocaleDateString();
+        const time = dt.toLocaleTimeString();
+
+        void sendEmail(
+            application.applicant.email,
+            "Interview Scheduled",
+            templates.interviewScheduled(
+                application.applicant.name,
+                application.job.title,
+                date,
+                time,
+                payload.meetingLink || null,
+                payload.location || null
+            )
+        );
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     // Notify internal employees
     const employees = await prisma.user.findMany({

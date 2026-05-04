@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Recruiter Profile</title>
+  <title>रोजगार केंद्र | Recruiter Profile</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
 <div class="page">
   <div class="topbar">
     <div class="topbar-brand">
-      <div class="topbar-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        <div class="topbar-logo">
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
+        </div>
+        <div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
+          <div class="user-meta">Recruiter Portal</div>
+        </div>
       </div>
-      <div>
-        <div class="brand">Smart Hire</div>
-        <div class="user-meta">Recruiter Portal</div>
-      </div>
-    </div>
     <div class="topbar-nav">
       <a href="recruiter-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -55,6 +58,17 @@
           <label for="companyName">Company Name *</label>
           <input id="companyName" type="text" required placeholder="Enter company name" />
         </div>
+
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="companyIndustry">Industry</label>
+            <input id="companyIndustry" type="text" placeholder="e.g., Technology" />
+          </div>
+          <div class="field">
+            <label for="companySize">Company Size</label>
+            <input id="companySize" type="text" placeholder="e.g., 50-100 employees" />
+          </div>
+        </div>
         
         <div class="field">
           <label for="companyPhone">Company Phone</label>
@@ -64,6 +78,17 @@
         <div class="field">
           <label for="companyAddress">Company Address</label>
           <input id="companyAddress" type="text" placeholder="Full office address" />
+        </div>
+
+        <div class="grid-2" style="margin-top: 0;">
+          <div class="field">
+            <label for="companyCity">City</label>
+            <input id="companyCity" type="text" placeholder="e.g., Pune" />
+          </div>
+          <div class="field">
+            <label for="companyCountry">Country</label>
+            <input id="companyCountry" type="text" placeholder="e.g., India" />
+          </div>
         </div>
         
         <div class="field">
@@ -130,18 +155,54 @@ if (recruiter) {
   resetBtn.addEventListener("click", resetForm);
 }
 
+function parseCompanyLocation(location) {
+  const raw = (location || "").trim();
+  if (!raw) return { address: "", city: "", country: "" };
+
+  const parts = raw.split(",").map(p => p.trim()).filter(Boolean);
+
+  if (parts.length >= 3) {
+    return {
+      address: parts.slice(0, -2).join(", "),
+      city: parts[parts.length - 2],
+      country: parts[parts.length - 1]
+    };
+  }
+
+  if (parts.length === 2) {
+    return { address: parts[0], city: parts[1], country: "" };
+  }
+
+  return { address: parts[0] || "", city: "", country: "" };
+}
+
 async function loadProfile() {
   try {
     const response = await apiFetch("/profile");
     const profile = response?.data || {};
-    
-    document.getElementById("companyName").value = profile.name || "";
+    const company = profile.company || {};
+    const loc = parseCompanyLocation(company.location);
+
+    document.getElementById("companyName").value = company.name || "";
     document.getElementById("companyPhone").value = profile.phone || "";
-    document.getElementById("companyAddress").value = profile.address || "";
-    document.getElementById("companyDescription").value = profile.bio || "";
-    
-    originalData = { ...profile };
-    
+    document.getElementById("companyIndustry").value = company.industry || "";
+    document.getElementById("companySize").value = company.size || "";
+    document.getElementById("companyAddress").value = loc.address || "";
+    document.getElementById("companyCity").value = loc.city || "";
+    document.getElementById("companyCountry").value = loc.country || "";
+    document.getElementById("companyDescription").value = company.description || "";
+
+    originalData = {
+      companyName: company.name || "",
+      phone: profile.phone || "",
+      industry: company.industry || "",
+      size: company.size || "",
+      address: loc.address || "",
+      city: loc.city || "",
+      country: loc.country || "",
+      description: company.description || ""
+    };
+
   } catch (error) {
     showToast(error.message || "Failed to load profile", "error");
   }
@@ -150,31 +211,44 @@ async function loadProfile() {
 async function saveProfile(e) {
   e.preventDefault();
   formError.textContent = "";
-  
-  const name = document.getElementById("companyName").value.trim();
-  if (!name) {
+
+  const companyName = document.getElementById("companyName").value.trim();
+  if (!companyName) {
     formError.textContent = "Company name is required";
     return;
   }
-  
+
   const payload = {
-    name,
     phone: document.getElementById("companyPhone").value.trim() || null,
-    address: document.getElementById("companyAddress").value.trim() || null,
-    bio: document.getElementById("companyDescription").value.trim() || null
+    companyName,
+    industry: document.getElementById("companyIndustry").value.trim() || null,
+    companySize: document.getElementById("companySize").value.trim() || null,
+    companyAddress: document.getElementById("companyAddress").value.trim() || null,
+    city: document.getElementById("companyCity").value.trim() || null,
+    country: document.getElementById("companyCountry").value.trim() || null,
+    companyDescription: document.getElementById("companyDescription").value.trim() || null
   };
-  
+
   setButtonBusy(saveBtn, true, "Saving...");
-  
+
   try {
     await apiFetch("/profile", {
       method: "PUT",
       body: JSON.stringify(payload)
     });
-    
-    originalData = { ...payload };
+
+    originalData = {
+      companyName: payload.companyName,
+      phone: payload.phone || "",
+      industry: payload.industry || "",
+      size: payload.companySize || "",
+      address: payload.companyAddress || "",
+      city: payload.city || "",
+      country: payload.country || "",
+      description: payload.companyDescription || ""
+    };
     showToast("Company profile saved successfully!", "success");
-    
+
   } catch (error) {
     formError.textContent = error.message || "Failed to save profile";
     showToast(error.message || "Failed to save profile", "error");
@@ -184,10 +258,14 @@ async function saveProfile(e) {
 }
 
 function resetForm() {
-  document.getElementById("companyName").value = originalData.name || "";
+  document.getElementById("companyName").value = originalData.companyName || "";
   document.getElementById("companyPhone").value = originalData.phone || "";
+  document.getElementById("companyIndustry").value = originalData.industry || "";
+  document.getElementById("companySize").value = originalData.size || "";
   document.getElementById("companyAddress").value = originalData.address || "";
-  document.getElementById("companyDescription").value = originalData.bio || "";
+  document.getElementById("companyCity").value = originalData.city || "";
+  document.getElementById("companyCountry").value = originalData.country || "";
+  document.getElementById("companyDescription").value = originalData.description || "";
   formError.textContent = "";
 }
 </script>

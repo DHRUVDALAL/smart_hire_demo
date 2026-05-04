@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Employee Dashboard</title>
+  <title>रोजगार केंद्र | Employee Dashboard</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
         <div class="topbar-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
         </div>
         <div>
-          <div class="brand">Smart Hire</div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
           <div class="user-meta">Employee Portal</div>
         </div>
       </div>
@@ -132,7 +135,7 @@
         </div>
       </article>
       <article class="card">
-        <h3 class="panel-title">Applications per Job</h3>
+        <h3 class="panel-title">Applications per Company</h3>
         <div class="chart-wrap">
           <canvas id="jobsBarChart"></canvas>
         </div>
@@ -384,16 +387,35 @@
     }
 
     function renderCharts(applications, jobs) {
+      const allowedStatusMap = {
+        APPLIED: "Applied",
+        SHORTLISTED: "Shortlisted",
+        INTERVIEW: "Interview",
+        REJECTED: "Rejected",
+        HIRED: "Hired"
+      };
+
       const statusCounts = applications.reduce((acc, app) => {
-        const status = String(app.status || "APPLIED").toUpperCase();
-        acc[status] = (acc[status] || 0) + 1;
+        const rawStatus = String(app.status || "").toUpperCase();
+        const label = allowedStatusMap[rawStatus];
+        if (!label) return acc;
+        acc[label] = (acc[label] || 0) + 1;
         return acc;
       }, {});
 
-      const jobCounts = jobs.map(job => ({
-        title: job.title?.length > 20 ? job.title.slice(0, 20) + "..." : job.title,
-        count: applications.filter(a => a.jobId === job.id).length
-      })).filter(j => j.count > 0).slice(0, 8);
+      const companyCountsMap = applications.reduce((acc, app) => {
+        const companyName = app.job?.company?.name || app.job?.company || "Unknown Company";
+        acc[companyName] = (acc[companyName] || 0) + 1;
+        return acc;
+      }, {});
+
+      const companyCounts = Object.entries(companyCountsMap)
+        .map(([company, count]) => ({
+          company: company.length > 24 ? company.slice(0, 24) + "..." : company,
+          count
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 8);
 
       const pieCtx = document.getElementById("statusPieChart");
       const barCtx = document.getElementById("jobsBarChart");
@@ -402,13 +424,11 @@
       if (barChart) barChart.destroy();
 
       const statusColors = {
-        APPLIED: "#94a3b8",
-        REVIEWED: "#3b82f6",
-        APPROVED: "#10b981",
-        HOLD: "#f59e0b",
-        REJECTED: "#ef4444",
-        INTERVIEW: "#8b5cf6",
-        ACCEPTED: "#059669"
+        Applied: "#94a3b8",
+        Shortlisted: "#3b82f6",
+        Interview: "#8b5cf6",
+        Rejected: "#ef4444",
+        Hired: "#059669"
       };
 
       pieChart = new Chart(pieCtx, {
@@ -433,10 +453,10 @@
       barChart = new Chart(barCtx, {
         type: "bar",
         data: {
-          labels: jobCounts.map(j => j.title),
+          labels: companyCounts.map(c => c.company),
           datasets: [{
             label: "Applications",
-            data: jobCounts.map(j => j.count),
+            data: companyCounts.map(c => c.count),
             backgroundColor: "rgba(23, 96, 135, 0.7)",
             borderRadius: 8,
           }],

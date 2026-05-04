@@ -120,7 +120,80 @@ export const updateProfileSchema = z.object({
         .optional()
         .nullable(),
 
-    // Applicant-specific fields
+    // Employee-specific fields
+    department: z
+        .string()
+        .max(120, "Department must not exceed 120 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    position: z
+        .string()
+        .max(120, "Position must not exceed 120 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    specialization: z
+        .string()
+        .max(200, "Specialization must not exceed 200 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    // Recruiter/company-specific fields
+    companyName: z
+        .string()
+        .min(2, "Company name must be at least 2 characters")
+        .max(200, "Company name must not exceed 200 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    industry: z
+        .string()
+        .max(200, "Industry must not exceed 200 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    companySize: z
+        .string()
+        .max(100, "Company size must not exceed 100 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    companyDescription: z
+        .string()
+        .max(2000, "Company description must not exceed 2000 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    companyAddress: z
+        .string()
+        .max(300, "Company address must not exceed 300 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    city: z
+        .string()
+        .max(120, "City must not exceed 120 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    country: z
+        .string()
+        .max(120, "Country must not exceed 120 characters")
+        .trim()
+        .optional()
+        .nullable(),
+
+    // Applicant/employee shared fields
     skills: z
         .array(z.string().max(50))
         .max(30, "Cannot have more than 30 skills")
@@ -270,14 +343,36 @@ export const createInterviewSchema = z.object({
     mode: z.enum(["ONLINE", "OFFLINE"], {
         required_error: "Interview mode is required",
     }),
-    meetingLink: z.string().url("meetingLink must be a valid URL").optional().nullable(),
+    meetingLink: z.string().max(500).optional().nullable(),
     location: z.string().max(200).optional().nullable(),
+}).superRefine((body, ctx) => {
+    const mode = String(body.mode || "").toUpperCase();
+
+    if (mode === "ONLINE") {
+        if (!body.meetingLink || !String(body.meetingLink).trim()) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["meetingLink"],
+                message: "meetingLink is required for ONLINE interviews",
+            });
+        }
+    }
+
+    if (mode === "OFFLINE") {
+        if (!body.location || !String(body.location).trim()) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["location"],
+                message: "location is required for OFFLINE interviews",
+            });
+        }
+    }
 });
 
 export const updateInterviewSchema = z.object({
     scheduledAt: z.string().datetime().optional(),
     mode: z.enum(["ONLINE", "OFFLINE"]).optional(),
-    meetingLink: z.string().url("meetingLink must be a valid URL").optional().nullable(),
+    meetingLink: z.string().max(500).optional().nullable(),
     location: z.string().max(200).optional().nullable(),
     status: z.enum(["SCHEDULED", "COMPLETED", "CANCELLED"]).optional(),
 }).refine((body) => Object.keys(body).length > 0, {

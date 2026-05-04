@@ -1,129 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Hire | Create Account</title>
+    <title>नोंदणी | खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र</title>
     <link rel="stylesheet" href="css/frontend-modern.css" />
     <link rel="stylesheet" href="css/saas-landing.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/government-branding.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
-<body class="saas-page">
-    <div class="saas-auth">
-        <!-- Left Side - Visual -->
-        <div class="saas-auth-visual">
-            <div class="saas-auth-visual-content">
-                <a href="index.html" class="saas-auth-visual-logo">
-                    <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
-                        <rect width="32" height="32" rx="8" fill="rgba(255,255,255,0.2)"/>
-                        <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Smart Hire
-                </a>
-                <h2>Start hiring smarter today</h2>
-                <p>Create your account and experience the future of recruitment. Join thousands of companies streamlining their hiring process.</p>
-                
-                <div class="saas-auth-visual-features">
-                    <div class="saas-auth-visual-feature">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Free 14-day trial, no credit card required
+<body class="gov-auth-page">
+    <div class="gov-auth-container">
+        <!-- Header with Logo and Portal Name -->
+        <div class="gov-auth-header">
+            <a href="index.html" class="gov-auth-brand">
+                <img src="images/Logo.png" alt="Portal Logo" class="gov-auth-logo">
+                <div class="gov-auth-brand-text">
+                    <span class="gov-brand-line1">खासदार मुरलीधर मोहोळ</span>
+                    <span class="gov-brand-line2">रोजगार व स्वयंरोजगार केंद्र</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="gov-auth-card gov-auth-card-wide">
+            <div class="gov-auth-card-header">
+                <h1>Create Your Account</h1>
+                <p>Register to access employment opportunities and career services.</p>
+            </div>
+
+            <form id="registerForm" class="gov-auth-form" novalidate>
+                <div class="gov-auth-field">
+                    <label for="name">Full Name</label>
+                    <input id="name" type="text" placeholder="Enter your full name" required />
+                </div>
+
+                <div class="gov-auth-field">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" placeholder="Enter your email" required />
+                </div>
+
+                <div class="gov-auth-field">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="">Select your role</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="RECRUITER">Recruiter</option>
+                        <option value="APPLICANT">Applicant</option>
+                        <option value="EMPLOYEE">Employee</option>
+                        <option value="HR">HR</option>
+                        <option value="ACCOUNTANT">Accountant</option>
+                    </select>
+                </div>
+
+                <div class="gov-auth-field-row">
+                    <div class="gov-auth-field">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" placeholder="Min. 6 characters" required />
                     </div>
-                    <div class="saas-auth-visual-feature">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Post unlimited jobs during trial
-                    </div>
-                    <div class="saas-auth-visual-feature">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Access all platform features
-                    </div>
-                    <div class="saas-auth-visual-feature">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Cancel anytime, no commitment
+                    <div class="gov-auth-field">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input id="confirmPassword" type="password" placeholder="Re-enter password" required />
                     </div>
                 </div>
+
+                <!-- Recruiter Fields -->
+                <div id="recruiterFields" class="gov-auth-conditional">
+                    <div class="gov-auth-field">
+                        <label for="companyName">Company Name <span class="required-mark">*</span></label>
+                        <input id="companyName" type="text" placeholder="Enter company name" />
+                    </div>
+                    <div class="gov-auth-field">
+                        <label for="designation">Designation (Optional)</label>
+                        <input id="designation" type="text" placeholder="Enter your designation" />
+                    </div>
+                </div>
+
+                <!-- Employee Fields -->
+                <div id="employeeFields" class="gov-auth-conditional">
+                    <div class="gov-auth-field">
+                        <label for="department">Department (Optional)</label>
+                        <input id="department" type="text" placeholder="Enter your department" />
+                        <span class="gov-auth-hint">This will be included in your profile.</span>
+                    </div>
+                </div>
+
+                <div id="errorText" class="gov-auth-error"></div>
+                <button id="submitBtn" class="gov-auth-btn" type="submit">Register</button>
+            </form>
+
+            <div class="gov-auth-footer">
+                Already have an account? <a href="login.html">Login</a>
             </div>
         </div>
 
-        <!-- Right Side - Form -->
-        <div class="saas-auth-form-container">
-            <div class="saas-auth-form-wrapper">
-                <div class="saas-auth-form-header">
-                    <h1>Create Account</h1>
-                    <p>Fill in your details to get started</p>
-                </div>
-
-                <form id="registerForm" class="saas-auth-form" novalidate>
-                    <div class="saas-auth-field">
-                        <label for="name">Full Name</label>
-                        <input id="name" type="text" placeholder="Enter your full name" required />
-                    </div>
-
-                    <div class="saas-auth-field">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" placeholder="name@company.com" required />
-                    </div>
-
-                    <div class="saas-auth-field">
-                        <label for="role">Role</label>
-                        <select id="role" required>
-                            <option value="">Select your role</option>
-                            <option value="ADMIN">Admin</option>
-                            <option value="RECRUITER">Recruiter</option>
-                            <option value="APPLICANT">Applicant</option>
-                            <option value="EMPLOYEE">Employee</option>
-                            <option value="HR">HR</option>
-                            <option value="ACCOUNTANT">Accountant</option>
-                        </select>
-                    </div>
-
-                    <div class="saas-auth-field-row">
-                        <div class="saas-auth-field">
-                            <label for="password">Password</label>
-                            <input id="password" type="password" placeholder="Min. 6 characters" required />
-                        </div>
-                        <div class="saas-auth-field">
-                            <label for="confirmPassword">Confirm Password</label>
-                            <input id="confirmPassword" type="password" placeholder="Re-enter password" required />
-                        </div>
-                    </div>
-
-                    <!-- Recruiter Fields -->
-                    <div id="recruiterFields" class="saas-auth-conditional">
-                        <div class="saas-auth-field">
-                            <label for="companyName">Company Name <span style="color: #ef4444;">*</span></label>
-                            <input id="companyName" type="text" placeholder="Acme Talent Pvt Ltd" />
-                        </div>
-                        <div class="saas-auth-field">
-                            <label for="designation">Designation (Optional)</label>
-                            <input id="designation" type="text" placeholder="Senior Recruiter" />
-                        </div>
-                    </div>
-
-                    <!-- Employee Fields -->
-                    <div id="employeeFields" class="saas-auth-conditional">
-                        <div class="saas-auth-field">
-                            <label for="department">Department (Optional)</label>
-                            <input id="department" type="text" placeholder="Engineering" />
-                            <span class="saas-auth-hint">This will be included in your profile.</span>
-                        </div>
-                    </div>
-
-                    <div id="errorText" class="saas-auth-error"></div>
-                    <button id="submitBtn" class="saas-btn saas-btn-primary saas-btn-large" type="submit">Create Account</button>
-                </form>
-
-                <div class="saas-auth-footer">
-                    Already have an account? <a href="login.html">Sign in</a>
-                </div>
-            </div>
+        <!-- Footer Text -->
+        <div class="gov-auth-page-footer">
+            <p>© 2024 खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र. All rights reserved.</p>
         </div>
     </div>
 
@@ -225,7 +199,7 @@
                 errorText.classList.add('show');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = "Create Account";
+                submitBtn.textContent = "Register";
             }
         });
 

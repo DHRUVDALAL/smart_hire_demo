@@ -1,39 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | Modern Hiring Infrastructure for Smart Companies</title>
+  <title>खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र | रोजगार संधी</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
   <link rel="stylesheet" href="css/saas-landing.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    }
+    
+    /* Hero Slider Styles */
+    .saas-hero-illustration-inner {
+      position: relative;
+    }
+    
+    .hero-slider {
+      position: relative;
+      width: 100%;
+      min-height: 350px;
+    }
+    
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+    
+    .hero-slide.active {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body class="saas-page">
   <!-- Navigation -->
   <nav class="saas-nav">
     <div class="saas-nav-inner">
       <a href="index.html" class="saas-nav-logo">
-        <svg viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="8" fill="url(#logo-gradient)"/>
-          <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <defs>
-            <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
-              <stop stop-color="#176087"/>
-              <stop offset="1" stop-color="#04395E"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        Smart Hire
+        <img src="images/Logo.png" alt="Logo" />
+        <div class="brand-name">
+          <span class="line1">खासदार मुरलीधर मोहोळ</span>
+          <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+        </div>
       </a>
       <div class="saas-nav-links">
-        <a href="index.html" class="saas-nav-link active">Home</a>
-        <a href="features.html" class="saas-nav-link">Features</a>
-        <a href="about.html" class="saas-nav-link">About</a>
-        <a href="contact.html" class="saas-nav-link">Contact</a>
+        <a href="index.html" class="saas-nav-link active" data-key="navHome">मुख्यपृष्ठ</a>
+        <a href="features.html" class="saas-nav-link" data-key="navFeatures">वैशिष्ट्ये</a>
+        <a href="about.html" class="saas-nav-link" data-key="navAbout">आमच्याबद्दल</a>
+        <a href="contact.html" class="saas-nav-link" data-key="navContact">संपर्क</a>
+      </div>
+      <div class="language-switcher">
+        <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <a href="#" class="language-option active" data-lang="marathi">मराठी</a>
+        <span class="language-divider">|</span>
+        <a href="#" class="language-option" data-lang="english">English</a>
       </div>
       <div class="saas-nav-actions">
-        <a href="login.html" class="saas-btn saas-btn-ghost">Login</a>
-        <a href="register.html" class="saas-btn saas-btn-primary">Get Started</a>
+        <a href="login.html" class="saas-btn saas-btn-ghost" data-key="navLogin">लॉगिन</a>
+        <a href="register.html" class="saas-btn saas-btn-primary" data-key="navRegister">नोंदणी करा</a>
       </div>
       <button class="saas-nav-mobile-toggle" aria-label="Toggle menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -49,60 +86,28 @@
   <section class="saas-hero">
     <div class="saas-hero-inner">
       <div class="saas-hero-content">
-        <div class="saas-hero-badge">
-          <span>Now Available</span>
+        <div class="gov-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span data-key="govInitiative">सरकारी उपक्रम</span>
         </div>
-        <h1>Modern Hiring Infrastructure for <span class="gradient-text">Smart Companies</span></h1>
-        <p class="saas-hero-subtitle">Smart Hire helps companies manage recruiting, candidate screening, interviews, and hiring workflows from one unified platform.</p>
+        <h1 data-key="heroTitle">युवकांसाठी रोजगार व <span class="gradient-text">स्वयंरोजगाराच्या नवीन संधी</span></h1>
+        <p class="saas-hero-subtitle" data-key="heroSubtitle">खासदार मुरलीधर मोहोळ यांच्या पुढाकारातून सुरू करण्यात आलेले हे पोर्टल नागरिकांना रोजगार, स्वयंरोजगार आणि कौशल्य विकासाच्या संधी उपलब्ध करून देण्यासाठी तयार करण्यात आले आहे.</p>
         <div class="saas-hero-buttons">
-          <a href="register.html" class="saas-btn saas-btn-primary saas-btn-large">Get Started</a>
-          <a href="contact.html" class="saas-btn saas-btn-secondary saas-btn-large">Book Demo</a>
+          <a href="jobs.html" class="saas-btn saas-btn-primary saas-btn-large" data-key="heroButtonJobs">नोकऱ्या पहा</a>
+          <a href="register.html" class="saas-btn saas-btn-secondary saas-btn-large" data-key="heroButtonRegister">आता नोंदणी करा</a>
         </div>
       </div>
       <div class="saas-hero-visual">
         <div class="saas-hero-illustration">
           <div class="saas-hero-illustration-inner">
-            <div class="mock-header">
-              <div class="mock-dots">
-                <span class="mock-dot mock-dot-red"></span>
-                <span class="mock-dot mock-dot-yellow"></span>
-                <span class="mock-dot mock-dot-green"></span>
-              </div>
-              <div class="mock-search"></div>
-            </div>
-            <div class="mock-content">
-              <div class="mock-sidebar">
-                <div class="mock-sidebar-item active"></div>
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-              </div>
-              <div class="mock-main">
-                <div class="mock-card">
-                  <div class="mock-avatar"></div>
-                  <div class="mock-lines">
-                    <div class="mock-line"></div>
-                    <div class="mock-line short"></div>
-                  </div>
-                  <span class="mock-badge mock-badge-green">Hired</span>
-                </div>
-                <div class="mock-card">
-                  <div class="mock-avatar"></div>
-                  <div class="mock-lines">
-                    <div class="mock-line"></div>
-                    <div class="mock-line short"></div>
-                  </div>
-                  <span class="mock-badge mock-badge-blue">Interview</span>
-                </div>
-                <div class="mock-card">
-                  <div class="mock-avatar"></div>
-                  <div class="mock-lines">
-                    <div class="mock-line"></div>
-                    <div class="mock-line short"></div>
-                  </div>
-                  <span class="mock-badge mock-badge-yellow">Screening</span>
-                </div>
-              </div>
+            <div class="hero-slider">
+              <img src="images/image1.jpg" class="hero-slide active" alt="Slide 1">
+              <img src="images/image2.jpg" class="hero-slide" alt="Slide 2">
+              <img src="images/image3.jpg" class="hero-slide" alt="Slide 3">
+              <img src="images/image4.jpg" class="hero-slide" alt="Slide 4">
             </div>
           </div>
         </div>
@@ -113,99 +118,75 @@
   <!-- Trust Section -->
   <section class="saas-trust">
     <div class="saas-trust-inner">
-      <p class="saas-trust-label">Trusted by growing teams worldwide</p>
+      <p class="saas-trust-label" data-key="trustLabel">पुण्यातील नागरिकांसाठी रोजगार संधी</p>
       <div class="saas-trust-logos">
         <div class="saas-trust-logo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
-          </svg>
-          TechCorp
-        </div>
-        <div class="saas-trust-logo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          InnovateLabs
+          <span data-key="trust247Support">24/7 सपोर्ट</span>
         </div>
         <div class="saas-trust-logo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="8" y1="21" x2="16" y2="21"></line>
-            <line x1="12" y1="17" x2="12" y2="21"></line>
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
-          FutureSoft
+          <span data-key="trustVerifiedJobs">सत्यापित नोकऱ्या</span>
         </div>
         <div class="saas-trust-logo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
-          NextGen Systems
+          <span data-key="trustFreeRegistration">विनामूल्य नोंदणी</span>
+        </div>
+        <div class="saas-trust-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          <span data-key="trustSkillDevelopment">कौशल्य विकास</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Problem/Solution Section -->
-  <section class="saas-problem-solution">
-    <div class="saas-problem-solution-inner">
-      <div class="saas-problem reveal">
-        <h2>Hiring is Broken.</h2>
-        <ul class="saas-problem-list">
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            Recruiters struggle to track applicants
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            Hiring pipelines become messy
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            Teams lose great candidates
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            Communication breaks down
-          </li>
-        </ul>
-      </div>
-      <div class="saas-solution reveal">
-        <div class="saas-solution-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </div>
-        <h2>Smart Hire Fixes This.</h2>
-        <p>Smart Hire centralizes every step of recruitment into one simple platform. From posting jobs to onboarding new hires, manage your entire hiring workflow with clarity and confidence.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Grid Section -->
+  <!-- Features Overview -->
   <section class="saas-features">
     <div class="saas-features-inner">
       <div class="saas-section-header">
-        <h2>Everything You Need to Hire Better</h2>
-        <p>Powerful features designed to streamline every step of your recruitment process</p>
+        <h2 data-key="servicesTitle">आमच्या सेवा</h2>
+        <p data-key="servicesSubtitle">रोजगार आणि स्वयंरोजगारासाठी सर्व आवश्यक सुविधा</p>
       </div>
       <div class="saas-features-grid">
         <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
+          <div class="saas-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
           </div>
-          <h3>Recruiter Job Management</h3>
-          <p>Post jobs, manage listings, and control job status with intuitive tools designed for efficiency.</p>
+          <h3 data-key="feature1Title">रोजगार संधी</h3>
+          <p data-key="feature1Desc">विविध क्षेत्रातील हजारो नोकऱ्या शोधा. आमचे प्लॅटफॉर्म दररोज नवीन रोजगार संधी उपलब्ध करून देते.</p>
+        </article>
+        
+        <article class="saas-feature-card reveal">
+          <div class="saas-benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h3 data-key="feature2Title">स्वयंरोजगार मार्गदर्शन</h3>
+          <p data-key="feature2Desc">स्वतःचा व्यवसाय सुरू करण्यासाठी मार्गदर्शन आणि संधी. तज्ञांकडून मिळवा व्यवसाय योजना आणि आर्थिक सहाय्याची माहिती.</p>
         </article>
 
         <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
+          <div class="saas-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
@@ -213,243 +194,102 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>
           </div>
-          <h3>Applicant Tracking System</h3>
-          <p>Track every candidate from application to hire with complete pipeline visibility.</p>
+          <h3 data-key="feature3Title">भरती नेटवर्क</h3>
+          <p data-key="feature3Desc">कुशल प्रतिभा शोधणाऱ्या कंपन्यांशी कनेक्ट व्हा. आम्ही नियोक्ते आणि उमेदवार यांच्यात पूल बनवतो.</p>
         </article>
 
         <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
+          <div class="saas-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-              <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
           </div>
-          <h3>Employee Screening</h3>
-          <p>Structured evaluation workflow with notes, feedback, and shortlist controls.</p>
+          <h3 data-key="feature4Title">पारदर्शक प्रक्रिया</h3>
+          <p data-key="feature4Desc">भरती प्रक्रियेच्या प्रत्येक टप्प्याची माहिती. आपल्या अर्जाची स्थिती रिअल-टाइममध्ये ट्रॅक करा.</p>
         </article>
 
         <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
+          <div class="saas-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
             </svg>
           </div>
-          <h3>Interview Scheduling</h3>
-          <p>Coordinate interviews seamlessly with integrated calendar and automated reminders.</p>
+          <h3 data-key="feature5Title">कौशल्य विकास</h3>
+          <p data-key="feature5Desc">प्रशिक्षण आणि करिअर वाढीसाठी संधी. नवीन कौशल्ये शिका आणि आपली योग्यता सुधारा.</p>
         </article>
 
         <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
+          <div class="saas-benefit-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="20" x2="18" y2="10"></line>
-              <line x1="12" y1="20" x2="12" y2="4"></line>
-              <line x1="6" y1="20" x2="6" y2="14"></line>
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
             </svg>
           </div>
-          <h3>Pipeline Analytics</h3>
-          <p>Real-time insights into your hiring pipeline with visual charts and key metrics.</p>
-        </article>
-
-        <article class="saas-feature-card reveal">
-          <div class="saas-feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
-          </div>
-          <h3>Team Collaboration</h3>
-          <p>Work together seamlessly with role-based access and shared candidate feedback.</p>
+          <h3 data-key="feature6Title">सरकारी समर्थन</h3>
+          <p data-key="feature6Desc">खासदार मुरलीधर मोहोळ यांच्या नेतृत्वाखालील उपक्रम. विश्वसनीय आणि प्रामाणिक सेवा.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- How It Works -->
-  <section class="saas-how-it-works">
-    <div class="saas-how-it-works-inner">
-      <div class="saas-section-header">
-        <h2>How It Works</h2>
-        <p>Four simple steps to transform your hiring process</p>
+  <!-- How it Works -->
+  <section class="saas-feature-breakdown" style="background: var(--bg-light);">
+    <div class="saas-feature-row">
+      <div class="saas-feature-text reveal">
+        <h2 data-key="howItWorksTitle">कसे काम करते</h2>
+        <p data-key="howItWorksSubtitle">आपल्या रोजगार शोधात आम्ही आपली मदत कशी करतो ते जाणून घ्या</p>
+        <ul class="saas-feature-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong data-key="step1Title">नोंदणी करा:</strong> <span data-key="step1Desc">विनामूल्य खाते तयार करा आणि आपले प्रोफाइल पूर्ण करा</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong data-key="step2Title">नोकऱ्या शोधा:</strong> <span data-key="step2Desc">आपल्या कौशल्यानुसार योग्य रोजगार संधी शोधा</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong data-key="step3Title">अर्ज करा:</strong> <span data-key="step3Desc">एका क्लिकमध्ये आपला रेझ्युमे सबमिट करा</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <strong data-key="step4Title">मुलाखतीसाठी तयार व्हा:</strong> <span data-key="step4Desc">आम्ही आपल्याला प्रत्येक टप्प्यावर मार्गदर्शन करू</span>
+          </li>
+        </ul>
       </div>
-      <div class="saas-timeline">
-        <div class="saas-timeline-step reveal">
-          <div class="saas-timeline-number">1</div>
-          <h4>Recruiters Post Jobs</h4>
-          <p>Create detailed job listings with requirements, skills, and location targeting.</p>
-        </div>
-        <div class="saas-timeline-step reveal">
-          <div class="saas-timeline-number">2</div>
-          <h4>Employees Screen Candidates</h4>
-          <p>Review applications with structured evaluation and provide detailed feedback.</p>
-        </div>
-        <div class="saas-timeline-step reveal">
-          <div class="saas-timeline-number">3</div>
-          <h4>Schedule Interviews</h4>
-          <p>Coordinate and schedule interviews with shortlisted candidates effortlessly.</p>
-        </div>
-        <div class="saas-timeline-step reveal">
-          <div class="saas-timeline-number">4</div>
-          <h4>Hire Best Talent</h4>
-          <p>Make data-driven decisions and onboard your new team members.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Product Screenshots -->
-  <section class="saas-screenshots">
-    <div class="saas-screenshots-inner">
-      <div class="saas-section-header">
-        <h2>Powerful Dashboards</h2>
-        <p>Role-specific interfaces designed for maximum productivity</p>
-      </div>
-      <div class="saas-screenshots-grid">
-        <div class="saas-screenshot-card reveal">
-          <div class="saas-screenshot-preview">
-            <div class="saas-screenshot-header">
-              <div class="mock-dots">
-                <span class="mock-dot mock-dot-red"></span>
-                <span class="mock-dot mock-dot-yellow"></span>
-                <span class="mock-dot mock-dot-green"></span>
-              </div>
-            </div>
-            <div class="saas-screenshot-content">
-              <div class="saas-screenshot-row">
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">24</div>
-                  <div class="saas-screenshot-stat-label">Applications</div>
-                </div>
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">8</div>
-                  <div class="saas-screenshot-stat-label">Interviews</div>
-                </div>
-              </div>
-              <div class="mock-card">
-                <div class="mock-avatar"></div>
-                <div class="mock-lines">
-                  <div class="mock-line"></div>
-                  <div class="mock-line short"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="saas-screenshot-info">
-            <h3>Applicant Dashboard</h3>
-            <p>Track applications and interview schedules</p>
-          </div>
-        </div>
-
-        <div class="saas-screenshot-card reveal">
-          <div class="saas-screenshot-preview">
-            <div class="saas-screenshot-header">
-              <div class="mock-dots">
-                <span class="mock-dot mock-dot-red"></span>
-                <span class="mock-dot mock-dot-yellow"></span>
-                <span class="mock-dot mock-dot-green"></span>
-              </div>
-            </div>
-            <div class="saas-screenshot-content">
-              <div class="saas-screenshot-row">
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">12</div>
-                  <div class="saas-screenshot-stat-label">Active Jobs</div>
-                </div>
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">156</div>
-                  <div class="saas-screenshot-stat-label">Candidates</div>
-                </div>
-              </div>
-              <div class="mock-card">
-                <div class="mock-avatar"></div>
-                <div class="mock-lines">
-                  <div class="mock-line"></div>
-                  <div class="mock-line short"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="saas-screenshot-info">
-            <h3>Recruiter Dashboard</h3>
-            <p>Manage jobs and track hiring pipeline</p>
-          </div>
-        </div>
-
-        <div class="saas-screenshot-card reveal">
-          <div class="saas-screenshot-preview">
-            <div class="saas-screenshot-header">
-              <div class="mock-dots">
-                <span class="mock-dot mock-dot-red"></span>
-                <span class="mock-dot mock-dot-yellow"></span>
-                <span class="mock-dot mock-dot-green"></span>
-              </div>
-            </div>
-            <div class="saas-screenshot-content">
-              <div class="saas-screenshot-row">
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">45</div>
-                  <div class="saas-screenshot-stat-label">To Review</div>
-                </div>
-                <div class="saas-screenshot-stat">
-                  <div class="saas-screenshot-stat-value">18</div>
-                  <div class="saas-screenshot-stat-label">Shortlisted</div>
-                </div>
-              </div>
-              <div class="mock-card">
-                <div class="mock-avatar"></div>
-                <div class="mock-lines">
-                  <div class="mock-line"></div>
-                  <div class="mock-line short"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="saas-screenshot-info">
-            <h3>Employee Screening</h3>
-            <p>Review and evaluate candidates efficiently</p>
-          </div>
+      <div class="saas-feature-visual reveal">
+        <div style="background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <img src="images/Logo.png" alt="रोजगार केंद्र" style="width: 100%; max-width: 300px; margin: 0 auto; display: block;" />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Benefits Section -->
-  <section class="saas-benefits">
-    <div class="saas-benefits-inner">
-      <div class="saas-section-header">
-        <h2>Why Teams Choose Smart Hire</h2>
-        <p>Experience the benefits of modern hiring infrastructure</p>
-      </div>
-      <div class="saas-benefits-grid">
-        <div class="saas-benefit-card reveal">
-          <div class="saas-benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-          </div>
-          <h3>Faster Hiring</h3>
-          <p>Reduce time-to-hire by 40% with streamlined workflows and automated processes that keep candidates moving through your pipeline.</p>
+  <!-- Stats Section -->
+  <section class="saas-trust">
+    <div class="saas-trust-inner">
+      <div style="display: flex; justify-content: center; gap: 64px; flex-wrap: wrap;">
+        <div style="text-align: center;" class="reveal">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--gov-orange);">1000+</div>
+          <div style="color: var(--text-muted); font-size: 1rem;" data-key="stat1Label">रोजगार संधी</div>
         </div>
-        <div class="saas-benefit-card reveal">
-          <div class="saas-benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </div>
-          <h3>Better Candidate Experience</h3>
-          <p>Keep candidates informed and engaged throughout the process with clear communication and timely updates.</p>
+        <div style="text-align: center;" class="reveal">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--gov-orange);">5000+</div>
+          <div style="color: var(--text-muted); font-size: 1rem;" data-key="stat2Label">नोंदणीकृत उमेदवार</div>
         </div>
-        <div class="saas-benefit-card reveal">
-          <div class="saas-benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-              <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
-          </div>
-          <h3>Structured Recruitment Pipeline</h3>
-          <p>Never lose track of candidates with organized pipelines, clear stages, and complete visibility at every step.</p>
+        <div style="text-align: center;" class="reveal">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--gov-orange);">500+</div>
+          <div style="color: var(--text-muted); font-size: 1rem;" data-key="stat3Label">नियोक्ते</div>
+        </div>
+        <div style="text-align: center;" class="reveal">
+          <div style="font-size: 3rem; font-weight: 800; color: var(--gov-orange);">95%</div>
+          <div style="color: var(--text-muted); font-size: 1rem;" data-key="stat4Label">यशस्वी भरती</div>
         </div>
       </div>
     </div>
@@ -458,11 +298,11 @@
   <!-- CTA Section -->
   <section class="saas-cta">
     <div class="saas-cta-inner">
-      <h2>Start Hiring Smarter Today</h2>
-      <p>Join thousands of companies building better teams with Smart Hire</p>
+      <h2 data-key="ctaTitle">आपल्या करिअरची सुरुवात करा</h2>
+      <p data-key="ctaSubtitle">आजच नोंदणी करा आणि हजारो रोजगार संधींमध्ये प्रवेश मिळवा</p>
       <div class="saas-cta-buttons">
-        <a href="register.html" class="saas-btn saas-btn-primary saas-btn-large">Create Account</a>
-        <a href="features.html" class="saas-btn saas-btn-secondary saas-btn-large">View Features</a>
+        <a href="register.html" class="saas-btn saas-btn-primary saas-btn-large" data-key="ctaButtonRegister">आता नोंदणी करा</a>
+        <a href="contact.html" class="saas-btn saas-btn-secondary saas-btn-large" data-key="ctaButtonContact">आम्हाला संपर्क करा</a>
       </div>
     </div>
   </section>
@@ -473,71 +313,65 @@
       <div class="saas-footer-grid">
         <div class="saas-footer-brand">
           <a href="index.html" class="saas-footer-logo">
-            <svg viewBox="0 0 32 32" fill="none" width="32" height="32">
-              <rect width="32" height="32" rx="8" fill="url(#footer-logo-gradient)"/>
-              <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <defs>
-                <linearGradient id="footer-logo-gradient" x1="0" y1="0" x2="32" y2="32">
-                  <stop stop-color="#4D6A92"/>
-                  <stop offset="1" stop-color="#5A8FA0"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            Smart Hire
+            <img src="images/Logo.png" alt="Logo" />
+            <div class="brand-name">
+              <span class="line1">खासदार मुरलीधर मोहोळ</span>
+              <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+            </div>
           </a>
-          <p>Modern hiring infrastructure for smart companies. Streamline your recruitment process and build amazing teams.</p>
+          <p data-key="footerTagline">पुण्यातील नागरिकांना रोजगार आणि स्वयंरोजगाराच्या संधी उपलब्ध करून देणारे सरकारी उपक्रम.</p>
         </div>
         <div class="saas-footer-column">
-          <h4>Company</h4>
+          <h4 data-key="footerPortalTitle">पोर्टल</h4>
           <ul class="saas-footer-links">
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><a href="about.html" data-key="footerAbout">आमच्याबद्दल</a></li>
+            <li><a href="contact.html" data-key="footerContact">संपर्क</a></li>
+            <li><a href="features.html" data-key="footerFeatures">वैशिष्ट्ये</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Product</h4>
+          <h4 data-key="footerCitizensTitle">नागरिकांसाठी</h4>
           <ul class="saas-footer-links">
-            <li><a href="features.html">Features</a></li>
-            <li><a href="#">Pricing</a></li>
-            <li><a href="#">Integrations</a></li>
+            <li><a href="jobs.html" data-key="footerJobs">नोकऱ्या</a></li>
+            <li><a href="register.html" data-key="footerRegister">नोंदणी</a></li>
+            <li><a href="login.html" data-key="footerLogin">लॉगिन</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Resources</h4>
+          <h4 data-key="footerEmployersTitle">नियोक्त्यांसाठी</h4>
           <ul class="saas-footer-links">
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">API Reference</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="post-job.html" data-key="footerPostJob">नोकरी पोस्ट करा</a></li>
+            <li><a href="login.html" data-key="footerRecruitmentPortal">भरती पोर्टल</a></li>
+            <li><a href="contact.html" data-key="footerHelp">सहाय्य</a></li>
           </ul>
         </div>
         <div class="saas-footer-column">
-          <h4>Account</h4>
+          <h4 data-key="footerInfoTitle">माहिती</h4>
           <ul class="saas-footer-links">
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Sign Up</a></li>
-            <li><a href="#">Support</a></li>
+            <li><a href="contact.html" data-key="footerSupport">सपोर्ट</a></li>
+            <li><a href="#" data-key="footerPrivacy">गोपनीयता धोरण</a></li>
+            <li><a href="#" data-key="footerTerms">अटी व शर्ती</a></li>
           </ul>
         </div>
       </div>
       <div class="saas-footer-bottom">
-        <p class="saas-footer-copyright">© 2024 Smart Hire. All rights reserved.</p>
+        <p class="saas-footer-copyright" data-key="footerCopyright">© 2024 खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र. सर्व हक्क राखीव.</p>
         <div class="saas-footer-social">
           <a href="#" aria-label="Twitter">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
             </svg>
           </a>
-          <a href="#" aria-label="LinkedIn">
+          <a href="#" aria-label="Facebook">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-              <rect x="2" y="9" width="4" height="12"></rect>
-              <circle cx="4" cy="4" r="2"></circle>
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
             </svg>
           </a>
-          <a href="#" aria-label="GitHub">
+          <a href="#" aria-label="Instagram">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
             </svg>
           </a>
         </div>
@@ -545,9 +379,19 @@
     </div>
   </footer>
 
-  <!-- Scroll Reveal Script -->
+  <!-- Mobile Nav Toggle Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      const mobileToggle = document.querySelector('.saas-nav-mobile-toggle');
+      const navLinks = document.querySelector('.saas-nav-links');
+      
+      if (mobileToggle && navLinks) {
+        mobileToggle.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+        });
+      }
+
+      // Scroll reveal
       const reveals = document.querySelectorAll('.reveal');
       
       function revealOnScroll() {
@@ -564,6 +408,23 @@
       
       window.addEventListener('scroll', revealOnScroll);
       revealOnScroll();
+    });
+  </script>
+  <script src="js/language.js"></script>
+  
+  <!-- Hero Slider Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const slides = document.querySelectorAll('.hero-slide');
+      if (slides.length > 0) {
+        let currentSlide = 0;
+        
+        setInterval(() => {
+          slides[currentSlide].classList.remove('active');
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add('active');
+        }, 3000);
+      }
     });
   </script>
 </body>

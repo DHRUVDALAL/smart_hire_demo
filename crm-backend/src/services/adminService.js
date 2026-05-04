@@ -7,6 +7,7 @@
 import prisma from "../utils/prisma.js";
 import { AppError } from "../middleware/errorHandler.js";
 import * as notificationService from "./notificationService.js";
+import { sendEmail, templates } from "./emailService.js";
 
 export async function getPendingJobs() {
     return prisma.job.findMany({
@@ -55,13 +56,26 @@ export async function approveJob(jobId, adminId) {
             role: "RECRUITER",
             isActive: true,
         },
-        select: { id: true },
+        select: { id: true, name: true, email: true },
     });
 
     await notificationService.notifyJobApproved(
         recruiters.map((r) => r.id),
         updated.title
     );
+
+    // Email recruiters (best-effort)
+    try {
+        for (const r of recruiters) {
+            void sendEmail(
+                r.email,
+                "Job Posting Approved",
+                templates.jobPostingApproved(r.name || "Recruiter", updated.title)
+            );
+        }
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     await prisma.activityLog.create({
         data: {
@@ -147,6 +161,7 @@ export async function getPendingRecruiters() {
                     id: true,
                     name: true,
                     industry: true,
+                    size: true,
                     description: true,
                     location: true,
                     website: true,
@@ -175,6 +190,10 @@ export async function getAllRecruiters() {
                     id: true,
                     name: true,
                     industry: true,
+                    size: true,
+                    description: true,
+                    location: true,
+                    website: true,
                 },
             },
         },
@@ -206,6 +225,17 @@ export async function approveRecruiter(recruiterId, adminId) {
         "Account Approved",
         `Your company "${recruiter.company.name}" has been approved. You can now post jobs.`
     );
+
+    // Email recruiter (best-effort)
+    try {
+        void sendEmail(
+            updated.user.email,
+            "Recruiter Profile Approved",
+            templates.recruiterProfileApproved(updated.user.name)
+        );
+    } catch (err) {
+        console.error("Email failed:", err?.message || err);
+    }
 
     await prisma.activityLog.create({
         data: {
@@ -263,6 +293,7 @@ export async function getPendingEmployees() {
                     name: true,
                     email: true,
                     phone: true,
+                    bio: true,
                     createdAt: true,
                 },
             },
@@ -280,6 +311,7 @@ export async function getAllEmployees() {
                     name: true,
                     email: true,
                     phone: true,
+                    bio: true,
                     isActive: true,
                     createdAt: true,
                 },

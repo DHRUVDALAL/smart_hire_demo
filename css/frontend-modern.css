@@ -7,17 +7,17 @@
 
 :root {
     /* =====================================================
-       NEW PREMIUM SAAS COLOR PALETTE
-       Inspired by Stripe / Linear / Notion / Vercel
+       GOVERNMENT EMPLOYMENT PORTAL COLOR PALETTE
+       खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र
        ===================================================== */
     
-    /* Primary Color Palette - Deep Professional Blue */
-    --primary-dark: #04395E;
-    --primary: #176087;
-    --primary-hover: #04395E;
-    --accent: #2E8B9A;
-    --accent-light: #E1E9F0;
-    --light-surface: #E1E9F0;
+    /* Primary Color Palette - Government Orange & Green */
+    --primary-dark: #EA580C;
+    --primary: #F97316;
+    --primary-hover: #EA580C;
+    --accent: #16A34A;
+    --accent-light: #DCFCE7;
+    --light-surface: #F0FDF4;
     
     /* Backgrounds */
     --bg: #F8FAFC;
@@ -66,8 +66,8 @@
     --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
     --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
     --shadow-xl: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
-    --shadow-glow: 0 0 0 3px rgba(23, 96, 135, 0.15);
-    --shadow-glow-primary: 0 0 0 4px rgba(23, 96, 135, 0.2);
+    --shadow-glow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+    --shadow-glow-primary: 0 0 0 4px rgba(249, 115, 22, 0.2);
     --shadow-card-hover: 0 20px 40px -12px rgba(15, 23, 42, 0.15);
     
     /* Transitions */

@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Hire | My Profile</title>
+  <title>रोजगार केंद्र | My Profile</title>
   <link rel="stylesheet" href="css/frontend-modern.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
 <body>
 <div class="page">
   <div class="topbar">
     <div class="topbar-brand">
-      <div class="topbar-logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4z"/></svg>
+        <div class="topbar-logo">
+          <img src="images/Logo.png" alt="Logo" style="height:40px;width:auto;">
+        </div>
+        <div>
+          <div class="brand"><span class="brand-line1">खासदार मुरलीधर मोहोळ</span><span class="brand-line2">रोजगार व स्वयंरोजगार केंद्र</span></div>
+          <div class="user-meta">Applicant Portal</div>
+        </div>
       </div>
-      <div>
-        <div class="brand">Smart Hire</div>
-        <div class="user-meta">Applicant Portal</div>
-      </div>
-    </div>
     <div class="topbar-nav">
       <a href="applicant-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -99,6 +102,11 @@
             <label for="designation">Current Designation</label>
             <input id="designation" type="text" placeholder="e.g., Software Engineer" />
           </div>
+        </div>
+
+        <div class="field">
+          <label for="education">Education</label>
+          <input id="education" type="text" placeholder="e.g., B.E. Computer Engineering, MBA" />
         </div>
         
         <div class="field">
@@ -391,6 +399,7 @@ async function loadProfile() {
     document.getElementById("bio").value = profile.bio || "";
     document.getElementById("experience").value = profile.experience || "";
     document.getElementById("designation").value = profile.designation || "";
+    document.getElementById("education").value = profile.education || "";
     
     userSkills = profile.skills || [];
     renderSkills();
@@ -467,6 +476,7 @@ async function saveProfile(e) {
       bio: document.getElementById("bio").value.trim() || null,
       experience: document.getElementById("experience").value ? Number(document.getElementById("experience").value) : null,
       designation: document.getElementById("designation").value.trim() || null,
+      education: document.getElementById("education").value.trim() || null,
       skills: userSkills.length ? userSkills : null
     };
     
@@ -500,6 +510,7 @@ function resetForm() {
   document.getElementById("bio").value = originalData.bio || "";
   document.getElementById("experience").value = originalData.experience || "";
   document.getElementById("designation").value = originalData.designation || "";
+  document.getElementById("education").value = originalData.education || "";
   
   userSkills = originalData.skills ? [...originalData.skills] : [];
   renderSkills();
