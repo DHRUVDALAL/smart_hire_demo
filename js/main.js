@@ -1,6 +1,34 @@
 // Smart Hire shared frontend helpers.
 
-const API_BASE = "http://localhost:5001/api";
+function resolveApiBase() {
+    const fromGlobal = window.SMART_HIRE_API_BASE;
+    if (fromGlobal) return fromGlobal;
+
+    const fromMeta = document
+        .querySelector('meta[name="smart-hire-api-base"]')
+        ?.getAttribute("content");
+    if (fromMeta) return fromMeta;
+
+    try {
+        const fromStorage = localStorage.getItem("SMART_HIRE_API_BASE");
+        if (fromStorage) return fromStorage;
+    } catch {
+        // ignore localStorage read errors
+    }
+
+    return window.location.origin && window.location.origin !== "null"
+        ? window.location.origin
+        : "";
+}
+
+function normalizeApiBase(rawBase) {
+    const base = String(rawBase || "").trim().replace(/\/+$/, "");
+    if (!base) return "";
+    return base.endsWith("/api") ? base : `${base}/api`;
+}
+
+const FALLBACK_API_ORIGIN = "https://smart-hire-backend-vq38.onrender.com";
+const API_BASE = normalizeApiBase(resolveApiBase() || FALLBACK_API_ORIGIN);
 
 function getDashboardForRole(role) {
     const map = {
@@ -304,6 +332,10 @@ function mountNotificationsBell(options = {}) {
 }
 
 async function apiFetch(path, options = {}) {
+    if (!API_BASE) {
+        throw new Error("API base URL is not configured. Set SMART_HIRE_API_BASE.");
+    }
+
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE}${path}`, {
         ...options,

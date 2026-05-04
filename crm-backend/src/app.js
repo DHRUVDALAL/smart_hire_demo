@@ -23,18 +23,47 @@ import interviewRoutes from "./routes/interview.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 
 // Middleware
-import { errorHandler } from "./middleware/errorHandler.js";
+import { AppError, errorHandler } from "./middleware/errorHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const corsOptions = {
+    origin(origin, callback) {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+
+        if (!ALLOWED_ORIGINS.length && process.env.NODE_ENV !== "production") {
+            callback(null, true);
+            return;
+        }
+
+        if (ALLOWED_ORIGINS.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+
+        callback(new AppError(`CORS blocked for origin: ${origin}`, 403));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+
 // ======================== GLOBAL MIDDLEWARE ========================
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
 }));

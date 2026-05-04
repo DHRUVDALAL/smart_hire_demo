@@ -9,15 +9,17 @@ import "dotenv/config";
 import app from "./app.js";
 
 const PORT = process.env.PORT || 5001;
+const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${PORT}`)
+    .replace(/\/+$/, "");
 
 app.listen(PORT, () => {
     console.log(`\n🚀 Smart Hire CRM Backend`);
     console.log(`   Environment    : ${process.env.NODE_ENV || "development"}`);
-    console.log(`   Server         : http://localhost:${PORT}`);
-    console.log(`   Health         : http://localhost:${PORT}/health`);
-    console.log(`   Auth           : http://localhost:${PORT}/api/auth`);
-    console.log(`   Profile        : http://localhost:${PORT}/api/profile`);
-    console.log(`   Jobs           : http://localhost:${PORT}/api/jobs`);
-    console.log(`   Applications   : http://localhost:${PORT}/api/applications`);
-    console.log(`   Reviews        : http://localhost:${PORT}/api/reviews\n`);
+    console.log(`   Server         : ${PUBLIC_BASE_URL}`);
+    console.log(`   Health         : ${PUBLIC_BASE_URL}/health`);
+    console.log(`   Auth           : ${PUBLIC_BASE_URL}/api/auth`);
+    console.log(`   Profile        : ${PUBLIC_BASE_URL}/api/profile`);
+    console.log(`   Jobs           : ${PUBLIC_BASE_URL}/api/jobs`);
+    console.log(`   Applications   : ${PUBLIC_BASE_URL}/api/applications`);
+    console.log(`   Reviews        : ${PUBLIC_BASE_URL}/api/reviews\n`);
 });
