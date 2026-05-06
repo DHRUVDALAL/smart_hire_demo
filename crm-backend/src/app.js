@@ -29,6 +29,56 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const importedRouteModules = [
+    "authRoutes",
+    "profileRoutes",
+    "jobRoutes",
+    "applicationRoutes",
+    "reviewRoutes",
+    "adminRoutes",
+    "interviewRoutes",
+    "notificationRoutes",
+];
+const mountedRoutes = [];
+
+function joinPaths(basePath, routePath) {
+    const normalizedBase = String(basePath || "").replace(/\/+$/, "");
+    const normalizedRoute = String(routePath || "").replace(/^\/+/, "");
+    if (!normalizedBase) return `/${normalizedRoute}`.replace(/\/{2,}/g, "/");
+    if (!normalizedRoute) return normalizedBase;
+    return `${normalizedBase}/${normalizedRoute}`.replace(/\/{2,}/g, "/");
+}
+
+function mountRouter(mountPath, moduleName, router) {
+    app.use(mountPath, router);
+
+    console.log(`[startup][mount] ${moduleName} mounted at ${mountPath}`);
+
+    if (!Array.isArray(router?.stack)) {
+        mountedRoutes.push({ module: moduleName, method: "USE", path: mountPath });
+        return;
+    }
+
+    const discovered = router.stack
+        .filter((layer) => layer?.route?.path)
+        .flatMap((layer) => {
+            const methods = Object.keys(layer.route.methods || {})
+                .filter((method) => layer.route.methods[method])
+                .map((method) => method.toUpperCase());
+            const fullPath = joinPaths(mountPath, layer.route.path);
+            return methods.map((method) => ({ module: moduleName, method, path: fullPath }));
+        });
+
+    if (!discovered.length) {
+        mountedRoutes.push({ module: moduleName, method: "USE", path: mountPath });
+        return;
+    }
+
+    discovered.forEach((route) => {
+        mountedRoutes.push(route);
+        console.log(`[startup][route] ${route.method} ${route.path}`);
+    });
+}
 
 const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || "")
     .split(",")
@@ -87,17 +137,40 @@ app.get("/health", (_req, res) => {
         timestamp: new Date().toISOString(),
     });
 });
+mountedRoutes.push({ module: "core", method: "GET", path: "/health" });
 
 // ======================== API ROUTES ========================
 
-app.use("/api/auth", authRoutes);
-app.use("/api/profile", profileRoutes);
-app.use("/api/jobs", jobRoutes);
-app.use("/api/applications", applicationRoutes);
-app.use("/api/reviews", reviewRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/interviews", interviewRoutes);
-app.use("/api/notifications", notificationRoutes);
+mountRouter("/api/auth", "authRoutes", authRoutes);
+mountRouter("/api/profile", "profileRoutes", profileRoutes);
+mountRouter("/api/jobs", "jobRoutes", jobRoutes);
+mountRouter("/api/applications", "applicationRoutes", applicationRoutes);
+mountRouter("/api/reviews", "reviewRoutes", reviewRoutes);
+mountRouter("/api/admin", "adminRoutes", adminRoutes);
+mountRouter("/api/interviews", "interviewRoutes", interviewRoutes);
+mountRouter("/api/notifications", "notificationRoutes", notificationRoutes);
+
+// Temporary deployment-debug endpoint
+app.get("/debug/routes", (_req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Mounted routes debug information",
+        data: {
+            cwd: process.cwd(),
+            nodeVersion: process.version,
+            render: {
+                isRender: Boolean(process.env.RENDER || process.env.RENDER_SERVICE_ID),
+                serviceName: process.env.RENDER_SERVICE_NAME || null,
+                serviceId: process.env.RENDER_SERVICE_ID || null,
+                gitCommit: process.env.RENDER_GIT_COMMIT || null,
+            },
+            importedRouteModules,
+            routeCount: mountedRoutes.length,
+            routes: mountedRoutes,
+        },
+    });
+});
+mountedRoutes.push({ module: "core", method: "GET", path: "/debug/routes" });
 
 // ======================== 404 HANDLER ========================
 
@@ -113,3 +186,4 @@ app.use((_req, res) => {
 app.use(errorHandler);
 
 export default app;
+export { importedRouteModules, mountedRoutes };

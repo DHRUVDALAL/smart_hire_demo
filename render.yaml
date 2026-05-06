@@ -4,9 +4,11 @@ services:
     env: node
     plan: free
     rootDir: crm-backend
-    buildCommand: npm install && npm run build:render
-    startCommand: npm start
+    buildCommand: npm install && npx prisma generate
+    startCommand: npx prisma db push && npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
