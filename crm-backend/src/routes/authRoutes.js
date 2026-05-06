@@ -5,12 +5,12 @@
  * POST /api/auth/login     — Authenticate and receive JWT
  */
 
-import { Router } from "express";
+import express from "express";
 import { registerHandler, loginHandler, getMeHandler } from "../controllers/authController.js";
 import { validate, registerSchema, loginSchema } from "../utils/validators.js";
 import { authenticate } from "../middleware/auth.js";
 
-const router = Router();
+const router = express.Router();
 
 router.post("/register", validate(registerSchema), registerHandler);
 router.post("/login", validate(loginSchema), loginHandler);

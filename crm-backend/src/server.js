@@ -7,10 +7,21 @@
 
 import "dotenv/config";
 import app from "./app.js";
+import prisma from "./utils/prisma.js";
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 10000;
 const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${PORT}`)
     .replace(/\/+$/, "");
+
+console.log("Auth routes mounted at /api/auth");
+
+try {
+    await prisma.$connect();
+    console.log("Prisma connected to PostgreSQL");
+} catch (error) {
+    console.error("Prisma failed to connect:", error?.message || error);
+    process.exit(1);
+}
 
 app.listen(PORT, () => {
     console.log(`\n🚀 Smart Hire CRM Backend`);
