@@ -111,6 +111,8 @@
         const departmentEl = document.getElementById("department");
         const errorText = document.getElementById("errorText");
         const submitBtn = document.getElementById("submitBtn");
+        const REGISTER_ENDPOINT = "https://smart-hire-backend-vq38.onrender.com/api/auth/register";
+        const ALLOWED_REGISTER_ROLES = ["ADMIN", "RECRUITER", "APPLICANT", "HR", "EMPLOYEE", "ACCOUNTANT"];
 
         function onRoleChange() {
             const role = roleEl.value;
@@ -133,6 +135,12 @@
 
             if (!name || !email || !role || !password || !confirmPassword) {
                 errorText.textContent = "Please fill all required fields.";
+                errorText.classList.add('show');
+                return;
+            }
+
+            if (!ALLOWED_REGISTER_ROLES.includes(role)) {
+                errorText.textContent = "Please select a valid role.";
                 errorText.classList.add('show');
                 return;
             }
@@ -172,22 +180,35 @@
                 payload.department = departmentEl.value.trim();
             }
 
+            console.log("REGISTER PAYLOAD:", {
+                name,
+                email,
+                password,
+                role
+            });
+            console.log("REGISTER URL:", REGISTER_ENDPOINT);
+
             submitBtn.disabled = true;
             submitBtn.textContent = "Creating account...";
 
             try {
-                const result = await apiFetch("/auth/register", {
+                const result = await apiFetch(REGISTER_ENDPOINT, {
                     method: "POST",
                     body: JSON.stringify(payload),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 });
 
                 console.log("REGISTER RESPONSE:", result);
 
+                const success = result?.success === true;
                 const token = result?.data?.token;
                 const user = result?.data?.user;
+                const responseMessage = result?.message;
 
-                if (!token || !user) {
-                    throw new Error("Unexpected response from server.");
+                if (!success || !token || !user) {
+                    throw new Error(responseMessage || "Registration failed");
                 }
 
                 localStorage.setItem("token", token);
@@ -195,7 +216,13 @@
 
                 window.location.href = getDashboardForRole(user.role);
             } catch (error) {
-                errorText.textContent = error.message || "Unable to register. Please try again.";
+                console.error("REGISTER ERROR:", error);
+                console.error("REGISTER RESPONSE:", error?.response?.data);
+                errorText.textContent =
+                    error?.response?.data?.message ||
+                    error?.payload?.message ||
+                    error?.message ||
+                    "Registration failed";
                 errorText.classList.add('show');
             } finally {
                 submitBtn.disabled = false;

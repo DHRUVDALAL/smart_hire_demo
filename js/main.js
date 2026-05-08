@@ -16,9 +16,7 @@ function resolveApiBase() {
         // ignore localStorage read errors
     }
 
-    return window.location.origin && window.location.origin !== "null"
-        ? window.location.origin
-        : "";
+    return "";
 }
 
 function normalizeApiBase(rawBase) {
@@ -332,12 +330,14 @@ function mountNotificationsBell(options = {}) {
 }
 
 async function apiFetch(path, options = {}) {
-    if (!API_BASE) {
+    const isAbsoluteUrl = /^https?:\/\//i.test(String(path || ""));
+    if (!isAbsoluteUrl && !API_BASE) {
         throw new Error("API base URL is not configured. Set SMART_HIRE_API_BASE.");
     }
 
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE}${path}`, {
+    const endpoint = isAbsoluteUrl ? path : `${API_BASE}${path}`;
+    const response = await fetch(endpoint, {
         ...options,
         headers: {
             "Content-Type": "application/json",
@@ -346,18 +346,33 @@ async function apiFetch(path, options = {}) {
         },
     });
 
-    let payload;
+    let rawBody = "";
     try {
-        payload = await response.json();
+        rawBody = await response.text();
     } catch {
-        payload = { success: false, message: "Invalid server response" };
+        rawBody = "";
+    }
+
+    let payload = null;
+    try {
+        payload = rawBody ? JSON.parse(rawBody) : {};
+    } catch {
+        payload = {
+            success: false,
+            message: `Server returned a non-JSON response (HTTP ${response.status})`,
+            raw: rawBody.slice(0, 500),
+        };
     }
 
     if (!response.ok || payload?.success === false) {
-        const message = payload?.message || "Request failed";
+        const message = payload?.message || `Request failed (HTTP ${response.status})`;
         const error = new Error(message);
         error.status = response.status;
         error.payload = payload;
+        error.response = {
+            status: response.status,
+            data: payload,
+        };
         throw error;
     }
 
