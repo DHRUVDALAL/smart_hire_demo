@@ -21,7 +21,15 @@ export async function registerHandler(req, res, next) {
             data: { user, token },
         });
     } catch (error) {
-        next(error);
+        console.error("REGISTER ERROR:", error);
+        console.error("REGISTER STACK:", error?.stack);
+
+        return res.status(500).json({
+            success: false,
+            message: error?.message || "Internal server error",
+            stack: error?.stack,
+            prisma: error,
+        });
     }
 }
 
