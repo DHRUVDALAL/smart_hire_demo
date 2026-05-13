@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
-<body>
+<body class="applicant-portal">
 <div class="page">
   <div class="topbar">
     <div class="topbar-brand">
@@ -21,7 +21,15 @@
           <div class="user-meta">Applicant Portal</div>
         </div>
       </div>
-    <div class="topbar-nav">
+    <button class="mobile-nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="applicantTopbarNav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+      <span class="sr-only">Toggle applicant navigation</span>
+    </button>
+    <div class="topbar-nav" id="applicantTopbarNav" aria-label="Applicant primary navigation">
       <a href="applicant-dashboard.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
@@ -73,12 +81,12 @@
         <div class="grid-2" style="margin-top: 0;">
           <div class="field">
             <label for="phone">Phone Number</label>
-            <input id="phone" type="tel" placeholder="e.g., +1 (555) 123-4567" pattern="[0-9+\-\(\)\s]*" />
+            <input id="phone" type="tel" placeholder="e.g., +91 9876543210" pattern="[0-9+\-\(\)\s]*" />
           </div>
           
           <div class="field">
             <label for="alternatePhone">Alternate Phone Number</label>
-            <input id="alternatePhone" type="tel" placeholder="e.g., +1 (555) 987-6543" pattern="[0-9+\-\(\)\s]*" />
+            <input id="alternatePhone" type="tel" placeholder="e.g., +91 9123456789" pattern="[0-9+\-\(\)\s]*" />
           </div>
         </div>
         

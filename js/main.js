@@ -133,6 +133,12 @@ function showToast(message, type = "success") {
     }, 2600);
 }
 
+function getUserInitial(name) {
+    const normalized = String(name || "").trim();
+    if (!normalized) return "U";
+    return normalized.charAt(0).toUpperCase();
+}
+
 function setButtonBusy(button, busy, busyText = "Loading...") {
     if (!button) return;
     if (busy) {
@@ -383,11 +389,20 @@ function injectUserMeta() {
     const user = getStoredUser();
     if (!user) return;
 
-    const name = user.name || "User";
+    const name = String(user.name || "User").trim() || "User";
+    const initial = getUserInitial(name);
     const role = String(user.role || "").toUpperCase();
 
-    const nameTargets = document.querySelectorAll(".user-name, [data-user-name]");
+    const avatarTargets = document.querySelectorAll(".user-avatar.user-name, .user-avatar[data-user-name]");
+    const nameTargets = document.querySelectorAll(".user-name:not(.user-avatar), [data-user-name]:not(.user-avatar)");
     const roleTargets = document.querySelectorAll(".user-role, [data-user-role]");
+
+    avatarTargets.forEach((el) => {
+        if (el.querySelector("img")) return;
+        el.textContent = initial;
+        el.setAttribute("aria-label", `${name} avatar`);
+        el.setAttribute("title", name);
+    });
 
     nameTargets.forEach((el) => {
         el.textContent = name;
@@ -398,7 +413,56 @@ function injectUserMeta() {
     });
 }
 
+function initTopbarMobileNav() {
+    const topbars = document.querySelectorAll(".applicant-portal .topbar");
+    if (!topbars.length) return;
+
+    topbars.forEach((topbar) => {
+        const toggle = topbar.querySelector(".mobile-nav-toggle");
+        const nav = topbar.querySelector(".topbar-nav");
+        if (!toggle || !nav) return;
+        if (toggle.dataset.initialized === "true") return;
+        toggle.dataset.initialized = "true";
+
+        const closeMenu = () => {
+            topbar.classList.remove("mobile-open");
+            toggle.setAttribute("aria-expanded", "false");
+        };
+
+        toggle.addEventListener("click", () => {
+            const isOpen = topbar.classList.toggle("mobile-open");
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        nav.querySelectorAll("a, button").forEach((item) => {
+            item.addEventListener("click", () => {
+                closeMenu();
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!topbar.classList.contains("mobile-open")) return;
+            if (!topbar.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 1024) {
+                closeMenu();
+            }
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    initTopbarMobileNav();
     injectUserMeta();
 
     document.querySelectorAll(".logout-btn, [data-logout]").forEach((btn) => {

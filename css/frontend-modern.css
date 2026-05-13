@@ -5869,3 +5869,328 @@ section.card {
         justify-content: center;
     }
 }
+
+/* =====================================================
+   APPLICANT PORTAL FINAL RESPONSIVE POLISH
+   ===================================================== */
+
+.applicant-portal {
+    overflow-x: hidden;
+}
+
+.applicant-portal .page {
+    width: min(1200px, calc(100% - clamp(20px, 4vw, 56px)));
+    padding: 20px 0 40px;
+}
+
+@media (min-width: 1440px) {
+    .applicant-portal .page {
+        width: min(1320px, calc(100% - 96px));
+    }
+}
+
+.applicant-portal .topbar {
+    gap: 16px;
+}
+
+.applicant-portal .topbar-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.applicant-portal .topbar-brand > div:last-child {
+    min-width: 0;
+}
+
+.applicant-portal .topbar-brand .brand {
+    min-width: 0;
+}
+
+.applicant-portal .topbar-brand .brand .brand-line1,
+.applicant-portal .topbar-brand .brand .brand-line2 {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.applicant-portal .user-avatar {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.applicant-portal .page-header-content {
+    max-width: 1080px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.applicant-portal .page-header-text {
+    max-width: min(760px, 100%);
+    margin-inline-start: clamp(4px, 2vw, 28px);
+}
+
+.applicant-portal .page-subtitle {
+    max-width: 62ch;
+}
+
+.applicant-portal .toolbar {
+    align-items: stretch;
+}
+
+.applicant-portal .toolbar .search {
+    flex: 1 1 260px;
+    min-width: 220px;
+    max-width: none;
+}
+
+.applicant-portal .toolbar select {
+    flex: 1 1 170px;
+    min-width: 160px;
+}
+
+.applicant-portal .stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.applicant-portal .job-card,
+.applicant-portal .list-row {
+    overflow-wrap: anywhere;
+}
+
+.applicant-portal .file-preview {
+    flex-wrap: wrap;
+}
+
+.mobile-nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.mobile-nav-toggle:hover {
+    border-color: var(--line-dark);
+    background: var(--surface-2);
+}
+
+.mobile-nav-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+.topbar.mobile-open .mobile-nav-toggle {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(23, 96, 135, 0.08);
+}
+
+@keyframes navSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 1024px) {
+    .applicant-portal .topbar {
+        flex-wrap: wrap;
+        align-items: center;
+        top: 8px;
+        padding: 12px 14px;
+    }
+
+    .applicant-portal .mobile-nav-toggle {
+        display: inline-flex;
+    }
+
+    .applicant-portal .topbar-nav {
+        display: none;
+        order: 4;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+    }
+
+    .applicant-portal .topbar.mobile-open .topbar-nav {
+        display: flex;
+        animation: navSlideDown 0.2s ease;
+    }
+
+    .applicant-portal .topbar-nav a,
+    .applicant-portal .topbar-nav button {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .applicant-portal .topbar-brand {
+        gap: 10px;
+    }
+
+    .applicant-portal .topbar-brand .topbar-logo img {
+        height: 34px !important;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line1 {
+        font-size: 0.78rem;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.7rem;
+    }
+
+    .applicant-portal .topbar-user {
+        order: 3;
+        width: 100%;
+        justify-content: flex-end;
+        gap: 8px;
+        padding-top: 4px;
+    }
+
+    .applicant-portal .topbar-user .btn.small {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+    }
+
+    .applicant-portal .page-header {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+    }
+
+    .applicant-portal .page-header-content {
+        justify-content: center;
+    }
+
+    .applicant-portal .page-header-text {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .applicant-portal .page-header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .applicant-portal .toolbar > * {
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .applicant-portal .job-card {
+        padding: 16px;
+    }
+
+    .applicant-portal .job-card .row {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 10px;
+    }
+
+    .applicant-portal .job-card .row .btn,
+    .applicant-portal .job-card .row button {
+        width: 100%;
+    }
+
+    .applicant-portal .list-meta,
+    .applicant-portal .job-card .meta {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .applicant-portal .page {
+        width: calc(100% - 16px);
+        padding: 14px 0 28px;
+    }
+
+    .applicant-portal .topbar {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+
+    .applicant-portal .topbar-brand .topbar-logo img {
+        height: 30px !important;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line1 {
+        font-size: 0.72rem;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.64rem;
+    }
+
+    .applicant-portal .user-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 0.9rem;
+    }
+
+    .applicant-portal .page-title {
+        font-size: 1.28rem;
+    }
+
+    .applicant-portal .page-subtitle {
+        font-size: 0.86rem;
+    }
+
+    .applicant-portal .stats-bar {
+        font-size: 0.8rem !important;
+    }
+
+    .applicant-portal .file-upload-area {
+        padding: 22px 14px;
+    }
+
+    .applicant-portal .empty-state {
+        padding: 30px 18px;
+    }
+}
+
+@media (max-width: 320px) {
+    .applicant-portal .page {
+        width: calc(100% - 12px);
+    }
+
+    .applicant-portal .mobile-nav-toggle {
+        width: 38px;
+        height: 38px;
+    }
+
+    .applicant-portal .topbar-nav a {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line1 {
+        font-size: 0.68rem;
+    }
+
+    .applicant-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.62rem;
+    }
+}
