@@ -31,10 +31,10 @@ export const registerSchema = z.object({
         .min(6, "Password must be at least 6 characters")
         .max(128, "Password must not exceed 128 characters"),
 
-    role: z.enum(["ADMIN", "RECRUITER", "APPLICANT", "HR", "EMPLOYEE", "ACCOUNTANT"], {
+    role: z.enum(["RECRUITER", "APPLICANT", "HR", "EMPLOYEE", "ACCOUNTANT"], {
         required_error: "Role is required",
         invalid_type_error:
-            "Invalid role. Must be one of: ADMIN, RECRUITER, APPLICANT, HR, EMPLOYEE, ACCOUNTANT",
+            "Invalid role. Must be one of: RECRUITER, APPLICANT, HR, EMPLOYEE, ACCOUNTANT",
     }),
 
     phone: z.string().optional(),

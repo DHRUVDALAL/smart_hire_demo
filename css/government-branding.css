@@ -393,6 +393,34 @@ body {
   font-family: inherit;
 }
 
+.gov-auth-password-wrap {
+  position: relative;
+}
+
+.gov-auth-password-wrap input {
+  padding-right: 74px;
+}
+
+.gov-auth-password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.gov-auth-password-toggle:hover {
+  background: rgba(15, 23, 42, 0.16);
+}
+
 .gov-auth-field input::placeholder {
   color: #94A3B8;
 }
@@ -489,6 +517,50 @@ body {
   cursor: not-allowed;
 }
 
+.gov-auth-helper-text {
+  margin: -4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.gov-auth-switch {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #E2E8F0;
+}
+
+.gov-auth-switch-title {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gov-auth-switch-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gov-auth-switch-link {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid #CBD5E1;
+  padding: 6px 12px;
+  text-decoration: none;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #0F172A;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.gov-auth-switch-link:hover {
+  border-color: var(--gov-orange);
+  color: var(--gov-orange);
+  background: rgba(249, 115, 22, 0.08);
+}
+
 /* Auth Footer */
 .gov-auth-footer {
   text-align: center;
@@ -508,6 +580,18 @@ body {
 
 .gov-auth-footer a:hover {
   color: var(--gov-orange);
+}
+
+.gov-auth-footer-alt-links {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gov-auth-footer-alt-links a {
+  font-size: 0.84rem;
 }
 
 /* Page Footer */
@@ -556,6 +640,14 @@ body {
 
   .gov-auth-brand-text {
     line-height: 1.2;
+  }
+
+  .gov-auth-switch-links {
+    flex-direction: column;
+  }
+
+  .gov-auth-switch-link {
+    justify-content: center;
   }
 }
 

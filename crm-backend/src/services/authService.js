@@ -11,6 +11,57 @@ import { generateToken } from "../utils/jwt.js";
 import { AppError } from "../middleware/errorHandler.js";
 import { sendEmail, templates } from "./emailService.js";
 
+const FIXED_ADMIN_EMAIL = "admin.rojgarkendra@gmail.com";
+const FIXED_ADMIN_PASSWORD = "Rojgarkendra@admin123";
+const REGISTERABLE_ROLES = ["RECRUITER", "APPLICANT", "HR", "EMPLOYEE", "ACCOUNTANT"];
+const INTERNAL_EMPLOYEE_ROLES = ["HR", "EMPLOYEE", "ACCOUNTANT"];
+const ADMIN_EMAIL_LOWER = FIXED_ADMIN_EMAIL.toLowerCase();
+
+export async function ensureFixedAdminAccount() {
+    const hashedPassword = await hashPassword(FIXED_ADMIN_PASSWORD);
+
+    const adminUser = await prisma.user.upsert({
+        where: { email: FIXED_ADMIN_EMAIL },
+        update: {
+            name: "System Administrator",
+            password: hashedPassword,
+            role: "ADMIN",
+            isActive: true,
+        },
+        create: {
+            name: "System Administrator",
+            email: FIXED_ADMIN_EMAIL,
+            password: hashedPassword,
+            role: "ADMIN",
+            isActive: true,
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+        },
+    });
+
+    await prisma.employee.upsert({
+        where: { userId: adminUser.id },
+        update: {
+            department: "Administration",
+            position: "ADMIN",
+            isActive: true,
+            isApproved: true,
+        },
+        create: {
+            userId: adminUser.id,
+            department: "Administration",
+            position: "ADMIN",
+            isActive: true,
+            isApproved: true,
+        },
+    });
+
+    return adminUser;
+}
+
 /**
  * Register a new user.
  *
@@ -23,6 +74,12 @@ import { sendEmail, templates } from "./emailService.js";
  * @returns {Promise<{user: object, token: string}>}
  */
 export async function register({ name, email, password, role, phone, companyId, companyName, designation }) {
+    const normalizedRole = String(role || "").toUpperCase();
+
+    if (!REGISTERABLE_ROLES.includes(normalizedRole)) {
+        throw new AppError("Invalid registration role.", 403);
+    }
+
     // Check if email is already taken
     const existingUser = await prisma.user.findUnique({
         where: { email },
@@ -39,7 +96,7 @@ export async function register({ name, email, password, role, phone, companyId, 
     let resolvedCompanyName = null;
 
     // Recruiters must belong to a company; use existing companyId or create one.
-    if (role === "RECRUITER") {
+    if (normalizedRole === "RECRUITER") {
         if (companyId) {
             const existingCompany = await prisma.company.findUnique({
                 where: { id: companyId },
@@ -70,7 +127,7 @@ export async function register({ name, email, password, role, phone, companyId, 
             name,
             email,
             password: hashedPassword,
-            role,
+            role: normalizedRole,
             phone: phone || null,
             companyId: resolvedCompanyId,
         },
@@ -89,7 +146,7 @@ export async function register({ name, email, password, role, phone, companyId, 
         },
     });
 
-    if (role === "RECRUITER") {
+    if (normalizedRole === "RECRUITER") {
         await prisma.recruiter.create({
             data: {
                 userId: user.id,
@@ -118,22 +175,22 @@ export async function register({ name, email, password, role, phone, companyId, 
     }
 
     // If the user is an internal role, create an Employee record
-    if (["HR", "ADMIN", "EMPLOYEE", "ACCOUNTANT"].includes(role)) {
+    if (INTERNAL_EMPLOYEE_ROLES.includes(normalizedRole)) {
         await prisma.employee.create({
             data: {
                 userId: user.id,
-                department:
-                    role === "HR" ? "Human Resources" :
-                    role === "ACCOUNTANT" ? "Finance" :
-                    role === "EMPLOYEE" ? "Operations" :
-                    "Administration",
-                position: role,
+                department: normalizedRole === "HR"
+                    ? "Human Resources"
+                    : normalizedRole === "ACCOUNTANT"
+                        ? "Finance"
+                        : "Operations",
+                position: normalizedRole,
             },
         });
     }
 
     // If the user is an applicant, create an Applicant profile
-    if (role === "APPLICANT") {
+    if (normalizedRole === "APPLICANT") {
         await prisma.applicant.create({
             data: { userId: user.id },
         });
@@ -153,7 +210,7 @@ export async function register({ name, email, password, role, phone, companyId, 
             action: "REGISTER",
             entity: "User",
             entityId: user.id,
-            details: JSON.stringify({ role }),
+            details: JSON.stringify({ role: normalizedRole }),
         },
     });
 
@@ -184,6 +241,10 @@ export async function login({ email, password }) {
 
     if (!user) {
         throw new AppError("Invalid email or password.", 401);
+    }
+
+    if (user.role === "ADMIN" && String(user.email || "").toLowerCase() !== ADMIN_EMAIL_LOWER) {
+        throw new AppError("Admin login is restricted to the system account.", 403);
     }
 
     // Check if the account is active

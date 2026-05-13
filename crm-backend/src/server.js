@@ -8,6 +8,7 @@
 import "dotenv/config";
 import app, { importedRouteModules, mountedRoutes } from "./app.js";
 import prisma from "./utils/prisma.js";
+import { ensureFixedAdminAccount } from "./services/authService.js";
 
 const PORT = process.env.PORT || 10000;
 const PUBLIC_BASE_URL = (process.env.PUBLIC_BASE_URL || process.env.RENDER_EXTERNAL_URL || `http://0.0.0.0:${PORT}`)
@@ -63,6 +64,14 @@ try {
     console.log("Prisma connected to PostgreSQL");
 } catch (error) {
     console.error("Prisma failed to connect:", error?.message || error);
+    process.exit(1);
+}
+
+try {
+    const adminUser = await ensureFixedAdminAccount();
+    console.log(`[startup] fixed admin account ready: ${adminUser.email}`);
+} catch (error) {
+    console.error("Failed to ensure fixed admin account:", error?.message || error);
     process.exit(1);
 }
 

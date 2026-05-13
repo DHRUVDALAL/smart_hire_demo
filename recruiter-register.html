@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applicant Registration | खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र</title>
+    <title>Recruiter Registration | खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र</title>
     <link rel="stylesheet" href="css/frontend-modern.css" />
     <link rel="stylesheet" href="css/saas-landing.css" />
     <link rel="stylesheet" href="css/government-branding.css" />
@@ -25,8 +25,8 @@
 
         <div class="gov-auth-card gov-auth-card-wide">
             <div class="gov-auth-card-header">
-                <h1>Applicant Registration</h1>
-                <p>Create your applicant account to browse and apply for jobs.</p>
+                <h1>Recruiter Registration</h1>
+                <p>Create a recruiter account for company hiring workflows.</p>
             </div>
 
             <form id="registerForm" class="gov-auth-form" novalidate>
@@ -38,6 +38,22 @@
                 <div class="gov-auth-field">
                     <label for="email">Email Address</label>
                     <input id="email" type="email" placeholder="Enter your email" required />
+                </div>
+
+                <div class="gov-auth-field-row">
+                    <div class="gov-auth-field">
+                        <label for="phone">Phone Number</label>
+                        <input id="phone" type="tel" placeholder="Enter phone number" required />
+                    </div>
+                    <div class="gov-auth-field">
+                        <label for="designation">Designation (Optional)</label>
+                        <input id="designation" type="text" placeholder="Enter your designation" />
+                    </div>
+                </div>
+
+                <div class="gov-auth-field">
+                    <label for="companyName">Company Name</label>
+                    <input id="companyName" type="text" placeholder="Enter company name" required />
                 </div>
 
                 <div class="gov-auth-field-row">
@@ -57,15 +73,14 @@
                     </div>
                 </div>
 
-                <p class="gov-auth-helper-text">This page creates applicant accounts only.</p>
                 <div id="errorText" class="gov-auth-error"></div>
-                <button id="submitBtn" class="gov-auth-btn" type="submit">Register as Applicant</button>
+                <button id="submitBtn" class="gov-auth-btn" type="submit">Register as Recruiter</button>
             </form>
 
             <div class="gov-auth-switch" aria-label="Other registration options">
                 <p class="gov-auth-switch-title">Need another portal?</p>
                 <div class="gov-auth-switch-links">
-                    <a id="recruiterLink" href="recruiter-register.html" class="gov-auth-switch-link">Recruiter Registration →</a>
+                    <a id="applicantLink" href="register.html" class="gov-auth-switch-link">Applicant Registration →</a>
                     <a id="employeeLink" href="employee-register.html" class="gov-auth-switch-link">Employee Portal Registration →</a>
                 </div>
             </div>
@@ -82,13 +97,13 @@
 
     <script src="js/main.js"></script>
     <script>
-        const ROLE = "APPLICANT";
+        const ROLE = "RECRUITER";
         const form = document.getElementById("registerForm");
         const errorText = document.getElementById("errorText");
         const submitBtn = document.getElementById("submitBtn");
         const redirectParam = new URLSearchParams(window.location.search).get("redirect");
         const loginLink = document.getElementById("loginLink");
-        const recruiterLink = document.getElementById("recruiterLink");
+        const applicantLink = document.getElementById("applicantLink");
         const employeeLink = document.getElementById("employeeLink");
 
         function withRedirect(url) {
@@ -130,7 +145,7 @@
         }
 
         loginLink.href = withRedirect("login.html");
-        recruiterLink.href = withRedirect("recruiter-register.html");
+        applicantLink.href = withRedirect("register.html");
         employeeLink.href = withRedirect("employee-register.html");
         bindPasswordToggles();
 
@@ -141,10 +156,13 @@
 
             const name = document.getElementById("name").value.trim();
             const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const designation = document.getElementById("designation").value.trim();
+            const companyName = document.getElementById("companyName").value.trim();
             const password = document.getElementById("password").value;
             const confirmPassword = document.getElementById("confirmPassword").value;
 
-            if (!name || !email || !password || !confirmPassword) {
+            if (!name || !email || !phone || !companyName || !password || !confirmPassword) {
                 errorText.textContent = "Please fill all required fields.";
                 errorText.classList.add("show");
                 return;
@@ -169,12 +187,20 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.textContent = "Creating account...";
+            submitBtn.textContent = "Creating recruiter account...";
 
             try {
                 const result = await apiFetch("/auth/register", {
                     method: "POST",
-                    body: JSON.stringify({ name, email, password, role: ROLE }),
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        password,
+                        role: ROLE,
+                        companyName,
+                        designation: designation || undefined,
+                    }),
                 });
 
                 const token = result?.data?.token;
@@ -197,7 +223,7 @@
                 errorText.classList.add("show");
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = "Register as Applicant";
+                submitBtn.textContent = "Register as Recruiter";
             }
         });
     </script>
