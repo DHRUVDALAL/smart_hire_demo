@@ -66,9 +66,9 @@
   const chatbotStyles = `
     .chatbot-container {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 9999;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      right: max(16px, env(safe-area-inset-right));
+      z-index: 12000;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     }
 
@@ -419,22 +419,30 @@
       background: #9ca3af;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       .chatbot-container {
-        bottom: 16px;
-        right: 16px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        right: max(12px, env(safe-area-inset-right));
       }
 
       .chatbot-window {
-        width: calc(100vw - 32px);
-        height: calc(100vh - 120px);
+        width: min(360px, calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right) - 24px));
+        height: min(500px, calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 132px));
         max-height: 500px;
         right: 0;
       }
 
       .chatbot-toggle {
-        width: 54px;
-        height: 54px;
+        width: 50px;
+        height: 50px;
+      }
+
+      .chatbot-icon {
+        font-size: 20px;
+      }
+
+      .chatbot-close-icon {
+        font-size: 18px;
       }
     }
   `;
