@@ -50,6 +50,41 @@ export async function getJobsHandler(req, res, next) {
     }
 }
 
+export async function getPublicJobsHandler(req, res, next) {
+    try {
+        const { search, location, category, employmentType, page, limit } = req.query;
+
+        const result = await jobService.getPublicJobs({
+            search,
+            location,
+            category,
+            employmentType,
+            page: page ? parseInt(page, 10) : 1,
+            limit: limit ? parseInt(limit, 10) : 9,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getPublicJobByIdHandler(req, res, next) {
+    try {
+        const job = await jobService.getPublicJobById(req.params.id);
+
+        res.status(200).json({
+            success: true,
+            data: job,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 /**
  * GET /api/jobs/:id
  * Get a single job by ID.

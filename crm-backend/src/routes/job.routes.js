@@ -2,8 +2,8 @@
  * Job Routes
  * ============================================================
  * POST   /api/jobs              — Create a new job listing
- * GET    /api/jobs              — List jobs (with filters)
- * GET    /api/jobs/:id          — Get job details
+ * GET    /api/jobs              — List jobs (authenticated)
+ * GET    /api/jobs/:id          — Get job details (authenticated)
  * PUT    /api/jobs/:id          — Update a job
  * DELETE /api/jobs/:id          — Close/delete a job
  * GET    /api/jobs/:id/applicants — View applicants for a job
@@ -24,9 +24,9 @@ import { validate, createJobSchema, updateJobSchema } from "../utils/validators.
 
 const router = Router();
 
-// Public: browse jobs
-router.get("/", getJobsHandler);
-router.get("/:id", getJobByIdHandler);
+// Authenticated: browse full job feed/details
+router.get("/", authenticate, getJobsHandler);
+router.get("/:id", authenticate, getJobByIdHandler);
 
 // Protected: recruiter/admin job management
 router.post(

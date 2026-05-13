@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/frontend-modern.css" />
     <link rel="stylesheet" href="css/saas-landing.css" />
     <link rel="stylesheet" href="css/government-branding.css" />
+    <link rel="stylesheet" href="css/responsive-system.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
@@ -91,7 +92,7 @@
             </form>
 
             <div class="gov-auth-footer">
-                Already have an account? <a href="login.html">Login</a>
+                Already have an account? <a id="loginLink" href="login.html">Login</a>
             </div>
         </div>
 
@@ -111,8 +112,34 @@
         const departmentEl = document.getElementById("department");
         const errorText = document.getElementById("errorText");
         const submitBtn = document.getElementById("submitBtn");
+        const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+        const loginLink = document.getElementById("loginLink");
         const REGISTER_ENDPOINT = "https://smart-hire-backend-vq38.onrender.com/api/auth/register";
         const ALLOWED_REGISTER_ROLES = ["ADMIN", "RECRUITER", "APPLICANT", "HR", "EMPLOYEE", "ACCOUNTANT"];
+
+        if (redirectParam && loginLink) {
+            loginLink.href = `login.html?redirect=${encodeURIComponent(redirectParam)}`;
+        }
+
+        function getSafeRedirectTarget(value) {
+            const raw = String(value || "").trim();
+            if (!raw) return "";
+
+            try {
+                if (raw.startsWith("/") && !raw.startsWith("//")) {
+                    return raw;
+                }
+
+                const parsed = new URL(raw, window.location.origin);
+                if (parsed.origin === window.location.origin) {
+                    return parsed.href;
+                }
+            } catch {
+                return "";
+            }
+
+            return "";
+        }
 
         function onRoleChange() {
             const role = roleEl.value;
@@ -214,7 +241,8 @@
                 localStorage.setItem("token", token);
                 localStorage.setItem("user", JSON.stringify(user));
 
-                window.location.href = getDashboardForRole(user.role);
+                const safeRedirect = getSafeRedirectTarget(redirectParam);
+                window.location.href = safeRedirect || getDashboardForRole(user.role);
             } catch (error) {
                 console.error("REGISTER ERROR:", error);
                 console.error("REGISTER RESPONSE:", error?.response?.data);

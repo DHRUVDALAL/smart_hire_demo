@@ -9,6 +9,54 @@ import prisma from "../utils/prisma.js";
 import { AppError } from "../middleware/errorHandler.js";
 import { sendEmail, templates } from "./emailService.js";
 
+const PUBLIC_EMPLOYMENT_TYPES = ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"];
+
+function normalizeEmploymentType(value) {
+    const normalized = String(value || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[\s-]+/g, "_");
+
+    return PUBLIC_EMPLOYMENT_TYPES.includes(normalized) ? normalized : null;
+}
+
+function formatEmploymentType(value) {
+    const normalized = normalizeEmploymentType(value);
+    if (!normalized) return "Full-time";
+    return normalized
+        .split("_")
+        .map((chunk) => `${chunk.slice(0, 1)}${chunk.slice(1).toLowerCase()}`)
+        .join("-");
+}
+
+function shortenDescription(value, maxLength = 180) {
+    const text = String(value || "").trim();
+    if (!text) return "No description provided.";
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
+function mapPublicJob(job) {
+    const companyName = String(job?.company?.name || "Company");
+    const industry = String(job?.company?.industry || "").trim();
+    const employmentType = formatEmploymentType(job?.type);
+    const locationParts = [job?.location, job?.locality]
+        .map((part) => String(part || "").trim())
+        .filter(Boolean);
+
+    return {
+        id: job.id,
+        title: job.title,
+        company: companyName,
+        location: locationParts.length ? locationParts.join(" • ") : "Location not specified",
+        salary: job.salaryRange || "Competitive",
+        employmentType,
+        shortDescription: shortenDescription(job.description),
+        createdAt: job.createdAt,
+        category: industry || employmentType,
+    };
+}
+
 /**
  * Create a new job listing.
  *
@@ -135,6 +183,176 @@ export async function getJobs({ status, companyId, search, page = 1, limit = 10 
         page,
         totalPages: Math.ceil(total / limit),
     };
+}
+
+/**
+ * Public-safe job feed.
+ * Returns only ACTIVE jobs with sanitized fields for unauthenticated browsing.
+ */
+export async function getPublicJobs({
+    search,
+    location,
+    category,
+    employmentType,
+    page = 1,
+    limit = 9,
+} = {}) {
+    const safePage = Number.isFinite(page) ? Math.max(1, page) : 1;
+    const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(limit, 1), 24) : 9;
+    const skip = (safePage - 1) * safeLimit;
+
+    const where = {
+        status: "ACTIVE",
+        AND: [],
+    };
+
+    const trimmedSearch = String(search || "").trim();
+    if (trimmedSearch) {
+        where.AND.push({
+            OR: [
+                { title: { contains: trimmedSearch, mode: "insensitive" } },
+                { description: { contains: trimmedSearch, mode: "insensitive" } },
+                { skills: { has: trimmedSearch } },
+                { company: { name: { contains: trimmedSearch, mode: "insensitive" } } },
+            ],
+        });
+    }
+
+    const trimmedLocation = String(location || "").trim();
+    if (trimmedLocation) {
+        where.AND.push({
+            OR: [
+                { location: { contains: trimmedLocation, mode: "insensitive" } },
+                { locality: { contains: trimmedLocation, mode: "insensitive" } },
+            ],
+        });
+    }
+
+    const normalizedEmploymentType = normalizeEmploymentType(employmentType);
+    if (normalizedEmploymentType) {
+        where.AND.push({ type: normalizedEmploymentType });
+    }
+
+    const trimmedCategory = String(category || "").trim();
+    if (trimmedCategory) {
+        const categoryType = normalizeEmploymentType(trimmedCategory);
+        where.AND.push({
+            OR: [
+                { company: { industry: { contains: trimmedCategory, mode: "insensitive" } } },
+                ...(categoryType ? [{ type: categoryType }] : []),
+            ],
+        });
+    }
+
+    if (!where.AND.length) {
+        delete where.AND;
+    }
+
+    const [jobs, total, locationRows, categoryRows] = await Promise.all([
+        prisma.job.findMany({
+            where,
+            orderBy: { createdAt: "desc" },
+            skip,
+            take: safeLimit,
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                location: true,
+                locality: true,
+                salaryRange: true,
+                type: true,
+                createdAt: true,
+                company: {
+                    select: {
+                        name: true,
+                        industry: true,
+                    },
+                },
+            },
+        }),
+        prisma.job.count({ where }),
+        prisma.job.findMany({
+            where: {
+                status: "ACTIVE",
+                location: { not: null },
+            },
+            select: { location: true },
+            distinct: ["location"],
+            orderBy: { location: "asc" },
+            take: 100,
+        }),
+        prisma.job.findMany({
+            where: { status: "ACTIVE" },
+            select: {
+                type: true,
+                company: {
+                    select: { industry: true },
+                },
+            },
+            take: 300,
+        }),
+    ]);
+
+    const publicJobs = jobs.map(mapPublicJob);
+    const totalPages = Math.max(1, Math.ceil(total / safeLimit));
+
+    const categories = Array.from(
+        new Set(
+            categoryRows
+                .map((row) => {
+                    const industry = String(row?.company?.industry || "").trim();
+                    return industry || formatEmploymentType(row?.type);
+                })
+                .filter(Boolean)
+        )
+    ).sort((a, b) => a.localeCompare(b));
+
+    return {
+        jobs: publicJobs,
+        total,
+        page: safePage,
+        totalPages,
+        hasNextPage: safePage < totalPages,
+        filters: {
+            locations: locationRows
+                .map((row) => String(row.location || "").trim())
+                .filter(Boolean),
+            categories,
+            employmentTypes: PUBLIC_EMPLOYMENT_TYPES.map(formatEmploymentType),
+        },
+    };
+}
+
+export async function getPublicJobById(jobId) {
+    const job = await prisma.job.findFirst({
+        where: {
+            id: jobId,
+            status: "ACTIVE",
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            location: true,
+            locality: true,
+            salaryRange: true,
+            type: true,
+            createdAt: true,
+            company: {
+                select: {
+                    name: true,
+                    industry: true,
+                },
+            },
+        },
+    });
+
+    if (!job) {
+        throw new AppError("Job not found.", 404);
+    }
+
+    return mapPublicJob(job);
 }
 
 /**

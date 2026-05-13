@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/frontend-modern.css" />
     <link rel="stylesheet" href="css/saas-landing.css" />
     <link rel="stylesheet" href="css/government-branding.css" />
+    <link rel="stylesheet" href="css/responsive-system.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
@@ -46,7 +47,7 @@
             </form>
 
             <div class="gov-auth-footer">
-                Don't have an account? <a href="register.html">Register</a>
+                Don't have an account? <a id="registerLink" href="register.html">Register</a>
             </div>
         </div>
 
@@ -61,6 +62,32 @@
     const form = document.getElementById("loginForm");
     const errorText = document.getElementById("errorText");
     const loginBtn = document.getElementById("loginBtn");
+    const redirectParam = new URLSearchParams(window.location.search).get("redirect");
+    const registerLink = document.getElementById("registerLink");
+
+    if (redirectParam && registerLink) {
+        registerLink.href = `register.html?redirect=${encodeURIComponent(redirectParam)}`;
+    }
+
+    function getSafeRedirectTarget(value) {
+        const raw = String(value || "").trim();
+        if (!raw) return "";
+
+        try {
+            if (raw.startsWith("/") && !raw.startsWith("//")) {
+                return raw;
+            }
+
+            const parsed = new URL(raw, window.location.origin);
+            if (parsed.origin === window.location.origin) {
+                return parsed.href;
+            }
+        } catch {
+            return "";
+        }
+
+        return "";
+    }
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -97,7 +124,8 @@
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user));
 
-            window.location.href = getDashboardForRole(user.role);
+            const safeRedirect = getSafeRedirectTarget(redirectParam);
+            window.location.href = safeRedirect || getDashboardForRole(user.role);
         } catch (error) {
             console.error("LOGIN ERROR:", error);
             errorText.textContent = error.message || "Invalid email or password";

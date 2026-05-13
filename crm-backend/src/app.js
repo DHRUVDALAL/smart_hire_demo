@@ -16,6 +16,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import jobRoutes from "./routes/job.routes.js";
+import publicRoutes from "./routes/public.routes.js";
 import applicationRoutes from "./routes/application.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
@@ -33,6 +34,7 @@ const importedRouteModules = [
     "authRoutes",
     "profileRoutes",
     "jobRoutes",
+    "publicRoutes",
     "applicationRoutes",
     "reviewRoutes",
     "adminRoutes",
@@ -144,6 +146,7 @@ mountedRoutes.push({ module: "core", method: "GET", path: "/health" });
 mountRouter("/api/auth", "authRoutes", authRoutes);
 mountRouter("/api/profile", "profileRoutes", profileRoutes);
 mountRouter("/api/jobs", "jobRoutes", jobRoutes);
+mountRouter("/api/public", "publicRoutes", publicRoutes);
 mountRouter("/api/applications", "applicationRoutes", applicationRoutes);
 mountRouter("/api/reviews", "reviewRoutes", reviewRoutes);
 mountRouter("/api/admin", "adminRoutes", adminRoutes);

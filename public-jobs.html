@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>सार्वजनिक नोकऱ्या | खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र</title>
+  <link rel="stylesheet" href="css/saas-landing.css" />
+  <link rel="stylesheet" href="css/government-branding.css" />
+  <link rel="stylesheet" href="css/responsive-system.css" />
+  <link rel="stylesheet" href="css/public-jobs.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/Logo.png">
+  <style>
+    body {
+      font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="saas-page">
+  <nav class="saas-nav">
+    <div class="saas-nav-inner">
+      <a href="index.html" class="saas-nav-logo">
+        <img src="images/Logo.png" alt="Logo" />
+        <div class="brand-name">
+          <span class="line1">खासदार मुरलीधर मोहोळ</span>
+          <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+        </div>
+      </a>
+      <button
+        class="saas-nav-mobile-toggle"
+        type="button"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="saas-nav-menu"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="saas-nav-menu" id="saas-nav-menu">
+        <div class="saas-nav-links">
+          <a href="index.html" class="saas-nav-link" data-key="navHome">मुख्यपृष्ठ</a>
+          <a href="features.html" class="saas-nav-link" data-key="navFeatures">वैशिष्ट्ये</a>
+          <a href="about.html" class="saas-nav-link" data-key="navAbout">आमच्याबद्दल</a>
+          <a href="contact.html" class="saas-nav-link" data-key="navContact">संपर्क</a>
+        </div>
+        <div class="language-switcher">
+          <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <a href="#" class="language-option active" data-lang="marathi">मराठी</a>
+          <span class="language-divider">|</span>
+          <a href="#" class="language-option" data-lang="english">English</a>
+        </div>
+        <div class="saas-nav-actions">
+          <a href="login.html" class="saas-btn saas-btn-ghost" data-key="navLogin">लॉगिन</a>
+          <a href="register.html" class="saas-btn saas-btn-primary" data-key="navRegister">नोंदणी करा</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="public-jobs-main">
+    <section class="public-jobs-shell">
+      <header class="public-jobs-header">
+        <h1 class="public-jobs-title">सार्वजनिक नोकरी संधी</h1>
+        <p class="public-jobs-subtitle">
+          नोकऱ्या पहा आणि तुमच्या कौशल्याला अनुरूप संधी शोधा. अर्ज करण्यासाठी Applicant खाते आवश्यक आहे.
+        </p>
+      </header>
+
+      <section class="public-jobs-toolbar" aria-label="Public jobs filters">
+        <div class="public-search-wrap">
+          <label class="u-sr-only" for="publicSearch">Search jobs</label>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input id="publicSearch" type="search" placeholder="Search title, company, or keyword" />
+        </div>
+        <div>
+          <label class="u-sr-only" for="publicLocationFilter">Location filter</label>
+          <select id="publicLocationFilter">
+            <option value="">All locations</option>
+          </select>
+        </div>
+        <div>
+          <label class="u-sr-only" for="publicCategoryFilter">Category filter</label>
+          <select id="publicCategoryFilter">
+            <option value="">All categories</option>
+          </select>
+        </div>
+        <div>
+          <label class="u-sr-only" for="publicEmploymentTypeFilter">Employment type filter</label>
+          <select id="publicEmploymentTypeFilter">
+            <option value="">All types</option>
+          </select>
+        </div>
+      </section>
+
+      <div class="public-jobs-meta">
+        <span id="publicJobsCount">0 public jobs found</span>
+      </div>
+
+      <section id="publicJobsGrid" class="public-jobs-grid" aria-live="polite">
+        <div class="public-skeleton" aria-hidden="true"></div>
+        <div class="public-skeleton" aria-hidden="true"></div>
+        <div class="public-skeleton" aria-hidden="true"></div>
+      </section>
+
+      <div class="public-jobs-pagination">
+        <button id="loadMoreJobsBtn" type="button" hidden>Load more jobs</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="authPromptModal" class="public-auth-modal" aria-hidden="true">
+    <div class="public-auth-card" role="dialog" aria-modal="true" aria-labelledby="authPromptTitle">
+      <h3 id="authPromptTitle">Apply करण्यासाठी लॉगिन आवश्यक आहे</h3>
+      <p>अर्ज फक्त Applicant खात्याद्वारे करता येतो. पुढे जाण्यासाठी Login किंवा Signup निवडा.</p>
+      <div class="public-auth-actions">
+        <a id="authPromptLogin" class="login-cta" href="login.html">Login</a>
+        <a id="authPromptSignup" class="signup-cta" href="register.html">Signup</a>
+      </div>
+      <div class="public-auth-actions" style="margin-top: 0.7rem;">
+        <button id="authPromptClose" type="button" class="signup-cta">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="saas-footer">
+    <div class="saas-footer-inner">
+      <div class="saas-footer-grid">
+        <div class="saas-footer-brand">
+          <a href="index.html" class="saas-footer-logo">
+            <img src="images/Logo.png" alt="Logo" />
+            <div class="brand-name">
+              <span class="line1">खासदार मुरलीधर मोहोळ</span>
+              <span class="line2">रोजगार व स्वयंरोजगार केंद्र</span>
+            </div>
+          </a>
+          <p data-key="footerTagline">पुण्यातील नागरिकांना रोजगार आणि स्वयंरोजगाराच्या संधी उपलब्ध करून देणारे सरकारी उपक्रम.</p>
+        </div>
+        <div class="saas-footer-column">
+          <h4 data-key="footerPortalTitle">पोर्टल</h4>
+          <ul class="saas-footer-links">
+            <li><a href="about.html" data-key="footerAbout">आमच्याबद्दल</a></li>
+            <li><a href="contact.html" data-key="footerContact">संपर्क</a></li>
+            <li><a href="features.html" data-key="footerFeatures">वैशिष्ट्ये</a></li>
+          </ul>
+        </div>
+        <div class="saas-footer-column">
+          <h4 data-key="footerCitizensTitle">नागरिकांसाठी</h4>
+          <ul class="saas-footer-links">
+            <li><a href="public-jobs.html" data-key="footerJobs">नोकऱ्या</a></li>
+            <li><a href="register.html" data-key="footerRegister">नोंदणी</a></li>
+            <li><a href="login.html" data-key="footerLogin">लॉगिन</a></li>
+          </ul>
+        </div>
+        <div class="saas-footer-column">
+          <h4 data-key="footerEmployersTitle">नियोक्त्यांसाठी</h4>
+          <ul class="saas-footer-links">
+            <li><a href="post-job.html" data-key="footerPostJob">नोकरी पोस्ट करा</a></li>
+            <li><a href="login.html" data-key="footerRecruitmentPortal">भरती पोर्टल</a></li>
+            <li><a href="contact.html" data-key="footerHelp">सहाय्य</a></li>
+          </ul>
+        </div>
+        <div class="saas-footer-column">
+          <h4 data-key="footerInfoTitle">माहिती</h4>
+          <ul class="saas-footer-links">
+            <li><a href="contact.html" data-key="footerSupport">सपोर्ट</a></li>
+            <li><a href="#" data-key="footerPrivacy">गोपनीयता धोरण</a></li>
+            <li><a href="#" data-key="footerTerms">अटी व शर्ती</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="saas-footer-bottom">
+        <p class="saas-footer-copyright" data-key="footerCopyright">© 2024 खासदार मुरलीधर मोहोळ रोजगार व स्वयंरोजगार केंद्र. सर्व हक्क राखीव.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/public-pages.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/public-jobs.js"></script>
+</body>
+</html>

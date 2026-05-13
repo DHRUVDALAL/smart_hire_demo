@@ -36,6 +36,14 @@
   flex-direction: column;
   line-height: 1.2;
   font-size: 0.95rem;
+  min-width: 0;
+}
+
+.saas-nav-logo .brand-name .line1,
+.saas-nav-logo .brand-name .line2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .saas-nav-logo .brand-name .line1,
@@ -191,6 +199,10 @@ body {
     margin-top: 12px;
     justify-content: center;
   }
+
+  .saas-nav-menu .language-switcher {
+    margin-top: 0;
+  }
 }
 
 /* System Architect Card */
@@ -285,9 +297,10 @@ body {
 
 .gov-auth-brand {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 14px;
   text-decoration: none;
 }
 
@@ -300,7 +313,8 @@ body {
 .gov-auth-brand-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  text-align: left;
   line-height: 1.3;
 }
 
@@ -525,15 +539,55 @@ body {
   }
   
   .gov-auth-logo {
-    height: 64px;
+    height: 58px;
   }
   
   .gov-auth-brand-text .gov-brand-line1 {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
   
   .gov-auth-brand-text .gov-brand-line2 {
-    font-size: 1rem;
+    font-size: 0.88rem;
+  }
+
+  .gov-auth-brand {
+    gap: 10px;
+  }
+
+  .gov-auth-brand-text {
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 480px) {
+  .gov-auth-brand {
+    gap: 8px;
+  }
+
+  .gov-auth-logo {
+    height: 50px;
+  }
+
+  .gov-auth-brand-text .gov-brand-line1 {
+    font-size: 0.82rem;
+  }
+
+  .gov-auth-brand-text .gov-brand-line2 {
+    font-size: 0.76rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .gov-auth-logo {
+    height: 44px;
+  }
+
+  .gov-auth-brand-text .gov-brand-line1 {
+    font-size: 0.75rem;
+  }
+
+  .gov-auth-brand-text .gov-brand-line2 {
+    font-size: 0.7rem;
   }
 }
 

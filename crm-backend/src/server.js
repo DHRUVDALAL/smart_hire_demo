@@ -74,6 +74,7 @@ app.listen(PORT, () => {
     console.log(`   Auth           : ${PUBLIC_BASE_URL}/api/auth`);
     console.log(`   Profile        : ${PUBLIC_BASE_URL}/api/profile`);
     console.log(`   Jobs           : ${PUBLIC_BASE_URL}/api/jobs`);
+    console.log(`   Public Jobs    : ${PUBLIC_BASE_URL}/api/public/jobs`);
     console.log(`   Applications   : ${PUBLIC_BASE_URL}/api/applications`);
     console.log(`   Reviews        : ${PUBLIC_BASE_URL}/api/reviews\n`);
 });

@@ -81,6 +81,12 @@ body.saas-page {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+.saas-page img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* --------------------------------------------------------------------------
@@ -317,17 +323,30 @@ body.saas-page {
   align-items: center;
   justify-content: space-between;
   height: 72px;
+  position: relative;
 }
 
 .saas-nav-logo {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.5rem;
-  font-weight: 800;
   color: var(--primary);
   text-decoration: none;
-  letter-spacing: -0.5px;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.saas-nav-logo .brand-name {
+  display: grid;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.saas-nav-logo .brand-name .line1,
+.saas-nav-logo .brand-name .line2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .saas-nav-logo svg {
@@ -335,10 +354,17 @@ body.saas-page {
   height: 32px;
 }
 
+.saas-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
 .saas-nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: clamp(8px, 1.6vw, 20px);
 }
 
 .saas-nav-link {
@@ -365,9 +391,25 @@ body.saas-page {
 .saas-nav-mobile-toggle {
   display: none;
   background: none;
-  border: none;
-  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  width: 40px;
+  height: 40px;
+  padding: 0;
   cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.saas-nav-mobile-toggle:hover {
+  background: var(--surface-2);
+  border-color: var(--line);
+}
+
+.saas-nav-mobile-toggle[aria-expanded="true"] {
+  border-color: var(--primary);
+  background: rgba(23, 96, 135, 0.08);
 }
 
 .saas-nav-mobile-toggle svg {
@@ -1833,6 +1875,17 @@ body.saas-page {
   display: block;
 }
 
+.saas-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 4rem);
+  flex-wrap: wrap;
+}
+
+.two-column-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 /* --------------------------------------------------------------------------
    Responsive Design
    -------------------------------------------------------------------------- */
@@ -1932,18 +1985,88 @@ body.saas-page {
     --space-7: 56px;
     --space-6: 48px;
   }
-  
-  .saas-nav-links {
-    display: none;
+
+  .saas-nav {
+    overflow: visible;
   }
-  
+
   .saas-nav-mobile-toggle {
-    display: flex;
+    display: inline-flex;
+    margin-left: auto;
+    z-index: 3;
   }
-  
+
   .saas-nav-inner {
-    height: 64px;
+    min-height: 64px;
+    height: auto;
     padding: 0 var(--space-2);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .saas-nav-logo {
+    max-width: calc(100% - 56px);
+  }
+
+  .saas-nav-logo .brand-name {
+    font-size: clamp(0.68rem, 2.2vw, 0.82rem);
+  }
+
+  .saas-nav-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: var(--space-2);
+    right: var(--space-2);
+    margin-left: 0;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    padding: 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 2;
+  }
+
+  .saas-nav.menu-open .saas-nav-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .saas-nav-links {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .saas-nav-link {
+    width: 100%;
+    padding: 10px 12px;
+  }
+
+  .language-switcher {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 8px 12px;
+  }
+
+  .saas-nav-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .saas-nav-actions .saas-btn {
+    width: 100%;
+    min-height: 42px;
   }
   
   .saas-hero {
@@ -2004,6 +2127,22 @@ body.saas-page {
   
   .saas-contact-form-section {
     padding: var(--space-3);
+  }
+
+  .two-column-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .saas-nav-logo {
+    max-width: calc(100% - 52px);
+    gap: 8px;
+  }
+
+  .saas-nav-logo .brand-name {
+    font-size: clamp(0.62rem, 2.6vw, 0.74rem);
+    line-height: 1.1;
   }
 }
 
