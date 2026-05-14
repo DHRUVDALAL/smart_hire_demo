@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="images/Logo.png">
 </head>
-<body>
+<body class="recruiter-portal">
   <div class="page">
     <div class="topbar">
       <div class="topbar-brand">
@@ -21,7 +21,15 @@
           <div class="user-meta">Recruiter Portal</div>
         </div>
       </div>
-      <div class="topbar-nav">
+      <button class="mobile-nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="recruiterTopbarNav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+        <span class="sr-only">Toggle recruiter navigation</span>
+      </button>
+      <div class="topbar-nav" id="recruiterTopbarNav" aria-label="Recruiter primary navigation">
         <a href="recruiter-dashboard.html" class="active">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           Dashboard
@@ -52,7 +60,7 @@
         <div class="user-avatar user-name">R</div>
         <a href="#" class="btn danger small logout-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:16px;height:16px;stroke-width:2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Logout
+          <span class="logout-label">Logout</span>
         </a>
       </div>
     </div>
@@ -83,7 +91,7 @@
       <div class="page-header-content">
         <div class="page-header-text">
           <h1 class="page-title">Recruiter Dashboard</h1>
-          <p class="page-subtitle">Overview of jobs, applicants, and interview pipeline</p>
+          <p class="page-subtitle">Overview of jobs, applicants and interview pipeline</p>
         </div>
         <div class="page-header-actions">
           <a href="post-job.html" class="btn" id="postJobBtn">
@@ -187,6 +195,7 @@
     let pieChart = null;
     let profileComplete = false;
     let isApproved = false;
+    let accessGranted = false;
 
     if (recruiter) {
       mountNotificationsBell();
@@ -196,6 +205,11 @@
           showToast(error.message || "Unable to load dashboard", "error");
         });
       });
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          checkProfileStatus();
+        }
+      });
     }
 
     async function checkProfileStatus() {
@@ -203,33 +217,26 @@
         const response = await apiFetch("/profile");
         const profile = response?.data || {};
         
-        // Calculate profile completion based on required fields for recruiter
-        // Required: name, company name
-        // Optional but counted: phone, address, bio
-        const requiredFields = [
-          !!(profile.name && profile.name.trim()),
-          !!(profile.company?.name && profile.company.name.trim())
-        ];
-        const optionalFields = [
-          !!(profile.phone && profile.phone.trim()),
-          !!(profile.address && profile.address.trim()),
-          !!(profile.bio && profile.bio.trim())
-        ];
-        
-        const requiredComplete = requiredFields.every(Boolean);
-        const optionalCount = optionalFields.filter(Boolean).length;
-        
-        // Profile is complete if all required fields are filled
-        // and at least some optional fields (or all required = 100% minimum)
-        const totalFields = requiredFields.length + optionalFields.length;
-        const completedFields = requiredFields.filter(Boolean).length + optionalCount;
-        const completionPercentage = Math.round((completedFields / totalFields) * 100);
-        
-        // Profile is considered complete when 100% OR when all required fields are filled
-        profileComplete = requiredComplete && completionPercentage === 100;
-        
-        // Get approval status directly from profile response
-        isApproved = profile.isApproved === true;
+        const hasName = !!(profile.name && profile.name.trim());
+        const hasCompanyName = !!(profile.company?.name && profile.company.name.trim());
+        const isProfileCompleteFromApi = profile.isProfileComplete === true;
+        const canPostJobsFromApi = profile.canPostJobs === true;
+
+        profileComplete = isProfileCompleteFromApi || (hasName && hasCompanyName);
+        isApproved = canPostJobsFromApi
+          || profile.recruiter?.isApproved === true
+          || profile.isApproved === true;
+        accessGranted = canPostJobsFromApi || isApproved;
+
+        const storedUser = getStoredUser();
+        if (storedUser) {
+          const merged = {
+            ...storedUser,
+            isApproved,
+            companyId: storedUser.companyId || profile.recruiter?.companyId || profile.company?.id || null
+          };
+          localStorage.setItem("user", JSON.stringify(merged));
+        }
         
         updateProfileNotice();
         updateNavRestrictions();
@@ -238,6 +245,7 @@
         // Show notice if we can't determine status
         profileComplete = false;
         isApproved = false;
+        accessGranted = false;
         updateProfileNotice();
         updateNavRestrictions();
       }
@@ -252,8 +260,11 @@
       // Remove any existing state classes
       notice.classList.remove("pending");
       
+      if (accessGranted) {
+        notice.style.display = "none";
+      }
       // Case 1: Profile not complete - show profile warning
-      if (!profileComplete) {
+      else if (!profileComplete) {
         notice.style.display = "block";
         noticeTitle.textContent = "⚠ Profile Incomplete";
         noticeMessage.textContent = "Your company profile must be completed before it can be reviewed by the admin. Please complete your profile to request approval.";
@@ -269,33 +280,41 @@
         completeBtn.textContent = "View Profile";
         completeBtn.href = "recruiter-profile.html";
       }
-      // Case 3: Profile complete AND approved - hide all notices
-      else {
-        notice.style.display = "none";
-      }
     }
 
     function updateNavRestrictions() {
-      const canAccess = profileComplete && isApproved;
+      const canAccess = accessGranted;
       const restrictedLinks = [
         { selector: 'a[href="post-job.html"]', text: "Post Job" },
         { selector: 'a[href="recruiter-jobs.html"]', text: "Manage Jobs" },
-        { selector: 'a[href="recruiter-applications.html"]', text: "Applications" }
+        { selector: 'a[href="recruiter-applications.html"]', text: "Applications" },
+        { selector: 'a[href="interview-schedule.html"]', text: "Interviews" }
       ];
       
       const restrictionNotice = document.getElementById("restrictionNotice");
       const postJobBtn = document.getElementById("postJobBtn");
       
+      if (postJobBtn) {
+        postJobBtn.classList.remove("disabled");
+        postJobBtn.removeEventListener("click", preventNavigation);
+      }
+
+      restrictedLinks.forEach(link => {
+        const el = document.querySelector(`.topbar-nav ${link.selector}`);
+        if (el) {
+          el.classList.remove("nav-disabled");
+          el.removeEventListener("click", preventNavigation);
+        }
+      });
+
       if (!canAccess) {
         restrictionNotice.style.display = "block";
-        
-        // Disable the main Post Job button
+
         if (postJobBtn) {
           postJobBtn.classList.add("disabled");
           postJobBtn.addEventListener("click", preventNavigation);
         }
-        
-        // Add visual indication to nav links
+
         restrictedLinks.forEach(link => {
           const el = document.querySelector(`.topbar-nav ${link.selector}`);
           if (el) {
@@ -303,9 +322,10 @@
             el.addEventListener("click", preventNavigation);
           }
         });
-      } else {
-        restrictionNotice.style.display = "none";
+        return;
       }
+
+      restrictionNotice.style.display = "none";
     }
 
     function preventNavigation(e) {

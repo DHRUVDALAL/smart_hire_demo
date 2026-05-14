@@ -93,6 +93,15 @@ export async function getProfile(userId) {
         throw new AppError("User not found.", 404);
     }
 
+    const recruiterApproved = user.recruiter?.isApproved === true;
+    const recruiterHasRequiredProfile =
+        Boolean(String(user.name || "").trim()) &&
+        Boolean(String(user.company?.name || "").trim());
+    const recruiterCanPostJobs =
+        user.role === "RECRUITER"
+            ? recruiterApproved && recruiterHasRequiredProfile && Boolean(user.recruiter?.id)
+            : true;
+
     // Flatten applicant data into the response for easier frontend access
     const profile = {
         ...user,
@@ -109,7 +118,9 @@ export async function getProfile(userId) {
         position: user.employee?.position,
         specialization: user.employee?.specialization,
         // Include approval status for role-based access control
-        isApproved: user.recruiter?.isApproved ?? user.employee?.isApproved ?? true,
+        isApproved: user.role === "RECRUITER" ? recruiterApproved : (user.employee?.isApproved ?? true),
+        isProfileComplete: user.role === "RECRUITER" ? recruiterHasRequiredProfile : true,
+        canPostJobs: recruiterCanPostJobs,
     };
 
     return profile;

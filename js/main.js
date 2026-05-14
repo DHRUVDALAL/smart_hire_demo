@@ -414,7 +414,7 @@ function injectUserMeta() {
 }
 
 function initTopbarMobileNav() {
-    const topbars = document.querySelectorAll(".applicant-portal .topbar, .admin-portal .topbar");
+    const topbars = document.querySelectorAll(".applicant-portal .topbar, .admin-portal .topbar, .recruiter-portal .topbar");
     if (!topbars.length) return;
 
     topbars.forEach((topbar) => {
