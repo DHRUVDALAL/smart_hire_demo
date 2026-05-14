@@ -6293,6 +6293,613 @@ section.card {
     }
 }
 
+/* =====================================================
+   ADMIN PORTAL RESPONSIVE POLISH
+   Mirrors the Applicant Portal responsive system
+   ===================================================== */
+
+.admin-portal {
+    overflow-x: hidden;
+}
+
+.admin-portal .page {
+    width: min(1200px, calc(100% - clamp(20px, 4vw, 56px)));
+    padding: 20px 0 40px;
+}
+
+/* Topbar - single row, nowrap */
+.admin-portal .topbar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
+    overflow: visible;
+}
+
+.admin-portal .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.admin-portal .topbar-brand > div:last-child {
+    min-width: 0;
+}
+
+.admin-portal .topbar-brand .brand {
+    min-width: 0;
+}
+
+.admin-portal .topbar-brand .brand .brand-line1,
+.admin-portal .topbar-brand .brand .brand-line2 {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-portal .topbar-brand .user-meta {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.admin-portal .topbar-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    min-width: max-content;
+    white-space: nowrap;
+}
+
+.admin-portal .topbar-user .logout-btn {
+    min-height: 36px;
+    padding: 6px 10px;
+    white-space: nowrap;
+}
+
+.admin-portal .user-avatar {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+/* Page header desktop centering - SaaS style offset */
+.admin-portal .page-header-content {
+    max-width: 1080px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.admin-portal .page-header-text {
+    max-width: min(760px, 100%);
+    margin-inline-start: clamp(4px, 2vw, 28px);
+}
+
+.admin-portal .page-subtitle {
+    max-width: 62ch;
+}
+
+/* Toolbar responsiveness */
+.admin-portal .toolbar {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.admin-portal .toolbar .search {
+    flex: 1 1 260px;
+    min-width: 220px;
+    max-width: none;
+}
+
+.admin-portal .toolbar select {
+    flex: 1 1 170px;
+    min-width: 160px;
+}
+
+/* Charts on admin dashboard */
+.admin-portal .admin-charts-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Company stats grid */
+.admin-portal .company-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+/* Admin approval cards */
+.admin-portal .admin-approval-card .approval-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-portal .admin-job-card .row {
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Data table scroll wrapper for mobile */
+.admin-portal .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-portal .data-table {
+    width: 100%;
+}
+
+.admin-portal .table-scroll .data-table {
+    min-width: 720px;
+}
+
+.admin-portal .data-table th,
+.admin-portal .data-table td {
+    white-space: nowrap;
+    padding: 10px 14px;
+}
+
+.admin-portal .data-table td:first-child,
+.admin-portal .data-table th:first-child {
+    white-space: normal;
+    min-width: 120px;
+}
+
+/* List row overflow */
+.admin-portal .list-row {
+    overflow-wrap: anywhere;
+}
+
+.admin-portal .card,
+.admin-portal .stat-card {
+    min-width: 0;
+}
+
+/* =====================================================
+   ADMIN PORTAL - 1440px+ (Wide Desktop)
+   ===================================================== */
+
+@media (min-width: 1440px) {
+    .admin-portal .page {
+        width: min(1320px, calc(100% - 96px));
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - Desktop header centering (1025px+)
+   ===================================================== */
+
+@media (min-width: 1025px) {
+    .admin-portal .page-header-content {
+        max-width: 1120px;
+        margin: 0 auto;
+        justify-content: flex-start;
+    }
+
+    .admin-portal .page-header-text {
+        flex: 0 1 760px;
+        margin-inline-start: clamp(40px, 6.5vw, 150px);
+        text-align: left;
+    }
+
+    .admin-portal .table-scroll .data-table {
+        min-width: 100%;
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - 1024px (Tablet landscape / small desktop)
+   ===================================================== */
+
+@media (max-width: 1024px) {
+    .admin-portal .topbar {
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        top: 8px;
+        padding: 12px 14px;
+        gap: 8px;
+    }
+
+    .admin-portal .mobile-nav-toggle {
+        display: inline-flex;
+        width: 38px;
+        height: 38px;
+        order: 2;
+    }
+
+    .admin-portal .topbar-nav {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        width: auto;
+        order: 4;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        box-shadow: var(--shadow-lg);
+        max-height: min(60vh, 360px);
+        overflow-y: auto;
+        z-index: 220;
+    }
+
+    .admin-portal .topbar.mobile-open .topbar-nav {
+        display: flex;
+        animation: navSlideDown 0.2s ease;
+    }
+
+    .admin-portal .topbar-nav a,
+    .admin-portal .topbar-nav button {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+
+    .admin-portal .topbar-user {
+        order: 3;
+        width: auto;
+        margin-left: auto;
+        gap: 6px;
+    }
+
+    /* Charts grid stacks on tablet */
+    .admin-portal .admin-charts-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - 768px (Tablet portrait)
+   ===================================================== */
+
+@media (max-width: 768px) {
+    .admin-portal .topbar-brand {
+        gap: 10px;
+    }
+
+    .admin-portal .topbar-brand .topbar-logo img {
+        height: 34px !important;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line1 {
+        font-size: 0.78rem;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.7rem;
+    }
+
+    .admin-portal .topbar-brand .user-meta {
+        font-size: 0.72rem;
+    }
+
+    .admin-portal .topbar {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+
+    .admin-portal .mobile-nav-toggle,
+    .admin-portal .notif-btn,
+    .admin-portal .user-avatar,
+    .admin-portal .topbar-user .logout-btn {
+        flex: 0 0 auto;
+    }
+
+    .admin-portal .notif-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    .admin-portal .user-avatar {
+        width: 34px;
+        height: 34px;
+        font-size: 0.86rem;
+    }
+
+    .admin-portal .topbar-user .logout-btn {
+        min-width: 34px;
+        min-height: 34px;
+        padding: 0;
+        border-radius: 8px;
+        gap: 0;
+    }
+
+    .admin-portal .topbar-user .logout-btn .logout-label {
+        display: none;
+    }
+
+    .admin-portal .topbar-user .logout-btn svg {
+        margin: 0;
+    }
+
+    /* Page header */
+    .admin-portal .page-header {
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+    }
+
+    .admin-portal .page-header-content {
+        justify-content: center;
+    }
+
+    .admin-portal .page-header-text {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    /* Charts stack single column */
+    .admin-portal .admin-charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Profile form grids */
+    .admin-portal #profileForm .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-portal #profileForm .field {
+        margin-bottom: 14px;
+    }
+
+    /* Toolbar full width */
+    .admin-portal .toolbar > * {
+        width: 100%;
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    /* Action buttons stack */
+    .admin-portal .admin-job-card .row,
+    .admin-portal .approval-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .admin-portal .admin-job-card .row .btn,
+    .admin-portal .admin-job-card .row button,
+    .admin-portal .approval-actions .btn,
+    .admin-portal .approval-actions button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Section head responsive */
+    .admin-portal .section-head {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Table actions */
+    .admin-portal .data-table td:last-child {
+        white-space: normal;
+    }
+
+    .admin-portal .data-table .btn.small {
+        margin: 2px 0;
+    }
+
+    /* Modal responsive */
+    .admin-portal .modal-card {
+        margin: 16px;
+        max-width: calc(100vw - 32px) !important;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - 480px (Mobile)
+   ===================================================== */
+
+@media (max-width: 480px) {
+    .admin-portal .page {
+        width: calc(100% - 16px);
+        padding: 14px 0 28px;
+    }
+
+    .admin-portal .topbar-brand .topbar-logo img {
+        height: 28px !important;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line1 {
+        display: none;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.7rem;
+    }
+
+    .admin-portal .topbar-brand .user-meta {
+        font-size: 0.68rem;
+    }
+
+    .admin-portal .user-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.82rem;
+    }
+
+    .admin-portal .mobile-nav-toggle {
+        width: 34px;
+        height: 34px;
+    }
+
+    .admin-portal .mobile-nav-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .admin-portal .page-title {
+        font-size: 1.28rem;
+    }
+
+    .admin-portal .page-subtitle {
+        font-size: 0.86rem;
+    }
+
+    /* Stats grid adjustments */
+    .admin-portal .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .admin-portal .stat-card {
+        padding: 14px;
+    }
+
+    .admin-portal .stat-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .admin-portal .stat-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .admin-portal .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .admin-portal .stat-title {
+        font-size: 0.75rem;
+    }
+
+    /* Card padding */
+    .admin-portal .card {
+        padding: 16px;
+    }
+
+    /* Empty state spacing */
+    .admin-portal .empty-state {
+        padding: 30px 18px;
+    }
+
+    /* Approval card mobile */
+    .admin-portal .admin-approval-card {
+        padding: 14px;
+    }
+
+    .admin-portal .approval-card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .admin-portal .approval-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .admin-portal .approval-actions {
+        justify-content: center;
+    }
+
+    /* List row mobile */
+    .admin-portal .list-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .admin-portal .list-row .status-badge {
+        align-self: flex-start;
+    }
+
+    .admin-portal .list-row .btn.small {
+        align-self: flex-start;
+        margin-left: 0 !important;
+    }
+
+    /* Company stat card */
+    .admin-portal .company-stat-card {
+        padding: 14px;
+    }
+
+    .admin-portal .company-stat-row {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - 375px (Small Mobile)
+   ===================================================== */
+
+@media (max-width: 375px) {
+    .admin-portal .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-portal .topbar {
+        padding: 8px 10px;
+        gap: 4px;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.65rem;
+    }
+
+    .admin-portal .mobile-nav-toggle {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* =====================================================
+   ADMIN PORTAL - 320px (Minimum)
+   ===================================================== */
+
+@media (max-width: 320px) {
+    .admin-portal .page {
+        width: calc(100% - 12px);
+    }
+
+    .admin-portal .mobile-nav-toggle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .admin-portal .topbar-nav a {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line1 {
+        display: none;
+    }
+
+    .admin-portal .topbar-brand .brand .brand-line2 {
+        font-size: 0.62rem;
+    }
+
+    .admin-portal .user-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .admin-portal .page-title {
+        font-size: 1.15rem;
+    }
+}
+
 html,
 body {
     overflow-x: hidden;

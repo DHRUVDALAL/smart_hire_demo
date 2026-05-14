@@ -414,7 +414,7 @@ function injectUserMeta() {
 }
 
 function initTopbarMobileNav() {
-    const topbars = document.querySelectorAll(".applicant-portal .topbar");
+    const topbars = document.querySelectorAll(".applicant-portal .topbar, .admin-portal .topbar");
     if (!topbars.length) return;
 
     topbars.forEach((topbar) => {
@@ -454,9 +454,7 @@ function initTopbarMobileNav() {
         });
 
         window.addEventListener("resize", () => {
-            if (window.innerWidth > 1024) {
-                closeMenu();
-            }
+            closeMenu();
         });
     });
 }
